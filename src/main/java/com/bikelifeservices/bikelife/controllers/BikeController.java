@@ -2,7 +2,10 @@ package com.bikelifeservices.bikelife.controllers;
 
 import com.bikelifeservices.bikelife.entities.Bike;
 import com.bikelifeservices.bikelife.services.BikeService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,17 +22,18 @@ public class BikeController {
     }
 
     @GetMapping
-    public List<Bike> getBikes() {
-        return bikeService.getBikes();
+    public ResponseEntity<List<Bike>> getBikes() {
+        return ResponseEntity.ok().body(bikeService.getBikes());
     }
 
     @PostMapping
-    public Bike postBike(@RequestBody Bike bike) {
-        return bikeService.createBike(bike);
+    public ResponseEntity<Bike> postBike(@RequestBody Bike bike) {
+        return ResponseEntity.ok().body(bikeService.createBike(bike));
     }
 
     @DeleteMapping(path="{bikeId}")
-    public void deleteBike(@PathVariable("bikeId") Long id) {
+    public ResponseEntity.BodyBuilder deleteBike(@PathVariable("bikeId") Long id) {
         bikeService.deleteBike(id);
+        return ResponseEntity.ok();
     }
 }

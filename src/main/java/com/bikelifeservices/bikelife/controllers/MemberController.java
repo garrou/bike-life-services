@@ -3,6 +3,8 @@ package com.bikelifeservices.bikelife.controllers;
 import com.bikelifeservices.bikelife.entities.Member;
 import com.bikelifeservices.bikelife.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,13 +19,13 @@ public class MemberController {
     }
 
     @GetMapping
-    public Member getMember(String email, String password) {
-        return memberService.getMember(email, password);
+    public ResponseEntity<Member> getMember(String email, String password) {
+        return ResponseEntity.ok().body(memberService.getMember(email, password));
     }
 
     @PostMapping
-    public Member postMember(@RequestBody Member toAdd) {
-        return memberService.createMember(toAdd);
+    public ResponseEntity<Member> postMember(@RequestBody Member member) {
+        return ResponseEntity.ok().body(memberService.createMember(member));
     }
 
     @DeleteMapping(path="{memberId}")
