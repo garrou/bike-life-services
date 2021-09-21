@@ -21,15 +21,15 @@ public class BikeService {
         return bikeRepository.findAll();
     }
 
-    public Bike postBike(Bike toAdd) {
-        return bikeRepository.save(toAdd);
+    public Bike createBike(Bike bike) {
+        return bikeRepository.save(bike);
     }
 
     public void deleteBike(long id) {
         boolean exists = bikeRepository.existsById(id);
 
         if (!exists) {
-            throw new IllegalArgumentException(String.format("Bike's id : %l does not exists", id));
+            throw new IllegalArgumentException(String.format("Bike's id : %d does not exists", id));
         }
 
         bikeRepository.deleteById(id);

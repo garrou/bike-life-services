@@ -2,17 +2,17 @@ package com.bikelifeservices.bikelife.entities;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "bike")
 @Table
 public class Bike {
 
     @Id
-    @SequenceGenerator(name="bike_sequence", sequenceName = "bike_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "bike_sequence", sequenceName = "bike_sequence", allocationSize = 1)
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "bike_sequence"
     )
-    private long id;
+    private long bikeId;
 
     private String name;
 
@@ -29,15 +29,15 @@ public class Bike {
         this.image = image;
     }
 
-    public Bike(long id, String name, String description, String image) {
-        this.id = id;
+    public Bike(long bikeId, String name, String description, String image) {
+        this.bikeId = bikeId;
         this.name = name;
         this.description = description;
         this.image = image;
     }
 
-    public long getId() {
-        return id;
+    public long getBikeId() {
+        return bikeId;
     }
 
     public String getName() {

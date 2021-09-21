@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/v1/bikes")
+@RequestMapping(path = "api/v1/bikes")
 public class BikeController {
 
     private final BikeService bikeService;
@@ -24,8 +24,8 @@ public class BikeController {
     }
 
     @PostMapping
-    public Bike createBike(@RequestBody Bike toAdd) {
-        return bikeService.postBike(toAdd);
+    public Bike postBike(@RequestBody Bike bike) {
+        return bikeService.createBike(bike);
     }
 
     @DeleteMapping(path="{bikeId}")
