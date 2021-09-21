@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/members")
+@RequestMapping(path="api/v1/members")
 public class MemberController {
 
     private final MemberService memberService;
