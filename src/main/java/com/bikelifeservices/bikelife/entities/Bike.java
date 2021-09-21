@@ -2,7 +2,7 @@ package com.bikelifeservices.bikelife.entities;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "bike")
 @Table
 public class Bike {
 
@@ -34,5 +34,21 @@ public class Bike {
         this.name = name;
         this.description = description;
         this.image = image;
+    }
+
+    public long getBikeId() {
+        return bikeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImage() {
+        return image;
     }
 }

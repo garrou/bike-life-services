@@ -2,7 +2,7 @@ package com.bikelifeservices.bikelife.entities;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "member")
 @Table
 public class Member {
 
@@ -12,6 +12,7 @@ public class Member {
             strategy = GenerationType.SEQUENCE,
             generator = "member_sequence"
     )
+
     private long memberId;
 
     private String email;
