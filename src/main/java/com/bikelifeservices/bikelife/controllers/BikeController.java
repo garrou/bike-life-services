@@ -24,8 +24,8 @@ public class BikeController {
     }
 
     @PostMapping
-    public Bike createBike(@RequestBody Bike toAdd) {
-        return bikeService.postBike(toAdd);
+    public Bike postBike(@RequestBody Bike bike) {
+        return bikeService.createBike(bike);
     }
 
     @DeleteMapping(path="{bikeId}")
