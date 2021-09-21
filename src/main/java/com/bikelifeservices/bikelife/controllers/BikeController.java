@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/v1/bikes")
+@RequestMapping(path = "api/v1/bikes")
 public class BikeController {
 
     private final BikeService bikeService;
