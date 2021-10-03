@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(path = "api/v1/members")
 public class MemberController {
@@ -19,13 +21,19 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<Member> getMember(String email, String password) {
-        return ResponseEntity.ok().body(memberService.getMember(email, password));
+    public ResponseEntity<Member> getMember(@RequestBody Member member) {
+        Optional<Member> found = memberService.loginMember(member);
+        return found
+                .map(value -> ResponseEntity.ok().body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Member> postMember(@RequestBody Member member) {
-        return ResponseEntity.ok().body(memberService.createMember(member));
+        Optional<Member> created = memberService.createMember(member);
+        return created
+                .map(value -> ResponseEntity.status(HttpStatus.CREATED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).body(null));
     }
 
     @DeleteMapping(path="{memberId}")

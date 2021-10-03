@@ -19,23 +19,19 @@ public class MemberService {
         this.memberRepository = userRepository;
     }
 
-    public Member getMember(String email, String password) {
-        return null;
+    public Optional<Member> loginMember(Member member) {
+        Optional<Member> found = memberRepository.findByEmail(member.getEmail());
+        return found.isPresent() && found.get().getPassword().equals(member.getPassword())
+                ? found
+                : Optional.empty();
     }
 
-    public Member createMember(Member member) {
-
+    public Optional<Member> createMember(Member member) {
         if (member.getPassword().length() < MIN_PASSWORD_SIZE) {
-            throw new IllegalArgumentException(String.format("Password cannot be less than %d characters long", MIN_PASSWORD_SIZE));
+            return Optional.empty();
         }
-
         Optional<Member> foundUser = memberRepository.findByEmail(member.getEmail());
-
-        if (foundUser.isPresent()) {
-            throw new IllegalStateException(String.format("An account already exists with %s", member.getEmail()));
-        }
-
-        return memberRepository.save(member);
+        return foundUser.isPresent() ? Optional.empty() : Optional.of(memberRepository.save(member));
     }
 
     public void deleteMember(Long id) {
@@ -44,7 +40,6 @@ public class MemberService {
         if (!exists) {
             throw new IllegalArgumentException(String.format("Member's id : %d does not exists", id));
         }
-
         memberRepository.deleteById(id);
     }
 }
