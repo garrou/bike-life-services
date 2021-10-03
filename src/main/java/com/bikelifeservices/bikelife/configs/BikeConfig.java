@@ -34,6 +34,12 @@ public class BikeConfig {
                     "VÉLO DE ROUTE BMC ROADMACHINE SEVEN SHIMANO 105 11V 700 MM BLEU PETROL 2022",
                     "https://media.alltricks.com/medium/209144760d45110a22941.59883979.jpg?frz-v=298");
 
+            Bike n = new Bike(
+              "N",
+              "Truc truc easy",
+              "https://media.alltricks.com/medium/209144760d45110a22941.59883979.jpg?frz-v=298"
+            );
+
             repository.saveAll(List.of(cannondale, bh, trek, bmc));
         };
     }
