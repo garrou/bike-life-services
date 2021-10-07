@@ -13,7 +13,7 @@ module.exports.signup = async (req, res) => {
     } 
     const resp = await MemberRepository.getMember(email);
 
-    if (resp.rows.length == 1) {
+    if (resp.rowCount == 1) {
         return res.status(constants.UNAUTHORIZED).json({'confirm': 'Un compte est déjà associé à cet email.'});
     }
     const salt = await bcrypt.genSalt();
@@ -27,8 +27,8 @@ module.exports.signup = async (req, res) => {
 module.exports.login = async (req, res) => {
     const { email, password } = req.body;
     const resp = await MemberRepository.getMember(email);
-
-    if (resp.rows === 0) {
+    
+    if (resp.rowCount === 0) {
         return res.status(constants.NOT_FOUND).json({'confirm': 'Email ou mot passe incorrect.'});
     }
     const same = await bcrypt.compare(password, resp.rows[0].password);
