@@ -39,5 +39,5 @@ module.exports.login = async (req, res) => {
     const member = new Member(resp.rows[0].member_id, email);
     const accessToken = jwt.sign(JSON.stringify(member), config.jwt.secretToken);
 
-    return res.status(200).json({member: member, accessToken: accessToken});
+    return res.status(200).json({'member': member, 'accessToken': accessToken});
 }
