@@ -1,16 +1,14 @@
-class User {
+class Member {
 
     /** 
      * @param {int} id
-     * @param {string} email 
-     * @param {string} password 
+     * @param {String} email 
      */
-    constructor(id, email, password) {
+    constructor(id, email) {
         this.id = id;
         this.email = email;
-        this.password = password;
     }
 
 }
 
-module.exports = User;
+module.exports = Member;
