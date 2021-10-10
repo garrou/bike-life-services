@@ -14,3 +14,9 @@ module.exports.getBikes = async (req, res) => {
     const resp = await BikeRepository.getBikes(memberId);
     return res.status(constants.OK).json({'bikes': resp.rows})
 }
+
+module.exports.deleteBike = async (req, res) => {
+    const { bikeId } = req.params;
+    await BikeRepository.deleteBike(bikeId);
+    return res.status(constants.OK).json({'confirm': 'Vélo supprimé'});
+}

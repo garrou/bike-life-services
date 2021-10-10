@@ -20,6 +20,14 @@ class BikeRepository {
     static getBikes = async (memberId) => {
         return await client.query('select * from bike where fk_member = $1', [memberId]);
     }
+
+    /**
+     * @param {int} bikeId 
+     * @returns Promise<QueryResult<any>>
+     */
+    static deleteBike = async (bikeId) => {
+        return await client.query('delete from bike where bike_id = $1', [bikeId]);
+    }
 }
 
 module.exports = BikeRepository;
