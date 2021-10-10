@@ -9,5 +9,6 @@ router.post('/login', authService.login);
 
 router.get('/bikes', guard.checkToken, accountService.getBikes);
 router.post('/bikes', guard.checkToken, accountService.addBike);
+router.delete('/bikes/:bikeId', guard.checkToken, accountService.deleteBike);
 
 module.exports = router;
