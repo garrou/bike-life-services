@@ -7,10 +7,13 @@ class BikeRepository {
      * @param {String} name 
      * @param {String} description 
      * @param {String} image 
+     * @param {Date} dateOfPurchase 
+     * @param {int} nbKm 
      * @returns Promise<QueryResult<any>>
      */
-    static createBike = async (memberId, name, description, image) => {
-        return await client.query('insert into bike (name, description, image, fk_member) values ($1, $2, $3, $4)', [name, description, image, memberId]);
+    static createBike = async (memberId, name, description, image, dateOfPurchase, nbKm) => {
+        return await client.query('insert into bike (name, description, image, date_of_purchase, fk_member, nb_km) values ($1, $2, $3, $4, $5, $6)', 
+        [name, description, image, dateOfPurchase, memberId, nbKm]);
     }
 
     /**
