@@ -21,3 +21,9 @@ module.exports.deleteBike = async (req, res) => {
     await BikeRepository.deleteBike(bikeId);
     return res.status(constants.OK).json({'confirm': 'Vélo supprimé'});
 }
+
+module.exports.updateBike = async (req, res) => {
+    let bike = JSON.parse(req.body.bike);
+    await BikeRepository.updateBike(bike);
+    return res.status(constants.OK).json({'confirm': 'Vélo modifié', 'bike': bike});
+}

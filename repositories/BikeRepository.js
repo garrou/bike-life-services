@@ -31,6 +31,26 @@ class BikeRepository {
     static deleteBike = async (bikeId) => {
         return await client.query('delete from bike where bike_id = $1', [bikeId]);
     }
+
+    /**
+     * @param {Bike} bike 
+     * @returns Promise<QueryResult<any>>
+     */
+    static updateBike = async (bike) => {
+        return await client.query(`update bike set
+                                    name = $1, 
+                                    description = $2, 
+                                    image = $3,
+                                    nb_km = $4,
+                                    date_of_purchase = $5
+                                    where bike_id = $6`,
+                                    [bike['name'], 
+                                    bike['description'], 
+                                    bike['image'], 
+                                    bike['nbKm'], 
+                                    bike['dateOfPurchase'], 
+                                    bike['id']]);
+    }
 }
 
 module.exports = BikeRepository;
