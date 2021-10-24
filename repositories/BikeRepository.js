@@ -18,6 +18,13 @@ class BikeRepository {
 
     /**
      * @param {int} memberId 
+     */
+    static addAverageLifeDuration = async (memberId) => {
+        await client.query(`call init_average_life_duration(${memberId})`);
+    }
+
+    /**
+     * @param {int} memberId 
      * @returns Promise<QueryResult<any>>
      */
     static getBikes = async (memberId) => {
