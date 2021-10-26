@@ -58,6 +58,10 @@ class BikeRepository {
                                     bike['dateOfPurchase'], 
                                     bike['id']]);
     }
+
+    static getBikeComponents = async (bikeId) => {
+        return await client.query(`select * from get_all_bike_components(${bikeId})`);
+    }
 }
 
 module.exports = BikeRepository;
