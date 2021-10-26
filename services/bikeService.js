@@ -28,3 +28,9 @@ module.exports.updateBike = async (req, res) => {
     await BikeRepository.updateBike(bike);
     return res.status(constants.OK).json({'confirm': 'Vélo modifié', 'bike': bike});
 }
+
+module.exports.getBikeComponents = async (req, res) => {
+    const { bikeId } = req.params;
+    const resp = await BikeRepository.getBikeComponents(bikeId);
+    return res.status(constants.OK).json(resp.rows[0]);
+}

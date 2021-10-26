@@ -10,11 +10,10 @@ module.exports.checkToken = (req, res, next) => {
         return res.sendStatus(constants.UNAUTHORIZED);
     }
 
-    jwt.verify(token, config.jwt.secretToken, (err, user) => {
+    jwt.verify(token, config.jwt.secretToken, (err) => {
         if (err) {
             return res.sendStatus(constants.FORBIDDEN);
         } 
-        req.user = user;
         next();
     });
 }
