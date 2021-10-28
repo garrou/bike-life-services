@@ -4,16 +4,15 @@ class BikeRepository {
 
     /**
      * @param {int} memberId 
-     * @param {String} name 
-     * @param {String} description 
+     * @param {String} name
      * @param {String} image 
      * @param {Date} dateOfPurchase 
      * @param {int} nbKm 
      * @returns Promise<QueryResult<any>>
      */
-    static createBike = async (memberId, name, description, image, dateOfPurchase, nbKm) => {
-        return await client.query('insert into bike (name, description, image, date_of_purchase, fk_member, nb_km) values ($1, $2, $3, $4, $5, $6)', 
-        [name, description, image, dateOfPurchase, memberId, nbKm]);
+    static createBike = async (memberId, name, image, dateOfPurchase, nbKm) => {
+        return await client.query('insert into bike (name, image, date_of_purchase, fk_member, nb_km) values ($1, $2, $3, $4, $5)', 
+        [name, image, dateOfPurchase, memberId, nbKm]);
     }
 
     /**
@@ -47,13 +46,11 @@ class BikeRepository {
         await client.query(`call add_km_to_components(${bike.id}, ${bike.nbKm})`);
         return await client.query(`update bike set
                                     name = $1, 
-                                    description = $2, 
-                                    image = $3,
-                                    nb_km = $4,
-                                    date_of_purchase = $5
-                                    where bike_id = $6`,
+                                    image = $2,
+                                    nb_km = $3,
+                                    date_of_purchase = $4
+                                    where bike_id = $5`,
                                     [bike.name, 
-                                    bike.description, 
                                     bike.image, 
                                     bike.nbKm, 
                                     bike.dateOfPurchase, 

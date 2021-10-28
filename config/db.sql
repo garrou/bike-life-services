@@ -7,9 +7,8 @@ create table member (
 create table bike (
 	bike_id serial primary key,
 	name varchar not null,
-	description varchar not null,
 	image text not null,
-	nb_km integer,
+	nb_km integer not null,
 	date_of_purchase date not null,
 	fk_member integer not null references member(member_id) on delete cascade
 );

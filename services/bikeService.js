@@ -3,11 +3,11 @@ const BikeRepository = require('../repositories/BikeRepository');
 const constants = require('../constants/constants.json');
 
 module.exports.addBike = async (req, res) => {
-    const { memberId, name, description, image, dateOfPurchase, nbKm } = req.body;
+    const { memberId, name, image, dateOfPurchase, nbKm } = req.body;
     const km = parseInt(nbKm);
-    await BikeRepository.createBike(memberId, name, description, image, dateOfPurchase, km);
+    await BikeRepository.createBike(memberId, name, image, dateOfPurchase, km);
     await BikeRepository.addAverageLifeDuration(memberId);
-    const bike = new Bike(name, description, image, dateOfPurchase, km);
+    const bike = new Bike(name, image, dateOfPurchase, km);
     return res.status(constants.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
 }
 
