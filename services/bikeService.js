@@ -24,7 +24,7 @@ module.exports.deleteBike = async (req, res) => {
 }
 
 module.exports.updateBike = async (req, res) => {
-    let bike = JSON.parse(req.body.bike);
+    const bike = JSON.parse(req.body.bike);
     await BikeRepository.updateBike(bike);
     return res.status(constants.OK).json({'confirm': 'Vélo modifié', 'bike': bike});
 }
@@ -33,4 +33,11 @@ module.exports.getBikeComponents = async (req, res) => {
     const { bikeId } = req.params;
     const resp = await BikeRepository.getBikeComponents(bikeId);
     return res.status(constants.OK).json(resp.rows[0]);
+}
+
+module.exports.updateComponent = async (req, res) => {
+    console.log(req.body.component);
+    const component = JSON.parse(req.body.component);
+    await BikeRepository.updateComponent(component);
+    return res.status(constants.OK).json({'confirm': 'Composant modifié'});
 }

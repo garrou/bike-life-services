@@ -14,5 +14,6 @@ router.delete('/bikes/:bikeId', guard.checkToken, bikeService.deleteBike);
 router.put('/bikes/:bikeId', guard.checkToken, bikeService.updateBike);
 
 router.get('/components/:bikeId', guard.checkToken, bikeService.getBikeComponents);
+router.put('/components/:componentId', guard.checkToken, bikeService.updateComponent);
 
 module.exports = router;

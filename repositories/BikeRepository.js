@@ -44,8 +44,8 @@ class BikeRepository {
      */
     static updateBike = async (bike) => {
         await client.query(`call add_km_to_components(${bike.id}, ${bike.nbKm})`);
-        return await client.query(`update bike set
-                                    name = $1, 
+        return await client.query(`update bike 
+                                    set name = $1, 
                                     image = $2,
                                     nb_km = $3,
                                     date_of_purchase = $4
@@ -59,6 +59,14 @@ class BikeRepository {
 
     static getBikeComponents = async (bikeId) => {
         return await client.query(`select * from get_all_bike_components(${bikeId})`);
+    }
+
+    static updateComponent = async (component) => {
+        return await client.query(`update ${component.detail}
+                                    set ${component.detail}_brand = $1,
+                                    ${component.detail}_km = $2,
+                                    ${component.detail}_duration = $3`,
+                                    [component.brand, component.km, component.duration]);
     }
 }
 
