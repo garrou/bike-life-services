@@ -36,7 +36,6 @@ module.exports.getBikeComponents = async (req, res) => {
 }
 
 module.exports.updateComponent = async (req, res) => {
-    console.log(req.body.component);
     const component = JSON.parse(req.body.component);
     await BikeRepository.updateComponent(component);
     return res.status(constants.OK).json({'confirm': 'Composant modifié'});
