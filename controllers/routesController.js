@@ -6,7 +6,8 @@ const router = Router();
 
 router.post('/members', memberService.signup);
 router.post('/login', memberService.login);
-router.get('/member/:email', guard.checkToken, memberService.getMember)
+
+router.get('/member/:id', guard.checkToken, memberService.getMemberById);
 
 router.get('/bikes', guard.checkToken, bikeService.getBikes);
 router.post('/bikes', guard.checkToken, bikeService.addBike);

@@ -42,6 +42,6 @@ module.exports.login = async (req, res) => {
     return res.status(constants.OK).json({'member': member, 'accessToken': accessToken});
 }
 
-module.exports.getMember = async (req, res) => {
-    return await MemberRepository.getMember(req.params.email);
+module.exports.getMemberById = async (req, res) => {
+    return await MemberRepository.getMember(req.params.id);
 }
