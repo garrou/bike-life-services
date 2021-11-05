@@ -95,7 +95,7 @@ create table air_chamber_forward (
 
 create table air_chamber_backward (
 	air_chamber_backward_id serial primary key,
-	air_chamber_backwardbrand text,
+	air_chamber_backward_brand text,
 	air_chamber_backward_km integer,
 	air_chamber_backward_duration integer,
 	fk_bike integer not null references bike(bike_id) on delete cascade
@@ -142,100 +142,124 @@ create or replace function get_all_bike_components(bike_id integer)
 returns 
 table(
 	frame_id integer,
+	frame_brand text,
 	frame_duration integer,
 	frame_km integer,
 
 	fork_id integer,
+	fork_brand text,
 	fork_duration integer,
 	fork_km integer,
 
 	string_id integer,
+	string_brand text,
 	string_duration integer,
 	string_km integer,
 
 	brake_forward_id integer,
+	brake_forward_brand text,
 	brake_forward_duration integer,
 	brake_forward_km integer,
 
 	brake_backward_id integer,
+	brake_backward_brand text,
 	brake_backward_duration integer,
 	brake_backward_km integer,
 
 	wheel_forward_id integer,
+	wheel_forward_brand text,
 	wheel_forward_duration integer,
 	wheel_forward_km integer,
 
 	wheel_backward_id integer,
+	wheel_backward_brand text,
 	wheel_backward_duration integer,
 	wheel_backward_km integer,
 
 	tire_forward_id integer,
+	tire_forward_brand text,
 	tire_forward_duration integer,
 	tire_forward_km integer,
 
 	tire_backward_id integer,
+	tire_backward_brand text,
 	tire_backward_duration integer,
 	tire_backward_km integer,
 
 	air_chamber_forward_id integer,
+	air_chamber_forward_brand text,
 	air_chamber_forward_duration integer,
 	air_chamber_forward_km integer,
 
 	air_chamber_backward_id integer,
+	air_chamber_backward_brand text,
 	air_chamber_backward_duration integer,
 	air_chamber_backward_km integer,
 
 	transmission_id integer,
+	transmission_brand text,
 	transmission_duration integer,
 	transmission_km integer
 	) as $$
 begin
 	return query select distinct
 	fr.frame_id,
+	fr.frame_brand,
 	fr.frame_duration, 
 	fr.frame_km,
 
 	fo.fork_id,
+	fo.fork_brand,
 	fo.fork_duration,
 	fo.fork_km,
 
 	s.string_id,
+	s.string_brand,
 	s.string_duration,
 	s.string_km,
 
 	bf.brake_forward_id,
+	bf.brake_forward_brand,
 	bf.brake_forward_duration,
 	bf.brake_forward_km,
 
 	bb.brake_backward_id,
+	bb.brake_backward_brand,
 	bb.brake_backward_duration,
 	bb.brake_backward_km,
 
 	wf.wheel_forward_id,
+	wf.wheel_forward_brand,
 	wf.wheel_forward_duration,
 	wf.wheel_forward_km,
 
 	wb.wheel_backward_id,
+	wb.wheel_backward_brand,
 	wb.wheel_backward_duration,
 	wb.wheel_backward_km,
 
 	tf.tire_forward_id,
+	tf.tire_forward_brand,
 	tf.tire_forward_duration,
 	tf.tire_forward_km,
 
 	tb.tire_backward_id,
+	tb.tire_backward_brand,
 	tb.tire_backward_duration,
 	tb.tire_backward_km,
 
 	acf.air_chamber_forward_id,
+	acf.air_chamber_forward_brand,
 	acf.air_chamber_forward_duration,
 	acf.air_chamber_forward_km,
 
 	acb.air_chamber_backward_id,
+	acb.air_chamber_backward_brand,
 	acb.air_chamber_backward_duration,
 	acb.air_chamber_backward_km,
 
 	tr.transmission_id,
+	tr.transmission_brand,
 	tr.transmission_duration,
 	tr.transmission_km
 	from frame as fr, 
