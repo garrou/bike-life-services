@@ -1,12 +1,12 @@
 const { Client } = require('pg');
-const config = require('../config/config.json');
+const config = require('../config/docker-config.json');
 
 const client = new Client({
-    user: config.db.user,
+    // user: config.db.user,
     host: config.db.host,
-    database: config.db.database,
-    password: config.db.password,
-    port: config.db.port
+    // database: config.db.database,
+    // password: config.db.password,
+    // port: config.db.port
 });
 
 client.connect()

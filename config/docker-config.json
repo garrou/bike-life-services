@@ -1,0 +1,13 @@
+{
+    "jwt": {
+        "maxAge": 3600,
+        "secretToken": "423fea5c7e2ecb85b987da5401cee4d38c0aefac42129a685a647f7019397a17f248a128187b04ef0a467f672f77e9508361ba176686cb1a866675f52a68b446"
+    },
+    "db": {
+        "user": "postgres",
+        "password": "admin",
+        "host": "postgres://postgres:postgres@postgres:5432/bike-life",
+        "database": "bike-life",
+        "port": 5432
+    }
+}
