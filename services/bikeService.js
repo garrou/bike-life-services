@@ -3,11 +3,11 @@ const BikeRepository = require('../repositories/BikeRepository');
 const constants = require('../constants/constants.json');
 
 module.exports.addBike = async (req, res) => {
-    const { memberId, name, description, image, dateOfPurchase, nbKm } = req.body;
+    const { memberId, name, image, dateOfPurchase, nbKm } = req.body;
     const km = parseInt(nbKm);
-    await BikeRepository.createBike(memberId, name, description, image, dateOfPurchase, km);
+    await BikeRepository.createBike(memberId, name, image, dateOfPurchase, km);
     await BikeRepository.addAverageLifeDuration(memberId);
-    const bike = new Bike(name, description, image, dateOfPurchase, km);
+    const bike = new Bike(name, image, dateOfPurchase, km);
     return res.status(constants.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
 }
 
@@ -24,7 +24,7 @@ module.exports.deleteBike = async (req, res) => {
 }
 
 module.exports.updateBike = async (req, res) => {
-    let bike = JSON.parse(req.body.bike);
+    const bike = JSON.parse(req.body.bike);
     await BikeRepository.updateBike(bike);
     return res.status(constants.OK).json({'confirm': 'Vélo modifié', 'bike': bike});
 }
@@ -33,4 +33,10 @@ module.exports.getBikeComponents = async (req, res) => {
     const { bikeId } = req.params;
     const resp = await BikeRepository.getBikeComponents(bikeId);
     return res.status(constants.OK).json(resp.rows[0]);
+}
+
+module.exports.updateComponent = async (req, res) => {
+    const component = JSON.parse(req.body.component);
+    await BikeRepository.updateComponent(component);
+    return res.status(constants.OK).json({'confirm': 'Composant modifié'});
 }
