@@ -4,11 +4,15 @@ const constants = require('../constants/constants.json');
 const jwt = require('jsonwebtoken');
 const MemberRepository = require('../repositories/MemberRepository');
 const Member = require('../models/Member');
+const validator = require('../utils/validator');
 
 module.exports.signup = async (req, res) => {
     const { email, password } = req.body;
 
-    if (password.length < constants.MIN_PASSWORD_LENGTH) {
+    if (!validator.isEmail(email)) {
+        return res.status(constants.UNAUTHORIZED).json({'confirm': 'Email invalide'});
+    }
+    if (!validator.isGoodLenPass(password)) {
         return res.status(constants.UNAUTHORIZED).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
     } 
     const resp = await MemberRepository.getMember(email);

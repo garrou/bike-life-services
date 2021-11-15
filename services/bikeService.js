@@ -1,13 +1,17 @@
 const Bike = require('../models/Bike');
 const BikeRepository = require('../repositories/BikeRepository');
 const constants = require('../constants/constants.json');
+const validator = require('../utils/validator');
 
 module.exports.addBike = async (req, res) => {
     const { memberId, name, image, dateOfPurchase, nbKm } = req.body;
-    const km = parseInt(nbKm);
-    await BikeRepository.createBike(memberId, name, image, dateOfPurchase, km);
+
+    if (!validator.isDate(dateOfPurchase)) {
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});    
+    }
+    await BikeRepository.createBike(memberId, name, image, dateOfPurchase, nbKm);
     await BikeRepository.addAverageLifeDuration(memberId);
-    const bike = new Bike(name, image, dateOfPurchase, km);
+    const bike = new Bike(name, image, dateOfPurchase, nbKm);
     return res.status(constants.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
 }
 
@@ -25,6 +29,10 @@ module.exports.deleteBike = async (req, res) => {
 
 module.exports.updateBike = async (req, res) => {
     const bike = JSON.parse(req.body.bike);
+
+    if (!validator.isDate(bike.dateOfPurchase)) {
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});
+    }
     await BikeRepository.updateBike(bike);
     return res.status(constants.OK).json({'confirm': 'Vélo modifié', 'bike': bike});
 }
@@ -37,6 +45,10 @@ module.exports.getBikeComponents = async (req, res) => {
 
 module.exports.updateComponent = async (req, res) => {
     const component = JSON.parse(req.body.component);
+
+    if (!validator.isValidKm(km) && !validator.isValidKm(duration)) {
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});
+    }
     await BikeRepository.updateComponent(component);
     return res.status(constants.OK).json({'confirm': 'Composant modifié'});
 }
