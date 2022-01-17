@@ -12,7 +12,7 @@ module.exports.checkToken = (req, res, next) => {
 
     jwt.verify(token, config.jwt.secretToken, (err) => {
         if (err) {
-            return res.sendStatus(constants.FORBIDDEN);
+            return res.sendStatus(constants.UNAUTHORIZED);
         } 
         next();
     });

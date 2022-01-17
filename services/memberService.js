@@ -10,15 +10,15 @@ module.exports.signup = async (req, res) => {
     const { email, password } = req.body;
 
     if (!validator.isEmail(email)) {
-        return res.status(constants.UNAUTHORIZED).json({'confirm': 'Email invalide'});
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Email invalide'});
     }
     if (!validator.isGoodLenPass(password)) {
-        return res.status(constants.UNAUTHORIZED).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
     } 
     const resp = await MemberRepository.getMember(email);
 
     if (resp.rowCount == 1) {
-        return res.status(constants.UNAUTHORIZED).json({'confirm': 'Un compte est déjà associé à cet email.'});
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
     }
     const salt = await bcrypt.genSalt();
     const passHash = await bcrypt.hash(password, salt);
@@ -48,4 +48,25 @@ module.exports.login = async (req, res) => {
 
 module.exports.getMemberById = async (req, res) => {
     return await MemberRepository.getMember(req.params.id);
+}
+
+module.exports.updateMember = async (req, res) => {
+    const { id, email, password } = req.body;
+
+    if (!validator.isEmail(email)) {
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Email invalide'});
+    }
+    if (!validator.isGoodLenPass(password)) {
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
+    } 
+    const resp = await MemberRepository.getMember(email);
+
+    if (resp.rowCount == 1) {
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
+    }
+    const salt = await bcrypt.genSalt();
+    const passHash = await bcrypt.hash(password, salt);
+    await MemberRepository.updateMember(id, email, passHash);
+
+    return res.status(constants.OK).json({'confirm': 'Compte modifié'});
 }
