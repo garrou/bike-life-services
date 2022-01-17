@@ -11,6 +11,7 @@ router.get('/', (req, res) => {
 router.post('/members', memberService.signup);
 router.post('/login', memberService.login);
 
+router.put('/members/:id', guard.checkToken, memberService.updateMember);
 router.get('/members/:id', guard.checkToken, memberService.getMemberById);
 
 router.get('/bikes', guard.checkToken, bikeService.getBikes);

@@ -46,7 +46,7 @@ module.exports.getBikeComponents = async (req, res) => {
 module.exports.updateComponent = async (req, res) => {
     const component = JSON.parse(req.body.component);
 
-    if (!validator.isValidKm(km) && !validator.isValidKm(duration)) {
+    if (!validator.isValidKm(component.km) && !validator.isValidKm(component.duration)) {
         return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});
     }
     await BikeRepository.updateComponent(component);
