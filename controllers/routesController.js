@@ -18,6 +18,7 @@ router.get('/bikes', guard.checkToken, bikeService.getBikes);
 router.post('/bikes', guard.checkToken, bikeService.addBike);
 router.delete('/bikes/:bikeId', guard.checkToken, bikeService.deleteBike);
 router.put('/bikes/:bikeId', guard.checkToken, bikeService.updateBike);
+router.patch('/bikes/:bikeId', guard.checkToken, bikeService.updateBikeKm);
 
 router.get('/components/:bikeId', guard.checkToken, bikeService.getBikeComponents);
 router.put('/components/:componentId', guard.checkToken, bikeService.updateComponent);

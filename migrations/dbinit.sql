@@ -1,3 +1,9 @@
+drop database bikelife if exists;
+
+create database bikelife;
+
+use bikelife;
+
 create table member (
 	member_id serial primary key,
 	email varchar unique not null,
@@ -8,7 +14,7 @@ create table bike (
 	bike_id serial primary key,
 	name varchar not null,
 	image text not null,
-	nb_km integer not null,
+	nb_km numeric not null,
 	date_of_purchase date not null,
 	fk_member integer not null references member(member_id) on delete cascade
 );
@@ -16,96 +22,96 @@ create table bike (
 create table frame (
 	frame_id serial primary key,
 	frame_brand text,
-	frame_km integer,
-	frame_duration integer,
+	frame_km numeric,
+	frame_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table fork (
 	fork_id serial primary key,
 	fork_brand text,
-	fork_km integer,
-	fork_duration integer,
+	fork_km numeric,
+	fork_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table string (
 	string_id serial primary key,
 	string_brand text,
-	string_km integer,
-	string_duration integer,
+	string_km numeric,
+	string_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table brake_forward (
 	brake_forward_id serial primary key,
 	brake_forward_brand text,
-	brake_forward_km integer,
-	brake_forward_duration integer,
+	brake_forward_km numeric,
+	brake_forward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table brake_backward (
 	brake_backward_id serial primary key,
 	brake_backward_brand text,
-	brake_backward_km integer,
-	brake_backward_duration integer,
+	brake_backward_km numeric,
+	brake_backward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table wheel_forward (
 	wheel_forward_id serial primary key,
 	wheel_forward_brand text,
-	wheel_forward_km integer,
-	wheel_forward_duration integer,
+	wheel_forward_km numeric,
+	wheel_forward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table wheel_backward (
 	wheel_backward_id serial primary key,
 	wheel_backward_brand text,
-	wheel_backward_km integer,
-	wheel_backward_duration integer,
+	wheel_backward_km numeric,
+	wheel_backward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table tire_forward (
 	tire_forward_id serial primary key,
 	tire_forward_brand text,
-	tire_forward_km integer,
-	tire_forward_duration integer,
+	tire_forward_km numeric,
+	tire_forward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table tire_backward (
 	tire_backward_id serial primary key,
 	tire_backward_brand text,
-	tire_backward_km integer,
-	tire_backward_duration integer,
+	tire_backward_km numeric,
+	tire_backward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table air_chamber_forward (
 	air_chamber_forward_id serial primary key,
 	air_chamber_forward_brand text,
-	air_chamber_forward_km integer,
-	air_chamber_forward_duration integer,
+	air_chamber_forward_km numeric,
+	air_chamber_forward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table air_chamber_backward (
 	air_chamber_backward_id serial primary key,
 	air_chamber_backwardbrand text,
-	air_chamber_backward_km integer,
-	air_chamber_backward_duration integer,
+	air_chamber_backward_km numeric,
+	air_chamber_backward_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
 create table transmission (
 	transmission_id serial primary key,
 	transmission_brand text,
-	transmission_km integer,
-	transmission_duration integer,
+	transmission_km numeric,
+	transmission_duration numeric,
 	fk_bike integer not null references bike(bike_id) on delete cascade
 );
 
@@ -117,7 +123,7 @@ create or replace procedure init_average_life_duration(member_id integer)
 as $$
 declare
 	id integer;
-	km integer;
+	km numeric;
 begin
 	select max(bike_id) into id from bike where fk_member = member_id;
 	select nb_km into km from bike where bike_id = id;
@@ -142,52 +148,52 @@ create or replace function get_all_bike_components(bike_id integer)
 returns 
 table(
 	frame_id integer,
-	frame_duration integer,
-	frame_km integer,
+	frame_duration numeric,
+	frame_km numeric,
 
 	fork_id integer,
-	fork_duration integer,
-	fork_km integer,
+	fork_duration numeric,
+	fork_km numeric,
 
 	string_id integer,
-	string_duration integer,
-	string_km integer,
+	string_duration numeric,
+	string_km numeric,
 
 	brake_forward_id integer,
-	brake_forward_duration integer,
-	brake_forward_km integer,
+	brake_forward_duration numeric,
+	brake_forward_km numeric,
 
 	brake_backward_id integer,
-	brake_backward_duration integer,
-	brake_backward_km integer,
+	brake_backward_duration numeric,
+	brake_backward_km numeric,
 
 	wheel_forward_id integer,
-	wheel_forward_duration integer,
-	wheel_forward_km integer,
+	wheel_forward_duration numeric,
+	wheel_forward_km numeric,
 
 	wheel_backward_id integer,
-	wheel_backward_duration integer,
-	wheel_backward_km integer,
+	wheel_backward_duration numeric,
+	wheel_backward_km numeric,
 
 	tire_forward_id integer,
-	tire_forward_duration integer,
-	tire_forward_km integer,
+	tire_forward_duration numeric,
+	tire_forward_km numeric,
 
 	tire_backward_id integer,
-	tire_backward_duration integer,
-	tire_backward_km integer,
+	tire_backward_duration numeric,
+	tire_backward_km numeric,
 
 	air_chamber_forward_id integer,
-	air_chamber_forward_duration integer,
-	air_chamber_forward_km integer,
+	air_chamber_forward_duration numeric,
+	air_chamber_forward_km numeric,
 
 	air_chamber_backward_id integer,
-	air_chamber_backward_duration integer,
-	air_chamber_backward_km integer,
+	air_chamber_backward_duration numeric,
+	air_chamber_backward_km numeric,
 
 	transmission_id integer,
-	transmission_duration integer,
-	transmission_km integer
+	transmission_duration numeric,
+	transmission_km numeric
 	) as $$
 begin
 	return query select distinct
@@ -250,29 +256,36 @@ begin
 	air_chamber_forward as acf,
 	air_chamber_backward as acb,
 	transmission as tr
-	where fr.fk_bike = bike_id;
+	where fr.fk_bike = bike_id
+	and fo.fk_bike = bike_id
+	and s.fk_bike = bike_id
+	and bf.fk_bike = bike_id
+	and bb.fk_bike = bike_id
+	and wf.fk_bike = bike_id
+	and wb.fk_bike = bike_id
+	and tf.fk_bike = bike_id
+	and tb.fk_bike = bike_id
+	and acf.fk_bike = bike_id
+	and acb.fk_bike = bike_id
+	and tr.fk_bike = bike_id;
 end;
 $$ language plpgsql;
 
-create or replace procedure add_km_to_components(b_id integer, km integer)
+create or replace procedure add_km_to_components(b_id integer, km numeric)
 as $$
-declare 
-	bike_km integer;
 begin
-	select nb_km into bike_km from bike where bike.bike_id = bike_id;
-	
-	update frame set frame_km = frame_km + (km - bike_km) where fk_bike = b_id;
-	update fork set fork_km = fork_km + (km - bike_km) where fk_bike = b_id;
-	update string set string_km = string_km + (km - bike_km) where fk_bike = b_id;
-	update brake_backward set brake_backward_km = brake_backward_km + (km - bike_km) where fk_bike = b_id;
-	update brake_forward set brake_forward_km = brake_forward_km + (km - bike_km) where fk_bike = b_id;
-	update wheel_forward set wheel_forward_km = wheel_forward_km + (km - bike_km) where fk_bike = b_id;
-	update wheel_backward set wheel_backward_km = wheel_backward_km + (km - bike_km) where fk_bike = b_id;
-	update tire_forward set tire_forward_km = tire_forward_km + (km - bike_km) where fk_bike = b_id;
-	update tire_backward set tire_backward_km = tire_backward_km + (km - bike_km) where fk_bike = b_id;
-	update air_chamber_forward set air_chamber_forward_km = air_chamber_forward_km + (km - bike_km) where fk_bike = b_id;
-	update air_chamber_backward set air_chamber_backward_km = air_chamber_backward_km + (km - bike_km) where fk_bike = b_id;
-	update transmission set transmission_km = transmission_km + (km - bike_km) where fk_bike = b_id;
+	update frame set frame_km = frame_km + km where fk_bike = b_id;
+	update fork set fork_km = fork_km + km where fk_bike = b_id;
+	update string set string_km = string_km + km where fk_bike = b_id;
+	update brake_backward set brake_backward_km = brake_backward_km + km where fk_bike = b_id;
+	update brake_forward set brake_forward_km = brake_forward_km + km where fk_bike = b_id;
+	update wheel_forward set wheel_forward_km = wheel_forward_km + km where fk_bike = b_id;
+	update wheel_backward set wheel_backward_km = wheel_backward_km + km where fk_bike = b_id;
+	update tire_forward set tire_forward_km = tire_forward_km + km where fk_bike = b_id;
+	update tire_backward set tire_backward_km = tire_backward_km + km where fk_bike = b_id;
+	update air_chamber_forward set air_chamber_forward_km = air_chamber_forward_km + km where fk_bike = b_id;
+	update air_chamber_backward set air_chamber_backward_km = air_chamber_backward_km + km where fk_bike = b_id;
+	update transmission set transmission_km = transmission_km + km where fk_bike = b_id;
 	commit;
 end;
 $$ language plpgsql;

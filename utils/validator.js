@@ -14,5 +14,5 @@ module.exports.isEmail = (toCheck) => {
 }
 
 module.exports.isValidKm = (toCheck) => {
-    return toCheck > 0 && toCheck < Number.MAX_SAFE_INTEGER;
+    return toCheck >= 0 && toCheck < Number.MAX_VALUE;
 }

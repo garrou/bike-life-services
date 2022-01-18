@@ -6,10 +6,10 @@ const validator = require('../utils/validator');
 module.exports.addBike = async (req, res) => {
     const { memberId, name, image, dateOfPurchase, nbKm } = req.body;
 
-    if (!validator.isDate(dateOfPurchase)) {
+    if (!validator.isDate(dateOfPurchase) || !validator.isValidKm(Number.parseFloat(nbKm))) {
         return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});    
     }
-    await BikeRepository.createBike(memberId, name, image, dateOfPurchase, nbKm);
+    await BikeRepository.createBike(memberId, name, image, dateOfPurchase, Number.parseFloat(nbKm));
     await BikeRepository.addAverageLifeDuration(memberId);
     const bike = new Bike(name, image, dateOfPurchase, nbKm);
     return res.status(constants.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
@@ -29,12 +29,23 @@ module.exports.deleteBike = async (req, res) => {
 
 module.exports.updateBike = async (req, res) => {
     const bike = JSON.parse(req.body.bike);
-
+    
     if (!validator.isDate(bike.dateOfPurchase)) {
         return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});
     }
     await BikeRepository.updateBike(bike);
     return res.status(constants.OK).json({'confirm': 'Vélo modifié', 'bike': bike});
+}
+
+module.exports.updateBikeKm = async (req, res) => {
+    const { bikeId } = req.params;
+    const { km } = req.body;
+    
+    if (!validator.isValidKm(km)) {
+        return res.status(constants.FORBIDDEN).json({'confirm': 'Kilomètres invalides'});
+    }
+    await BikeRepository.updateBikeKm(bikeId, km);
+    return res.status(constants.OK).json({'confirm': 'Vélo modifié'});
 }
 
 module.exports.getBikeComponents = async (req, res) => {
