@@ -30,7 +30,7 @@ module.exports.deleteBike = async (req, res) => {
 module.exports.updateBike = async (req, res) => {
     const bike = JSON.parse(req.body.bike);
     
-    if (!validator.isDate(bike.dateOfPurchase)) {
+    if (!validator.isDate(bike.dateOfPurchase) || !validator.isValidKm(bike.nbKm)) {
         return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});
     }
     await BikeRepository.updateBike(bike);
