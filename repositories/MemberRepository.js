@@ -5,7 +5,6 @@ class MemberRepository {
     /**
      * @param {string} email 
      * @param {string} password 
-     * @returns Promise<QueryResult<any>>
      */
     static createMember = async (email, password) => {
         const client = await pool.connect();
@@ -15,7 +14,7 @@ class MemberRepository {
 
     /**
      * @param {string} email 
-     * @returns Promise<QueryResult<any>>
+     * @returns QueryResult<any>
      */
     static getMember = async (email) => {
         const client = await pool.connect();
@@ -28,7 +27,6 @@ class MemberRepository {
      * @param {int} id 
      * @param {String} email 
      * @param {String} password 
-     * @returns Promise<QueryResult<any>>
      */
     static updateMember = async (id, email, password) => {
         const client = await pool.connect();

@@ -1,6 +1,6 @@
 const constants = require('../constants/constants.json');
 const jwt = require('jsonwebtoken');
-const config = require('../config/config.json');
+require('dotenv').config();
 
 module.exports.checkToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -10,7 +10,7 @@ module.exports.checkToken = (req, res, next) => {
         return res.sendStatus(constants.UNAUTHORIZED);
     }
 
-    jwt.verify(token, config.jwt.secretToken, (err) => {
+    jwt.verify(token, process.env.SECRET_TOKEN, (err) => {
         if (err) {
             return res.sendStatus(constants.UNAUTHORIZED);
         } 

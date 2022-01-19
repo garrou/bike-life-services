@@ -1,9 +1,3 @@
-drop database bikelife if exists;
-
-create database bikelife;
-
-use bikelife;
-
 create table member (
 	member_id serial primary key,
 	email varchar unique not null,

@@ -8,7 +8,6 @@ class BikeRepository {
      * @param {String} image 
      * @param {Date} dateOfPurchase 
      * @param {int} nbKm 
-     * @returns Promise<QueryResult<any>>
      */
     static createBike = async (memberId, name, image, dateOfPurchase, nbKm) => {
         const client = await pool.connect();
@@ -28,7 +27,7 @@ class BikeRepository {
 
     /**
      * @param {int} memberId 
-     * @returns Promise<QueryResult<any>>
+     * @returns QueryResult<any>
      */
     static getBikes = async (memberId) => {
         const client = await pool.connect();
@@ -39,7 +38,6 @@ class BikeRepository {
 
     /**
      * @param {int} bikeId 
-     * @returns Promise<QueryResult<any>>
      */
     static deleteBike = async (bikeId) => {
         const client = await pool.connect();
@@ -49,7 +47,6 @@ class BikeRepository {
 
     /**
      * @param {Bike} bike 
-     * @returns Promise<QueryResult<any>>
      */
     static updateBike = async (bike) => {
         const client = await pool.connect();
@@ -71,7 +68,6 @@ class BikeRepository {
     /**
      * @param {int} bikeId
      * @param {double} toAdd
-     * @returns Promise<QueryResult<any>>
      */
      static updateBikeKm = async (bikeId, kmToAdd) => {
         const client = await pool.connect();
@@ -83,6 +79,10 @@ class BikeRepository {
         client.release(true);
     }
 
+    /**
+     * @param {int} bikeId 
+     * @returns QueryResult<any>
+     */
     static getBikeComponents = async (bikeId) => {
         const client = await pool.connect();
         const res = await client.query(`select * from get_all_bike_components(${bikeId})`);
@@ -90,6 +90,9 @@ class BikeRepository {
         return res;
     }
 
+    /**
+     * @param {Component} component 
+     */
     static updateComponent = async (component) => {
         const client = await pool.connect();
         await client.query(`update ${component.detail}

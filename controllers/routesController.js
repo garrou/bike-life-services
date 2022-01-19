@@ -4,10 +4,6 @@ const guard = require('../middlewares/guard');
 const { Router } = require('express');
 const router = Router();
 
-router.get('/', (_, res) => {
-    res.status(200).send({'Docker': 'OK'});
-})
-
 router.post('/members', memberService.signup);
 router.post('/login', memberService.login);
 
