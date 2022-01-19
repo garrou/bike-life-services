@@ -1,7 +1,7 @@
-const { Client } = require('pg');
+const { Pool } = require('pg');
 const config = require('../config/config.json');
 
-const client = new Client({
+const pool = new Pool({
     user: config.db.user,
     host: config.db.host,
     database: config.db.database,
@@ -9,8 +9,4 @@ const client = new Client({
     port: config.db.port
 });
 
-client.connect()
-    .then(() => console.log('Connected to database'))
-    .catch(e => console.log(e));
-
-module.exports = client;
+module.exports = pool;

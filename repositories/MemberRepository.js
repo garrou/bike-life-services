@@ -1,4 +1,4 @@
-const client = require('../db/db');
+const pool = require('../db/db');
 
 class MemberRepository {
 
@@ -8,7 +8,9 @@ class MemberRepository {
      * @returns Promise<QueryResult<any>>
      */
     static createMember = async (email, password) => {
-        return await client.query('insert into member (email, password) values ($1, $2)', [email, password]);
+        const client = await pool.connect();
+        await client.query('insert into member (email, password) values ($1, $2)', [email, password]);
+        client.release(true);
     }
 
     /**
@@ -16,7 +18,10 @@ class MemberRepository {
      * @returns Promise<QueryResult<any>>
      */
     static getMember = async (email) => {
-        return await client.query('select * from member where email like $1', [email]);
+        const client = await pool.connect();
+        const res = await client.query('select * from member where email like $1', [email]);
+        client.release(true);
+        return res;
     }
 
     /**
@@ -26,7 +31,9 @@ class MemberRepository {
      * @returns Promise<QueryResult<any>>
      */
     static updateMember = async (id, email, password) => {
-        return await client.query('update member set email = $1, password = $2 where id = $3', [email, password, id]);
+        const client = await pool.connect();
+        await client.query('update member set email = $1, password = $2 where id = $3', [email, password, id]);
+        client.release(true);
     }
 }
 
