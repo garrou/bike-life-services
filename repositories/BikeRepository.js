@@ -18,15 +18,6 @@ class BikeRepository {
 
     /**
      * @param {int} memberId 
-     */
-    static addAverageLifeDuration = async (memberId) => {
-        const client = await pool.connect();
-        await client.query(`call init_average_life_duration(${memberId})`);
-        client.release(true);
-    }
-
-    /**
-     * @param {int} memberId 
      * @returns QueryResult<any>
      */
     static getBikes = async (memberId) => {
@@ -50,7 +41,6 @@ class BikeRepository {
      */
     static updateBike = async (bike) => {
         const client = await pool.connect();
-        await client.query(`call add_km_to_components(${bike.id}, ${bike.nbKm})`);
         await client.query(`update bike 
                                     set name = $1, 
                                     image = $2,
@@ -71,35 +61,10 @@ class BikeRepository {
      */
      static updateBikeKm = async (bikeId, kmToAdd) => {
         const client = await pool.connect();
-        await client.query(`call add_km_to_components(${bikeId}, ${kmToAdd})`);
         await client.query(`update bike 
                                     set nb_km = nb_km + $1
                                     where bike_id = $2`,
                                     [kmToAdd, bikeId]);
-        client.release(true);
-    }
-
-    /**
-     * @param {int} bikeId 
-     * @returns QueryResult<any>
-     */
-    static getBikeComponents = async (bikeId) => {
-        const client = await pool.connect();
-        const res = await client.query(`select * from get_all_bike_components(${bikeId})`);
-        client.release(true);
-        return res;
-    }
-
-    /**
-     * @param {Component} component 
-     */
-    static updateComponent = async (component) => {
-        const client = await pool.connect();
-        await client.query(`update ${component.detail}
-                                    set ${component.detail}_brand = $1,
-                                    ${component.detail}_km = $2,
-                                    ${component.detail}_duration = $3`,
-                                    [component.brand, component.km, component.duration]);
         client.release(true);
     }
 }
