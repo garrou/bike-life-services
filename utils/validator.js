@@ -1,4 +1,3 @@
-const constants = require('../constants/constants.json');
 const validator = require('validator');
 
 module.exports.isDate = (toCheck) => {
@@ -6,7 +5,7 @@ module.exports.isDate = (toCheck) => {
 }
 
 module.exports.isGoodLenPass = (toCheck) => {
-    return validator.isLength(toCheck, {min: constants.MIN_PASSWORD_LENGTH, max: 255});
+    return validator.isLength(toCheck, {min: 8, max: 255});
 }
 
 module.exports.isEmail = (toCheck) => {
