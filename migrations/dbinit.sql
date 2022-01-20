@@ -13,7 +13,6 @@ create table bike (
 	fk_member integer not null references member(member_id) on delete cascade
 );
 
-
 create table components_type (
 	name varchar primary key
 );

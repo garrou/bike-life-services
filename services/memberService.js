@@ -15,17 +15,19 @@ module.exports.signup = async (req, res) => {
     if (!validator.isGoodLenPass(password)) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
     } 
-    const resp = await memberRepository.getMember(email);
+    let resp = await memberRepository.getMember(email);
 
     if (resp.rowCount == 1) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
     }
     const salt = await bcrypt.genSalt();
     const passHash = await bcrypt.hash(password, salt);
-    await memberRepository.createMember(email, passHash);
-    const member = new Member(null, email, passHash);
+    resp = await memberRepository.createMember(email, passHash);
 
-    return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': member});
+    if (resp.rowCount !== 1) {
+        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la création du compte'});
+    }
+    return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': new Member(null, email, passHash)});
 }
 
 module.exports.login = async (req, res) => {
@@ -50,7 +52,7 @@ module.exports.getMemberById = async (req, _) => {
     return await memberRepository.getMember(req.params.id);
 }
 
-module.exports.updateMember = async (req, res) => {
+module.exports.update = async (req, res) => {
     const { id, email, password } = req.body;
 
     if (!validator.isEmail(email)) {

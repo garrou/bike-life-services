@@ -4,12 +4,14 @@ class MemberRepository {
 
     /**
      * @param {string} email 
-     * @param {string} password 
+     * @param {string} password
+     * @returns QueryResult<any> 
      */
     static createMember = async (email, password) => {
         const client = await pool.connect();
-        await client.query('insert into member (email, password) values ($1, $2)', [email, password]);
+        const res = await client.query('insert into member (email, password) values ($1, $2)', [email, password]);
         client.release(true);
+        return res;
     }
 
     /**
@@ -27,11 +29,13 @@ class MemberRepository {
      * @param {int} id 
      * @param {String} email 
      * @param {String} password 
+     * @returns QueryResult<any>
      */
     static updateMember = async (id, email, password) => {
         const client = await pool.connect();
-        await client.query('update member set email = $1, password = $2 where id = $3', [email, password, id]);
+        const res = await client.query('update member set email = $1, password = $2 where id = $3', [email, password, id]);
         client.release(true);
+        return res;
     }
 }
 
