@@ -21,7 +21,7 @@ create table components (
 	component_id serial primary key,
 	bike_id integer not null references bike(bike_id) on delete cascade,
 	nb_km numeric not null,
-	date_of_purchase date,
+	date_of_purchase date not null,
 	brand varchar,
 	image varchar,
 	duration numeric not null,

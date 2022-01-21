@@ -32,6 +32,7 @@ module.exports.add = async (req, res) => {
 
     if (!validator.isValidKm(km) 
         || !validator.isValidKm(duration)
+        || !validator.isDate(date)
         || !finded) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
     }
