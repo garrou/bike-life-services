@@ -12,7 +12,4 @@ router.post('/login', memberService.login);
 // PUT /members/n
 router.put('/members/:id', guard.checkToken, memberService.update);
 
-// GET /members/n
-router.get('/members/:id', guard.checkToken, memberService.getMemberById);
-
 module.exports = router;

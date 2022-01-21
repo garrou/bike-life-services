@@ -5,7 +5,7 @@ class Member {
      * @param {String} email 
      */
     constructor(id, email) {
-        this.id = id;
+        this.id = parseInt(id);
         this.email = email;
     }
 

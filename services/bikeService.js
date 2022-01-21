@@ -22,7 +22,8 @@ module.exports.addBike = async (req, res) => {
 module.exports.getMemberBikes = async (req, res) => {
     const { memberId } = req.query;
     const resp = await bikeRepository.getBikes(memberId);
-    return res.status(http.OK).json({'bikes': resp.rows})
+    const bikes = Bike.createFromList(resp.rows);
+    return res.status(http.OK).json(bikes);
 }
 
 module.exports.deleteBike = async (req, res) => {
