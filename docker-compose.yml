@@ -1,29 +1,26 @@
 version: "3.8"
 services:
   api:
+    container_name: bls
     image: bls
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/bike-life
-      NODE_ENV: development
-      PORT: 8100
+    build: .
     depends_on:
-      - postgres
+      - db
     ports:
       - "8100:8100"
-  postgres:
-    container_name: postgres
+
+  db:
+    container_name: db
     image: postgres
     environment:
-      POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: bike-life
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-      - ./migrations/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: bikelife
     ports:
       - "5432:5432"
+    volumes: 
+      - ./pgdata:/var/lib/postgresql/data
+      - ./migrations/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
+
 
 

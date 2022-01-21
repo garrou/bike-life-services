@@ -1,16 +1,12 @@
-const { Client } = require('pg');
-const config = require('../config/config.json');
+const { Pool } = require('pg');
+require('dotenv').config();
 
-const client = new Client({
-    user: config.db.user,
-    host: config.db.host,
-    database: config.db.database,
-    password: config.db.password,
-    port: config.db.port
+const pool = new Pool({
+    user: process.env.POSTGRES_USER,
+    host: process.env.DOCKER_POSTGRES_HOST,
+    database: process.env.POSTGRES_DATABASE,
+    password: process.env.POSTGRES_PASSWORD,
+    port: process.env.POSTGRES_PORT
 });
 
-client.connect()
-    .then(() => console.log('Connected to database'))
-    .catch(e => console.log(e));
-
-module.exports = client;
+module.exports = pool;

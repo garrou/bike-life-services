@@ -1,4 +1,4 @@
-const client = require('../db/db');
+const pool = require('../db/db');
 
 class BikeRepository {
 
@@ -6,45 +6,47 @@ class BikeRepository {
      * @param {int} memberId 
      * @param {String} name
      * @param {String} image 
-     * @param {Date} dateOfPurchase 
+     * @param {String} dateOfPurchase 
      * @param {int} nbKm 
-     * @returns Promise<QueryResult<any>>
+     * @returns QueryResult<any>
      */
     static createBike = async (memberId, name, image, dateOfPurchase, nbKm) => {
-        return await client.query('insert into bike (name, image, date_of_purchase, fk_member, nb_km) values ($1, $2, $3, $4, $5)', 
+        const client = await pool.connect();
+        const res = await client.query('insert into bike (name, image, date_of_purchase, fk_member, nb_km) values ($1, $2, $3, $4, $5)', 
         [name, image, dateOfPurchase, memberId, nbKm]);
+        client.release(true);
+        return res;
     }
 
     /**
      * @param {int} memberId 
-     */
-    static addAverageLifeDuration = async (memberId) => {
-        await client.query(`call init_average_life_duration(${memberId})`);
-    }
-
-    /**
-     * @param {int} memberId 
-     * @returns Promise<QueryResult<any>>
+     * @returns QueryResult<any>
      */
     static getBikes = async (memberId) => {
-        return await client.query('select * from bike where fk_member = $1', [memberId]);
+        const client = await pool.connect();
+        const res = await client.query('select * from bike where fk_member = $1', [memberId]);
+        client.release(true);
+        return res;
     }
 
     /**
      * @param {int} bikeId 
-     * @returns Promise<QueryResult<any>>
+     * @returns QueryResult<any>
      */
     static deleteBike = async (bikeId) => {
-        return await client.query('delete from bike where bike_id = $1', [bikeId]);
+        const client = await pool.connect();
+        const res = await client.query('delete from bike where bike_id = $1', [bikeId]);
+        client.release(true);
+        return res;
     }
 
     /**
      * @param {Bike} bike 
-     * @returns Promise<QueryResult<any>>
+     * @returns QueryResult<any>
      */
     static updateBike = async (bike) => {
-        await client.query(`call add_km_to_components(${bike.id}, ${bike.nbKm})`);
-        return await client.query(`update bike 
+        const client = await pool.connect();
+        const res = await client.query(`update bike 
                                     set name = $1, 
                                     image = $2,
                                     nb_km = $3,
@@ -55,18 +57,23 @@ class BikeRepository {
                                     bike.nbKm, 
                                     bike.dateOfPurchase, 
                                     bike.id]);
+        client.release(true);
+        return res;
     }
 
-    static getBikeComponents = async (bikeId) => {
-        return await client.query(`select * from get_all_bike_components(${bikeId})`);
-    }
-
-    static updateComponent = async (component) => {
-        return await client.query(`update ${component.detail}
-                                    set ${component.detail}_brand = $1,
-                                    ${component.detail}_km = $2,
-                                    ${component.detail}_duration = $3`,
-                                    [component.brand, component.km, component.duration]);
+    /**
+     * @param {int} bikeId
+     * @param {double} toAdd
+     * @returns QueryResult<any>
+     */
+     static updateBikeKm = async (bikeId, kmToAdd) => {
+        const client = await pool.connect();
+        const res = await client.query(`update bike 
+                                    set nb_km = nb_km + $1
+                                    where bike_id = $2`,
+                                    [kmToAdd, bikeId]);
+        client.release(true);
+        return res;
     }
 }
 
