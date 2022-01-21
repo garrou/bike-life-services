@@ -43,7 +43,7 @@ module.exports.login = async (req, res) => {
         return res.status(http.NOT_FOUND).json({'confirm': 'Email ou mot de passe incorrect.'});
     }
     const member = new Member(resp.rows[0].member_id, email);
-    const accessToken = jwt.sign(JSON.stringify(member), process.env.SECRET_TOKEN);
+    const accessToken = jwt.sign(JSON.stringify(member), process.env.SECRET_TOKEN, {expiresIn: '31d'});
 
     return res.status(http.OK).json({'member': member, 'accessToken': accessToken});
 }

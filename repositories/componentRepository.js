@@ -54,7 +54,7 @@ class ComponentRepository {
      * @param {float} km 
      * @param {float} duration 
      * @param {String} type 
-     * @param {String} date 
+     * @param {Date} date 
      * @param {int} bikeId
      * @returns QueryResult<any>
      */
