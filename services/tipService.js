@@ -1,4 +1,5 @@
 const http = require('../constants/http.json');
+const { createFromList } = require('../models/Tip');
 const Tip = require('../models/Tip');
 const tipRepository = require('../repositories/tipRepository');
 
@@ -21,14 +22,9 @@ module.exports.getTip = async (req, res) => {
     return res.status(http.OK).json(tip);
 }
 
-module.exports.incrementVote = async (req, res) => {
-    const { isVoteUp, tipId } = req.body;
-    const resp = isVoteUp 
-                ? await tipRepository.updateGoodVote(tipId)
-                : await tipRepository.updateBadVote(tipId);
-
-    if (resp.rowCount != 1) {
-        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le vote'});
-    }
-    return res.status(http.OK).json({'confirm': 'Vote prit en compte'});
+module.exports.getByType = async (req, res) => {
+    const { componentType } = req.params;
+    const resp = await tipRepository.getByType(componentType);
+    const tips = createFromList(resp.rows);
+    return res.status(http.OK).json(tips);
 }
