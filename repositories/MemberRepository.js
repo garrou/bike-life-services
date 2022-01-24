@@ -9,7 +9,7 @@ class MemberRepository {
      */
     static createMember = async (email, password) => {
         const client = await pool.connect();
-        const res = await client.query('insert into member (email, password) values ($1, $2)', [email, password]);
+        const res = await client.query('INSERT INTO member (email, password) VALUES ($1, $2)', [email, password]);
         client.release(true);
         return res;
     }
@@ -20,7 +20,7 @@ class MemberRepository {
      */
     static getMember = async (email) => {
         const client = await pool.connect();
-        const res = await client.query('select * from member where email like $1', [email]);
+        const res = await client.query('SELECT * FROM member WHERE email LIKE $1', [email]);
         client.release(true);
         return res;
     }
@@ -33,7 +33,7 @@ class MemberRepository {
      */
     static updateMember = async (id, email, password) => {
         const client = await pool.connect();
-        const res = await client.query('update member set email = $1, password = $2 where id = $3', [email, password, id]);
+        const res = await client.query('UPDATE member SET email = $1, password = $2 WHERE id = $3', [email, password, id]);
         client.release(true);
         return res;
     }
