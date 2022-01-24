@@ -14,9 +14,9 @@ class Component {
         this.id = id;
         this.bikeId = bikeId;
         this.brand = brand;
-        this.km = parseFloat(km);
+        this.km = km;
         this.dateOfPurchase = dateOfPurchase;
-        this.duration = parseFloat(duration);
+        this.duration = duration;
         this.image = image;
         this.type = type;
     }

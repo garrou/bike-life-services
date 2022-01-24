@@ -46,23 +46,19 @@ CREATE TABLE tips (
 	component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE,
 	title VARCHAR(255) NOT NULL,
 	content TEXT NOT NULL,
-	vote_up INTEGER NOT NULL,
-	vote_down INTEGER NOT NULL, 
 	write_date DATE NOT NULL
 );
 
-INSERT INTO tips (component_type, title, content, vote_up, vote_down) 
+INSERT INTO tips (component_type, title, content, write_date) 
 VALUES 
-('Chaîne', 'Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms.\nCependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
+('Chaîne', 'Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
 -	Lorsque vous n’utilisez pas votre vélo, évitez de mettre votre chaine sur un braquet trop élevé ou évitez simplement de la « croiser ». Il est donc important de ne pas la placer sur une configuration « grand plateau, grand pignon » ou « grand plateau, petit pignon ». L’objectif est qu’elle ne soit pas trop tendue. Cela a tendance à l’étirer et à réduire sa durée de vie. 
 -	Lorsque vous arrivez à 4000kms, démontez votre chaine, étalez-là à côté d’une chaine neuve. Si la différence entre les deux est de plus d’un moyeu, changez de chaine.
--	Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée. 
-', 0, 0, NOW()), 
+-	Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', NOW()), 
 
 ('Pneu', 'Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
 Pour les VTC, le gonflage est plus classique et se situe généralement entre 2 et 3 bars par pneu. 
-Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars. 
-', 0, 0, NOW()),
+Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', NOW()),
 
 ('Pneu', 'Changer un pneu sur le vélo', '1/ DÉMONTER UN PNEU DE VÉLO : ÉTAPE 1
 Pour retirer la roue du vélo, commencez par desserrer les boulons de chaque côté de l’axe. Enlevez ensuite le bouchon de valve, c’est-à-dire l’endroit par lequel vous pouvez gonfler votre roue.
@@ -93,11 +89,4 @@ Attention au sens du pneu : la plupart des pneus ont un sens. Il est en généra
 ÉTAPE 3 : METTRE LA CHAMBRE À AIR
 Il ne vous reste plus qu’à mettre la chambre à air, légèrement gonflée. Faites passer la valve par le trou de la jante, avant de placer la chambre à air entièrement dans le pneu.
 
-Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !'
-, 0, 0, NOW());
-
-CREATE TABLE member_tips (
-	vote INTEGER NOT NULL,
-	fk_member INTEGER NOT NULL REFERENCES member(member_id) ON DELETE CASCADE,
-	fk_tip INTEGER NOT NULL REFERENCES tip(tip_id) ON DELETE CASCADE
-);
+Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW());

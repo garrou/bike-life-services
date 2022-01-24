@@ -5,4 +5,6 @@ const router = Router();
 
 router.get('/tips', guard.checkToken, tipService.getAll);
 
+router.get('/tips/:tipId', guard.checkToken, tipService.getTip);
+
 module.exports = router;

@@ -10,12 +10,12 @@ class Tip {
      * @param {Date} date 
      */
     constructor(id, type, title, content, voteUp, voteDown, date) {
-        this.id = parseInt(id);
+        this.id = id;
         this.type = type;
         this.title = title;
         this.content = content;
-        this.voteUp = parseInt(voteUp);
-        this.voteDown = parseInt(voteDown);
+        this.voteUp = voteUp;
+        this.voteDown = voteDown;
         this.date = date;
     }
 
@@ -23,13 +23,15 @@ class Tip {
      * @param {Array} records 
      * @returns Array<Tip>
      */
-    static createFormList(records) {
+    static createFromList(records) {
         return records.map((tip) => new Tip(tip.tip_id,
                                             tip.component_type,
                                             tip.title,
                                             tip.content,
-                                            tip.voteUp,
-                                            tip.voteDown,
+                                            tip.vote_up,
+                                            tip.vote_down,
                                             tip.write_date));
     }
 }
+
+module.exports = Tip;

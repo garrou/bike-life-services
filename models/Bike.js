@@ -8,11 +8,11 @@ class Bike {
      * @param {int} nbKm
      */
     constructor(id, name, image, dateOfPurchase, nbKm) {
-        this.id = parseInt(id);
+        this.id = id;
         this.name = name;
         this.image = image;
         this.dateOfPurchase = dateOfPurchase;
-        this.nbKm = parseFloat(nbKm);
+        this.nbKm = nbKm;
     }
 
     /**
@@ -20,7 +20,6 @@ class Bike {
      * @returns Array<Bike>
      */
     static createFromList(records) {
-        console.log(records);
         return records
                 .map((bike) => new Bike(bike.bike_id, 
                                         bike.name, 
