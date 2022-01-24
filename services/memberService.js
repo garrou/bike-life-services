@@ -6,10 +6,6 @@ const Member = require('../models/Member');
 const validator = require('../utils/validator');
 require('dotenv').config();
 
-module.exports.verify = async (_, res) => {
-    return res.status(http.OK);
-}
-
 module.exports.signup = async (req, res) => {
     const { email, password } = req.body;
 
