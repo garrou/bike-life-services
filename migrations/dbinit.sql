@@ -44,7 +44,7 @@ VALUES ('Cadre'),
 CREATE TABLE tips (
 	tip_id SERIAL PRIMARY KEY,
 	component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE,
-	title VARCHAR(255) NOT NULL,
+	title VARCHAR NOT NULL,
 	content TEXT NOT NULL,
 	write_date DATE NOT NULL
 );
