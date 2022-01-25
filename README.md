@@ -20,11 +20,17 @@ SERVER_PORT=
 SECRET_TOKEN=
 ```
 
+## First start
+
+```
+sh first.sh
+```
+
 ## Docker     
 
 ```sh
 docker build -t bls .
-docker-compose up
+docker-compose up [-d]
 ```
 
 ## Tests

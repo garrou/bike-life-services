@@ -7,7 +7,8 @@ const http = require('../constants/http.json')
 module.exports.getBikeComponents = async (req, res) => {
     const { bikeId } = req.query;
     const resp = await componentRepository.getBikeComponents(bikeId);
-    return res.status(http.OK).json(resp.rows);
+    const components = Component.createFromList(resp.rows);
+    return res.status(http.OK).json(components);
 }
 
 module.exports.update = async (req, res) => {
@@ -42,5 +43,5 @@ module.exports.add = async (req, res) => {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant l'ajout du composant"});
     }
     const component = new Component(0, bikeId, brand, km, date, duration, image, type);
-    return res.status(http.CREATED).json({'confirm': 'Composant ajouté', 'component': JSON.stringify(component)});
+    return res.status(http.CREATED).json({'confirm': 'Composant ajouté', 'component': component});
 }

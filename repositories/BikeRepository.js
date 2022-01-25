@@ -12,7 +12,9 @@ class BikeRepository {
      */
     static createBike = async (memberId, name, image, dateOfPurchase, nbKm) => {
         const client = await pool.connect();
-        const res = await client.query('insert into bike (name, image, date_of_purchase, fk_member, nb_km) values ($1, $2, $3, $4, $5)', 
+        const res = await client.query(`INSERT INTO bike 
+                                        (name, image, date_of_purchase, fk_member, nb_km) 
+                                        VALUES ($1, $2, $3, $4, $5)`, 
         [name, image, dateOfPurchase, memberId, nbKm]);
         client.release(true);
         return res;
@@ -24,7 +26,7 @@ class BikeRepository {
      */
     static getBikes = async (memberId) => {
         const client = await pool.connect();
-        const res = await client.query('select * from bike where fk_member = $1', [memberId]);
+        const res = await client.query('SELECT * FROM bike WHERE fk_member = $1', [memberId]);
         client.release(true);
         return res;
     }
@@ -35,7 +37,7 @@ class BikeRepository {
      */
     static deleteBike = async (bikeId) => {
         const client = await pool.connect();
-        const res = await client.query('delete from bike where bike_id = $1', [bikeId]);
+        const res = await client.query('DELETE FROM bike WHERE bike_id = $1', [bikeId]);
         client.release(true);
         return res;
     }
@@ -46,12 +48,12 @@ class BikeRepository {
      */
     static updateBike = async (bike) => {
         const client = await pool.connect();
-        const res = await client.query(`update bike 
-                                    set name = $1, 
+        const res = await client.query(`UPDATE bike 
+                                    SET name = $1, 
                                     image = $2,
                                     nb_km = $3,
                                     date_of_purchase = $4
-                                    where bike_id = $5`,
+                                    WHERE bike_id = $5`,
                                     [bike.name, 
                                     bike.image, 
                                     bike.nbKm, 
@@ -68,9 +70,9 @@ class BikeRepository {
      */
      static updateBikeKm = async (bikeId, kmToAdd) => {
         const client = await pool.connect();
-        const res = await client.query(`update bike 
-                                    set nb_km = nb_km + $1
-                                    where bike_id = $2`,
+        const res = await client.query(`UPDATE bike 
+                                    SET nb_km = nb_km + $1
+                                    WHERE bike_id = $2`,
                                     [kmToAdd, bikeId]);
         client.release(true);
         return res;
