@@ -73,5 +73,5 @@ module.exports.addKm = async (req, res) => {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la modification du vélo'});
     }
     await componentRepository.updateNbKmBikeComponents(km, bikeId);
-    return res.status(http.OK).json({'confirm': 'Vélo modifié'});
+    return res.status(http.OK).json({'confirm': 'Kilomètre(s) ajouté(s)'});
 }

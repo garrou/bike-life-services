@@ -11,7 +11,7 @@ const pool = require('../db/db');
  */
 module.exports.createBike = async (bikeId, memberId, name, image, dateOfPurchase, nbKm, electric) => {
     const client = await pool.connect();
-    const res = await client.query(`INSERT INTO bike 
+    const res = await client.query(`INSERT INTO bikes 
                                     (bike_id, name, image, date_of_purchase, fk_member, nb_km, electric) 
                                     VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
                                     [bikeId, name, image, dateOfPurchase, memberId, nbKm, electric]);
@@ -25,7 +25,7 @@ module.exports.createBike = async (bikeId, memberId, name, image, dateOfPurchase
  */
 module.exports.getBikes = async (memberId) => {
     const client = await pool.connect();
-    const res = await client.query('SELECT * FROM bike WHERE fk_member = $1', [memberId]);
+    const res = await client.query('SELECT * FROM bikes WHERE fk_member = $1', [memberId]);
     client.release(true);
     return res;
 }
@@ -36,7 +36,7 @@ module.exports.getBikes = async (memberId) => {
  */
 module.exports.getBike = async (bikeId) => {
     const client = await pool.connect();
-    const res = await client.query('SELECT * FROM bike WHERE bike_id = $1', [bikeId]);
+    const res = await client.query('SELECT * FROM bikes WHERE bike_id = $1', [bikeId]);
     client.release(true);
     return res;
 }
@@ -47,7 +47,7 @@ module.exports.getBike = async (bikeId) => {
  */
 module.exports.deleteBike = async (bikeId) => {
     const client = await pool.connect();
-    const res = await client.query('DELETE FROM bike WHERE bike_id = $1', [bikeId]);
+    const res = await client.query('DELETE FROM bikes WHERE bike_id = $1', [bikeId]);
     client.release(true);
     return res;
 }
@@ -58,7 +58,7 @@ module.exports.deleteBike = async (bikeId) => {
  */
 module.exports.updateBike = async (bike) => {
     const client = await pool.connect();
-    const res = await client.query(`UPDATE bike 
+    const res = await client.query(`UPDATE bikes 
                                     SET name = $1, 
                                     image = $2,
                                     nb_km = $3,
@@ -82,7 +82,7 @@ module.exports.updateBike = async (bike) => {
  */
 module.exports.updateBikeKm = async (bikeId, kmToAdd) => {
     const client = await pool.connect();
-    const res = await client.query(`UPDATE bike 
+    const res = await client.query(`UPDATE bikes 
                                     SET nb_km = nb_km + $1
                                     WHERE bike_id = $2`,
                                     [kmToAdd, bikeId]);

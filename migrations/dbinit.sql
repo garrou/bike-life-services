@@ -1,18 +1,18 @@
-CREATE TABLE member (
+CREATE TABLE members (
 	member_id VARCHAR PRIMARY KEY,
 	email VARCHAR UNIQUE NOT NULL,
 	password VARCHAR NOT NULL,
 	active BOOLEAN NOT NULL
 );
 
-CREATE TABLE bike (
+CREATE TABLE bikes (
 	bike_id VARCHAR PRIMARY KEY,
 	name VARCHAR NOT NULL,
 	image TEXT,
 	electric BOOLEAN NOT NULL,
 	nb_km NUMERIC NOT NULL,
 	date_of_purchase DATE NOT NULL,
-	fk_member VARCHAR NOT NULL REFERENCES member(member_id) ON DELETE CASCADE
+	fk_member VARCHAR NOT NULL REFERENCES members(member_id) ON DELETE CASCADE
 );
 
 CREATE TABLE components_type (
@@ -22,13 +22,14 @@ CREATE TABLE components_type (
 
 CREATE TABLE components (
 	component_id VARCHAR PRIMARY KEY,
-	fk_bike VARCHAR NOT NULL REFERENCES bike(bike_id) ON DELETE CASCADE,
+	fk_bike VARCHAR NOT NULL REFERENCES bikes(bike_id) ON DELETE CASCADE,
 	nb_km NUMERIC NOT NULL,
 	date_of_purchase DATE NOT NULL,
 	brand VARCHAR,
 	image VARCHAR,
 	duration NUMERIC NOT NULL,
-	component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE
+	component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE,
+	archived BOOLEAN NOT NULL
 );
 
 INSERT INTO components_type 
@@ -55,9 +56,9 @@ CREATE TABLE tips (
 INSERT INTO tips (tip_id, component_type, title, content, write_date) 
 VALUES 
 ('d45s4d5s4d545sds4ds', 'Chaîne', 'Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
--	Lorsque vous n’utilisez pas votre vélo, évitez de mettre votre chaine sur un braquet trop élevé ou évitez simplement de la « croiser ». Il est donc important de ne pas la placer sur une configuration « grand plateau, grand pignon » ou « grand plateau, petit pignon ». L’objectif est qu’elle ne soit pas trop tendue. Cela a tendance à l’étirer et à réduire sa durée de vie. 
--	Lorsque vous arrivez à 4000kms, démontez votre chaine, étalez-là à côté d’une chaine neuve. Si la différence entre les deux est de plus d’un moyeu, changez de chaine.
--	Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', NOW()), 
+- Lorsque vous n’utilisez pas votre vélo, évitez de mettre votre chaine sur un braquet trop élevé ou évitez simplement de la « croiser ». Il est donc important de ne pas la placer sur une configuration « grand plateau, grand pignon » ou « grand plateau, petit pignon ». L’objectif est qu’elle ne soit pas trop tendue. Cela a tendance à l’étirer et à réduire sa durée de vie. 
+- Lorsque vous arrivez à 4000kms, démontez votre chaine, étalez-là à côté d’une chaine neuve. Si la différence entre les deux est de plus d’un moyeu, changez de chaine.
+- Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', NOW()), 
 
 ('dad89a8s9d5a56d2az', 'Pneu', 'Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
 Pour les VTC, le gonflage est plus classique et se situe généralement entre 2 et 3 bars par pneu. 

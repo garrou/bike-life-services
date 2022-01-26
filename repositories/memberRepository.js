@@ -9,8 +9,9 @@ const pool = require('../db/db');
  */
 module.exports.createMember = async (memberId, email, password, active) => {
     const client = await pool.connect();
-    const res = await client.query('INSERT INTO member (member_id, email, password, active) VALUES ($1, $2, $3, $4)', 
-                                        [memberId, email, password, active]);
+    const res = await client.query(`INSERT INTO members (member_id, email, password, active) 
+                                    VALUES ($1, $2, $3, $4)`, 
+                                    [memberId, email, password, active]);
     client.release(true);
     return res;
 }
@@ -21,7 +22,9 @@ module.exports.createMember = async (memberId, email, password, active) => {
  */
 module.exports.getActiveMember = async (email) => {
     const client = await pool.connect();
-    const res = await client.query('SELECT * FROM member WHERE email = $1 AND active = true', [email]);
+    const res = await client.query(`SELECT * 
+                                    FROM members 
+                                    WHERE email = $1 AND active = TRUE`, [email]);
     client.release(true);
     return res;
 }
@@ -32,7 +35,9 @@ module.exports.getActiveMember = async (email) => {
  */
 module.exports.getMember = async (email) => {
     const client = await pool.connect();
-    const res = await client.query('SELECT * FROM member WHERE email = $1', [email]);
+    const res = await client.query(`SELECT * 
+                                    FROM members 
+                                    WHERE email = $1`, [email]);
     client.release(true);
     return res;
 }
@@ -43,7 +48,9 @@ module.exports.getMember = async (email) => {
  */
 module.exports.getEmailById = async (id) => {
     const client = await pool.connect();
-    const res = await client.query('SELECT email FROM member WHERE member_id = $1', [id]);
+    const res = await client.query(`SELECT email 
+                                    FROM members 
+                                    WHERE member_id = $1`, [id]);
     client.release(true);
     return res;
 }
@@ -56,7 +63,9 @@ module.exports.getEmailById = async (id) => {
  */
 module.exports.updateMember = async (id, email, password) => {
     const client = await pool.connect();
-    const res = await client.query('UPDATE member SET email = $1, password = $2 WHERE id = $3', [email, password, id]);
+    const res = await client.query(`UPDATE members 
+                                    SET email = $1, password = $2 
+                                    WHERE id = $3`, [email, password, id]);
     client.release(true);
     return res;
 }
