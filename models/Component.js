@@ -1,12 +1,12 @@
 class Component {
 
     /**
-     * @param {int} id
-     * @param {int} bikeId 
+     * @param {Number} id
+     * @param {Number} bikeId 
      * @param {String} brand 
-     * @param {int} km 
-     * @param {String} dateOfPurchase
-     * @param {int} duration 
+     * @param {Number} km 
+     * @param {Date} dateOfPurchase
+     * @param {Number} duration 
      * @param {String} image
      * @param {String} type
      */

@@ -3,7 +3,7 @@ const pool = require('../db/db');
 class ComponentRepository {
     
     /**
-     * @param {int} bikeId 
+     * @param {Number} bikeId 
      * @returns QueryResult<any>
      */
      static getBikeComponents = async (bikeId) => {
@@ -49,21 +49,53 @@ class ComponentRepository {
     }
 
     /**
+     * @param {String} componentId
      * @param {String} brand 
      * @param {String} image 
      * @param {float} km 
      * @param {float} duration 
      * @param {String} type 
      * @param {Date} date 
-     * @param {int} bikeId
+     * @param {Number} bikeId
      * @returns QueryResult<any>
      */
-    static add = async (brand, image, km, duration, type, date, bikeId) => {
+    static add = async (componentId, brand, image, km, duration, type, date, bikeId) => {
         const client = await pool.connect();
         const res = await client.query(`INSERT INTO components
-                                        (brand, image, nb_km, duration, component_type, date_of_purchase, fk_bike)
+                                        (component_id, brand, image, nb_km, duration, component_type, date_of_purchase, fk_bike)
                                         VALUES
-                                        ($1, $2, $3, $4, $5, $6, $7)`, [brand, image, km, duration, type, date, bikeId]);
+                                        ($1, $2, $3, $4, $5, $6, $7, $8)`, 
+                                        [componentId, brand, image, km, duration, type, date, bikeId]);
+        client.release(true);
+        return res;
+    }
+
+    /**
+     * @param {Number} componentId
+     * @param {Number} bikeId
+     * @param {String} type
+     * @param {Date} dateOfPurchase
+     * @param {Number} nbKm
+     * @returns QueryResult<any>
+     */
+    static initBikeComponents = async (componentId, bikeId, type, dateOfPurchase, nbKm) => {
+        const client = await pool.connect();
+        const res = await client.query(`INSERT INTO components
+                                        (component_id, nb_km, duration, component_type, date_of_purchase, fk_bike)
+                                        VALUES 
+                                        ($1, 
+                                        $2, 
+                                        (SELECT CASE WHEN AVG(duration) IS NULL THEN (SELECT average_duration 
+                                                                                        FROM components_type 
+                                                                                        WHERE name = $3)
+                                                    ELSE AVG(duration)
+                                                    END
+                                        FROM components 
+                                        WHERE component_type = $3), 
+                                        $3, 
+                                        $4, 
+                                        $5)`,
+                                        [componentId, nbKm, type, dateOfPurchase, bikeId]);
         client.release(true);
         return res;
     }

@@ -5,9 +5,9 @@ class ComponentTypesRepository {
     /**
      * @returns QueryResult<any>
      */
-    static getTypes = async () => {
+    static getTypesNames = async () => {
         const client = await pool.connect();
-        const res = await client.query('SELECT * FROM components_type ORDER BY name');
+        const res = await client.query('SELECT name FROM components_type ORDER BY name');
         client.release(true);
         return res;
     }
