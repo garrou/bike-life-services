@@ -1,6 +1,8 @@
 const Component = require('../models/Component');
+const bikeRepository = require('../repositories/bikeRepository');
 const componentRepository = require('../repositories/componentRepository');
 const componentTypeRepository = require('../repositories/componentTypesRepository');
+const { v1: uuidv1 } = require('uuid');
 const validator = require('../utils/validator');
 const http = require('../constants/http.json')
 
@@ -27,9 +29,8 @@ module.exports.update = async (req, res) => {
 
 module.exports.add = async (req, res) => {
     const { brand, image, km, duration, type, date, bikeId } = req.body;
-
-    const types = await componentTypeRepository.getTypes();
-    const finded = types.rows.find((e) => e.name === type) !== undefined;
+    const types = await componentTypeRepository.getTypesNames();
+    const finded = types.rows.find(elt => elt.name === type) !== undefined;
 
     if (!validator.isValidKm(km) 
         || !validator.isValidKm(duration)
@@ -37,11 +38,27 @@ module.exports.add = async (req, res) => {
         || !finded) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
     }
-    const resp = await componentRepository.add(brand, image, km, duration, type, date, bikeId);
+    const componentId = uuidv1();
+    const resp = await componentRepository.add(componentId, brand, image, km, duration, type, date, bikeId);
 
     if (resp.rowCount !== 1) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant l'ajout du composant"});
     }
-    const component = new Component(0, bikeId, brand, km, date, duration, image, type);
+    const component = new Component(componentId, bikeId, brand, km, date, duration, image, type);
     return res.status(http.CREATED).json({'confirm': 'Composant ajouté', 'component': component});
+}
+
+module.exports.initComponents = async (req, res) => {
+    const { bikeId } = req.body;
+    const { electric, date_of_purchase, nb_km } = (await bikeRepository.getBike(bikeId)).rows[0];
+    let types = (await componentTypeRepository.getTypesNames()).rows;
+
+    if (!electric) {
+        types = types.filter(elt => elt.name !== 'Batterie');
+    }
+    types.forEach(async (type) => {
+        await componentRepository.initBikeComponents(uuidv1(), bikeId, type.name, date_of_purchase, nb_km);
+    });
+    
+    return res.status(http.CREATED).json({'confirm': 'Composants ajoutés'});
 }

@@ -7,6 +7,8 @@ router.get('/components', guard.checkToken, componentService.getBikeComponents);
 
 router.post('/components', guard.checkToken, componentService.add);
 
+router.post('/components/init', guard.checkToken, componentService.initComponents);
+
 router.put('/components/:componentId', guard.checkToken, componentService.update);
 
 module.exports = router;

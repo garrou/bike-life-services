@@ -9,4 +9,6 @@ router.post('/login', memberService.login);
 
 router.put('/members/:id', guard.checkToken, memberService.update);
 
+router.get('/members/:id', guard.checkToken, memberService.getEmail);
+
 module.exports = router;

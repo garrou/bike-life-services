@@ -1,7 +1,7 @@
 class Member {
 
     /** 
-     * @param {int} id
+     * @param {Number} id
      * @param {String} email 
      */
     constructor(id, email) {

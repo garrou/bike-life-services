@@ -1,21 +1,17 @@
 class Tip {
 
     /**
-     * @param {int} id 
+     * @param {Number} id 
      * @param {String} type 
      * @param {String} title 
      * @param {String} content 
-     * @param {int} voteUp 
-     * @param {int} voteDown 
      * @param {Date} date 
      */
-    constructor(id, type, title, content, voteUp, voteDown, date) {
+    constructor(id, type, title, content, date) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.content = content;
-        this.voteUp = voteUp;
-        this.voteDown = voteDown;
         this.date = date;
     }
 
@@ -28,8 +24,6 @@ class Tip {
                                             tip.component_type,
                                             tip.title,
                                             tip.content,
-                                            tip.vote_up,
-                                            tip.vote_down,
                                             tip.write_date));
     }
 }

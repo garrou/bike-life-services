@@ -1,18 +1,20 @@
 class Bike {
 
     /**
-     * @param {int} id
+     * @param {Number} id
      * @param {String} name 
      * @param {String} image 
      * @param {Date} date_of_purchase
-     * @param {int} nbKm
+     * @param {Number} nbKm
+     * @param {Boolean} electric
      */
-    constructor(id, name, image, dateOfPurchase, nbKm) {
+    constructor(id, name, image, dateOfPurchase, nbKm, electric) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.dateOfPurchase = dateOfPurchase;
         this.nbKm = nbKm;
+        this.electric = electric;
     }
 
     /**
@@ -25,7 +27,8 @@ class Bike {
                                         bike.name, 
                                         bike.image, 
                                         bike.date_of_purchase, 
-                                        bike.nb_km));
+                                        bike.nb_km,
+                                        bike.electric));
     }
 }
 

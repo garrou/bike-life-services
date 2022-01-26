@@ -3,25 +3,26 @@ const pool = require('../db/db');
 class BikeRepository {
 
     /**
-     * @param {int} memberId 
+     * @param {String} bikeId
+     * @param {Number} memberId 
      * @param {String} name
      * @param {String} image 
      * @param {String} dateOfPurchase 
-     * @param {int} nbKm 
+     * @param {Number} nbKm 
      * @returns QueryResult<any>
      */
-    static createBike = async (memberId, name, image, dateOfPurchase, nbKm) => {
+    static createBike = async (bikeId, memberId, name, image, dateOfPurchase, nbKm, electric) => {
         const client = await pool.connect();
         const res = await client.query(`INSERT INTO bike 
-                                        (name, image, date_of_purchase, fk_member, nb_km) 
-                                        VALUES ($1, $2, $3, $4, $5)`, 
-        [name, image, dateOfPurchase, memberId, nbKm]);
+                                        (bike_id, name, image, date_of_purchase, fk_member, nb_km, electric) 
+                                        VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
+                                        [bikeId, name, image, dateOfPurchase, memberId, nbKm, electric]);
         client.release(true);
         return res;
     }
 
     /**
-     * @param {int} memberId 
+     * @param {Number} memberId 
      * @returns QueryResult<any>
      */
     static getBikes = async (memberId) => {
@@ -32,7 +33,18 @@ class BikeRepository {
     }
 
     /**
-     * @param {int} bikeId 
+     * @param {Number} bikeId 
+     * @returns QueryResult<any>
+     */
+    static getBike = async (bikeId) => {
+        const client = await pool.connect();
+        const res = await client.query('SELECT * FROM bike WHERE bike_id = $1', [bikeId]);
+        client.release(true);
+        return res;
+    }
+
+    /**
+     * @param {Number} bikeId 
      * @returns QueryResult<any>
      */
     static deleteBike = async (bikeId) => {
@@ -52,20 +64,22 @@ class BikeRepository {
                                     SET name = $1, 
                                     image = $2,
                                     nb_km = $3,
-                                    date_of_purchase = $4
-                                    WHERE bike_id = $5`,
+                                    date_of_purchase = $4,
+                                    electric = $5
+                                    WHERE bike_id = $6`,
                                     [bike.name, 
                                     bike.image, 
                                     bike.nbKm, 
                                     bike.dateOfPurchase, 
+                                    bike.electric,
                                     bike.id]);
         client.release(true);
         return res;
     }
 
     /**
-     * @param {int} bikeId
-     * @param {double} toAdd
+     * @param {Number} bikeId
+     * @param {Number} toAdd
      * @returns QueryResult<any>
      */
      static updateBikeKm = async (bikeId, kmToAdd) => {

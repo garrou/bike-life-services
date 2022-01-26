@@ -13,7 +13,7 @@ class TipRepository {
     }
 
     /**
-     * @param {int} tipId 
+     * @param {Number} tipId 
      * @returns QueryResult<any> 
      */
     static getById = async (tipId) => {
