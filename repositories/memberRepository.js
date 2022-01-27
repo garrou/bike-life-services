@@ -24,7 +24,8 @@ module.exports.getActiveMember = async (email) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM members 
-                                    WHERE email = $1 AND active = TRUE`, [email]);
+                                    WHERE email = $1 AND active = TRUE`, 
+                                    [email]);
     client.release(true);
     return res;
 }
@@ -37,7 +38,8 @@ module.exports.getMember = async (email) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM members 
-                                    WHERE email = $1`, [email]);
+                                    WHERE email = $1`, 
+                                    [email]);
     client.release(true);
     return res;
 }
@@ -50,7 +52,8 @@ module.exports.getEmailById = async (id) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT email 
                                     FROM members 
-                                    WHERE member_id = $1`, [id]);
+                                    WHERE member_id = $1`, 
+                                    [id]);
     client.release(true);
     return res;
 }
@@ -65,7 +68,8 @@ module.exports.updateMember = async (id, email, password) => {
     const client = await pool.connect();
     const res = await client.query(`UPDATE members 
                                     SET email = $1, password = $2 
-                                    WHERE id = $3`, [email, password, id]);
+                                    WHERE id = $3`, 
+                                    [email, password, id]);
     client.release(true);
     return res;
 }

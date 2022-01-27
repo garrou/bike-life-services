@@ -67,7 +67,8 @@ module.exports.initComponents = async (req, res) => {
 
 module.exports.getMemberComponents = async (req, res) => {
     const { memberId } = req.params;
-    const resp = await componentRepository.getMemberComponents(memberId);
+    const { archived, type } = req.query;
+    const resp = await componentRepository.getMemberComponents(memberId, archived, type);
     const components = createFromList(resp.rows);
     return res.status(http.OK).json(components);
 }

@@ -5,7 +5,9 @@ const pool = require('../db/db');
  */
 module.exports.getTypesNames = async () => {
     const client = await pool.connect();
-    const res = await client.query('SELECT name FROM components_type ORDER BY name');
+    const res = await client.query(`SELECT name 
+                                    FROM components_type 
+                                    ORDER BY name`);
     client.release(true);
     return res;
 }

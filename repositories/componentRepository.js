@@ -9,22 +9,28 @@ module.exports.getBikeComponents = async (bikeId) => {
     const res = await client.query(`SELECT * FROM components
                                     WHERE fk_bike = $1 
                                     AND archived = FALSE 
-                                    ORDER BY nb_km DESC`, [bikeId]);
+                                    ORDER BY nb_km DESC`, 
+                                    [bikeId]);
     client.release(true);
     return res;
 }
 
 /**
  * @param {Number} memberId 
+ * @param {Boolean} archived
+ * @param {String} type
  * @returns QueryResult<any>
  */
-module.exports.getMemberComponents = async (memberId) => {
+module.exports.getMemberComponents = async (memberId, archived, type) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM components 
                                     JOIN bikes ON bikes.bike_id = components.fk_bike
                                     JOIN members ON members.member_id = bikes.fk_member
-                                    WHERE members.member_id = $1`, [memberId]);
+                                    WHERE members.member_id = $1 
+                                    AND archived = $2 
+                                    AND component_type LIKE $3`, 
+                                    [memberId, archived, type]);
     client.release(true);
     return res;
 }
@@ -33,25 +39,12 @@ module.exports.getMemberComponents = async (memberId) => {
  * @param {Component} component 
  * @returns QueryResult<any>
  */
-module.exports.updateComponent = async (component) => {
+module.exports.updateComponent = async (comp) => {
  const client = await pool.connect();
  const res = await client.query(`UPDATE components
-                                SET brand = $1,
-                                date_of_purchase = $2,
-                                nb_km = $3,
-                                duration = $4,
-                                image = $5,
-                                component_type = $6,
-                                archived = $7
+                                SET brand = $1, date_of_purchase = $2, nb_km = $3, duration = $4, image = $5, component_type = $6, archived = $7
                                 WHERE component_id = $8`,
-                                [component.brand, 
-                                component.dateOfPurchase, 
-                                component.km, 
-                                component.duration,
-                                component.image,
-                                component.type,
-                                component.archived,
-                                component.id]);
+                                [comp.brand, comp.dateOfPurchase, comp.km, comp.duration, comp.image, comp.type, comp.archived, comp.id]);
  client.release(true);
  return res;
 }

@@ -29,7 +29,7 @@ module.exports.signup = async (req, res) => {
     if (resp.rowCount !== 1) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la création du compte'});
     }
-    return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': new Member(null, email, passHash)});
+    return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': new Member(memberId, email, passHash)});
 }
 
 module.exports.login = async (req, res) => {
