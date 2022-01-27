@@ -1,16 +1,17 @@
 class Component {
 
     /**
-     * @param {int} id
-     * @param {int} bikeId 
+     * @param {Number} id
+     * @param {Number} bikeId 
      * @param {String} brand 
-     * @param {int} km 
-     * @param {String} dateOfPurchase
-     * @param {int} duration 
+     * @param {Number} km 
+     * @param {Date} dateOfPurchase
+     * @param {Number} duration 
      * @param {String} image
      * @param {String} type
+     * @param {Boolean} archived
      */
-    constructor(id, bikeId, brand, km, dateOfPurchase, duration, image, type) {
+    constructor(id, bikeId, brand, km, dateOfPurchase, duration, image, type, archived) {
         this.id = id;
         this.bikeId = bikeId;
         this.brand = brand;
@@ -19,6 +20,7 @@ class Component {
         this.duration = duration;
         this.image = image;
         this.type = type;
+        this.archived = archived;
     }
 
     /**
@@ -34,7 +36,8 @@ class Component {
                                             compo.date_of_purchase,
                                             compo.duration,
                                             compo.image, 
-                                            compo.component_type));
+                                            compo.component_type,
+                                            compo.archived));
     }
 }
 
