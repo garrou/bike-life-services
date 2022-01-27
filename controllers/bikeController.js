@@ -7,7 +7,7 @@ router.get('/bikes/:bikeId', guard.checkToken, bikeService.getBike);
 
 router.get('/members/:memberId/bikes', guard.checkToken, bikeService.getMemberBikes);
 
-router.post('/:memberId/bikes', guard.checkToken, bikeService.addBike);
+router.post('/members/:memberId/bikes', guard.checkToken, bikeService.addBike);
 
 router.delete('/bikes/:bikeId', guard.checkToken, bikeService.deleteBike);
 

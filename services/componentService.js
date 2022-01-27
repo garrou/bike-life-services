@@ -65,10 +65,9 @@ module.exports.initComponents = async (req, res) => {
     return res.status(http.CREATED).json({'confirm': 'Composants ajoutés'});
 }
 
-module.exports.getMemberComponents = async (req, res) => {
+module.exports.getArchivedMemberComponents = async (req, res) => {
     const { memberId } = req.params;
-    const { archived, type } = req.query;
-    const resp = await componentRepository.getMemberComponents(memberId, archived, type);
+    const resp = await componentRepository.getArchivedMemberComponents(memberId);
     const components = createFromList(resp.rows);
     return res.status(http.OK).json(components);
 }
