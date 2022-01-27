@@ -8,7 +8,8 @@ const components = createFromList([{
     'brand': 'Inconnue',
     'image': 'monimage',
     'duration': 2568.85,
-    'component_type': 'Pneu'
+    'component_type': 'Pneu',
+    'archived': false
 }]);
 
 test('Check values of component', async () => {
@@ -21,4 +22,5 @@ test('Check values of component', async () => {
     expect(components[0].duration).toBe(2568.85);
     expect(components[0].image).toBe('monimage');
     expect(components[0].type).toBe('Pneu');
+    expect(components[0].archived).toBe(false);
 });

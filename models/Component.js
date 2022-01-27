@@ -9,8 +9,9 @@ class Component {
      * @param {Number} duration 
      * @param {String} image
      * @param {String} type
+     * @param {Boolean} archived
      */
-    constructor(id, bikeId, brand, km, dateOfPurchase, duration, image, type) {
+    constructor(id, bikeId, brand, km, dateOfPurchase, duration, image, type, archived) {
         this.id = id;
         this.bikeId = bikeId;
         this.brand = brand;
@@ -19,6 +20,7 @@ class Component {
         this.duration = duration;
         this.image = image;
         this.type = type;
+        this.archived = archived;
     }
 
     /**
@@ -34,7 +36,8 @@ class Component {
                                             compo.date_of_purchase,
                                             compo.duration,
                                             compo.image, 
-                                            compo.component_type));
+                                            compo.component_type,
+                                            compo.archived));
     }
 }
 
