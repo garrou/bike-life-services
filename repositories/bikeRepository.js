@@ -26,7 +26,8 @@ module.exports.getBikes = async (memberId) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM bikes 
-                                    WHERE fk_member = $1`, 
+                                    WHERE fk_member = $1
+                                    ORDER BY nb_km DESC`, 
                                     [memberId]);
     client.release(true);
     return res;

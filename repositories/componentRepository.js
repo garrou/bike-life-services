@@ -6,9 +6,10 @@ const pool = require('../db/db');
  */
 module.exports.getBikeComponents = async (bikeId) => {
     const client = await pool.connect();
-    const res = await client.query(`SELECT * FROM components
+    const res = await client.query(`SELECT * 
+                                    FROM components
                                     WHERE fk_bike = $1 
-                                    AND archived = FALSE 
+                                    AND archived = false 
                                     ORDER BY nb_km DESC`, 
                                     [bikeId]);
     client.release(true);
@@ -21,16 +22,15 @@ module.exports.getBikeComponents = async (bikeId) => {
  * @param {String} type
  * @returns QueryResult<any>
  */
-module.exports.getMemberComponents = async (memberId, archived, type) => {
+module.exports.getArchivedMemberComponents = async (memberId) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM components 
                                     JOIN bikes ON bikes.bike_id = components.fk_bike
                                     JOIN members ON members.member_id = bikes.fk_member
                                     WHERE members.member_id = $1 
-                                    AND archived = $2 
-                                    AND component_type LIKE $3`, 
-                                    [memberId, archived, type]);
+                                    AND archived = true`, 
+                                    [memberId]);
     client.release(true);
     return res;
 }
@@ -54,11 +54,11 @@ module.exports.updateComponent = async (comp) => {
  * @param {Number} bikeId 
  * @returns QueryResult<any>
  */
-module.exports.updateNbKmBikeComponents = async (km, bikeId) => {
+module.exports.updateKmBikeComponents = async (km, bikeId) => {
     const client = await pool.connect();
     const res = await client.query(`UPDATE components 
                                     SET nb_km = nb_km + $1 
-                                    WHERE fk_bike = $2 AND archived = FALSE`,
+                                    WHERE fk_bike = $2 AND archived = false`,
                                     [km, bikeId]);
     client.release(true);
     return res;
@@ -112,7 +112,7 @@ module.exports.initBikeComponents = async (componentId, bikeId, type, dateOfPurc
                                     $3, 
                                     $4, 
                                     $5,
-                                    FALSE)`,
+                                    false)`,
                                     [componentId, nbKm, type, dateOfPurchase, bikeId]);
     client.release(true);
     return res;

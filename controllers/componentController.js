@@ -3,7 +3,7 @@ const componentService = require('../services/componentService');
 const guard = require('../middlewares/guard');
 const router = Router();
 
-router.get('/members/:memberId/components', guard.checkToken, componentService.getMemberComponents);
+router.get('/members/:memberId/components', guard.checkToken, componentService.getArchivedMemberComponents);
 
 router.get('/bikes/:bikeId/components', guard.checkToken, componentService.getBikeComponents);
 

@@ -74,5 +74,9 @@ module.exports.update = async (req, res) => {
 module.exports.getEmail = async (req, res) => {
     const { id } = req.params;
     const resp = await memberRepository.getEmailById(id);
+    
+    if (resp.rowCount !== 1) {
+        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant la récupération de l'email"});
+    }
     return res.status(http.OK).json({'email': resp.rows[0].email});
 }
