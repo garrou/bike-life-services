@@ -67,11 +67,11 @@ module.exports.addKm = async (req, res) => {
     if (!validator.isValidKm(km)) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Kilomètres invalides'});
     }
-    const resp = await bikeRepository.updateBikeKm(bikeId, km);
+    const resp = await bikeRepository.addKm(bikeId, km);
 
     if (resp.rowCount !== 1) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la modification du vélo'});
     }
-    await componentRepository.updateKmBikeComponents(km, bikeId);
+    await componentRepository.addKm(km, bikeId);
     return res.status(http.OK).json({'confirm': 'Kilomètre(s) ajouté(s)'});
 }

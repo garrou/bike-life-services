@@ -10,7 +10,7 @@ module.exports.getBikeComponents = async (bikeId) => {
                                     FROM components
                                     WHERE fk_bike = $1 
                                     AND archived = false 
-                                    ORDER BY nb_km DESC`, 
+                                    ORDER BY component_type`, 
                                     [bikeId]);
     client.release(true);
     return res;
@@ -42,9 +42,9 @@ module.exports.getArchivedMemberComponents = async (memberId) => {
 module.exports.updateComponent = async (comp) => {
  const client = await pool.connect();
  const res = await client.query(`UPDATE components
-                                SET brand = $1, date_of_purchase = $2, nb_km = $3, duration = $4, image = $5, component_type = $6, archived = $7
-                                WHERE component_id = $8`,
-                                [comp.brand, comp.dateOfPurchase, comp.km, comp.duration, comp.image, comp.type, comp.archived, comp.id]);
+                                SET brand = $1, date_of_purchase = $2, nb_km = $3, duration = $4, image = $5, component_type = $6, archived = $7, fk_bike = $8
+                                WHERE component_id = $9`,
+                                [comp.brand, comp.dateOfPurchase, comp.km, comp.duration, comp.image, comp.type, comp.archived, comp.bikeId, comp.id]);
  client.release(true);
  return res;
 }
@@ -54,7 +54,7 @@ module.exports.updateComponent = async (comp) => {
  * @param {Number} bikeId 
  * @returns QueryResult<any>
  */
-module.exports.updateKmBikeComponents = async (km, bikeId) => {
+module.exports.addKm = async (km, bikeId) => {
     const client = await pool.connect();
     const res = await client.query(`UPDATE components 
                                     SET nb_km = nb_km + $1 

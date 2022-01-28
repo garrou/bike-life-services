@@ -79,7 +79,7 @@ module.exports.updateBike = async (bike) => {
  * @param {Number} toAdd
  * @returns QueryResult<any>
  */
-module.exports.updateBikeKm = async (bikeId, kmToAdd) => {
+module.exports.addKm = async (bikeId, kmToAdd) => {
     const client = await pool.connect();
     const res = await client.query(`UPDATE bikes 
                                     SET nb_km = nb_km + $1

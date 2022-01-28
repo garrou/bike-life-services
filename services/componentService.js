@@ -61,7 +61,6 @@ module.exports.initComponents = async (req, res) => {
     types.forEach(async (type) => {
         await componentRepository.initBikeComponents(uuidv1(), bikeId, type.name, date_of_purchase, nb_km);
     });
-    
     return res.status(http.CREATED).json({'confirm': 'Composants ajoutés'});
 }
 
