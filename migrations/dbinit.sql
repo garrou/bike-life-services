@@ -33,17 +33,13 @@ CREATE TABLE components (
 );
 
 INSERT INTO components_type 
-VALUES ('Cadre', 20000),
-	('Fourche', 20000),
-	('Jante', 25000),
-	('Guidon', 25000),
-	('Chaîne', 7000),
+VALUES ('Chaîne', 7000),
 	('Batterie', 30000),
 	('Pneu', 7500),
-	('Dérailleur', 20000),
-	('Selle', 25000),
+	('Dérailleur', 8000),
 	('Frein', 4000),
-	('Chambre à air', 7500);
+	('Plaquette', 4000),
+	('Cassette', 4000);
 
 CREATE TABLE tips (
 	tip_id VARCHAR PRIMARY KEY,
