@@ -58,7 +58,9 @@ module.exports.addKm = async (km, bikeId) => {
     const client = await pool.connect();
     const res = await client.query(`UPDATE components 
                                     SET nb_km = nb_km + $1 
-                                    WHERE fk_bike = $2 AND archived = false`,
+                                    WHERE fk_bike = $2 
+                                    AND component_type != 'Batterie'
+                                    AND archived = false`,
                                     [km, bikeId]);
     client.release(true);
     return res;

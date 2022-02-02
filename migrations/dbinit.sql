@@ -34,7 +34,7 @@ CREATE TABLE components (
 
 INSERT INTO components_type 
 VALUES ('Chaîne', 7000),
-	('Batterie', 30000),
+	('Batterie', 500),
 	('Pneu', 7500),
 	('Dérailleur', 8000),
 	('Frein', 4000),
@@ -90,3 +90,13 @@ Attention au sens du pneu : la plupart des pneus ont un sens. Il est en généra
 Il ne vous reste plus qu’à mettre la chambre à air, légèrement gonflée. Faites passer la valve par le trou de la jante, avant de placer la chambre à air entièrement dans le pneu.
 
 Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW());
+
+CREATE TABLE batteries (
+	component_id VARCHAR PRIMARY KEY,
+	power_wh NUMERIC NOT NULL,
+	power_v NUMERIC NOT NULL,
+	capacity_a NUMERIC NOT NULL,
+	kg NUMERIC NOT NULL,
+	cycles INTEGER NOT NULL
+);
+

@@ -53,13 +53,12 @@ module.exports.add = async (req, res) => {
 module.exports.initComponents = async (req, res) => {
     const { bikeId } = req.params;
     const { electric, date_of_purchase, nb_km } = (await bikeRepository.getBike(bikeId)).rows[0];
-    let types = (await componentTypeRepository.getTypesNames()).rows;
+    const types = (await componentTypeRepository.getTypesNames()).rows;
 
-    if (!electric) {
-        types = types.filter(elt => elt.name !== 'Batterie');
-    }
     types.forEach(async (type) => {
-        await componentRepository.initBikeComponents(uuidv1(), bikeId, type.name, date_of_purchase, nb_km);
+        type.name === 'Batterie' && electric 
+            ? await componentRepository.initBikeComponents(uuidv1(), bikeId, type.name, date_of_purchase, 0)
+            : await componentRepository.initBikeComponents(uuidv1(), bikeId, type.name, date_of_purchase, nb_km);
     });
     return res.status(http.CREATED).json({'confirm': 'Composants ajoutés'});
 }

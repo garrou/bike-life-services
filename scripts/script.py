@@ -10,7 +10,8 @@ def read(filename):
 
         for row in rows:
             for cell in row:
-                print(cell.value, end=' ')
+                if cell.value != None:
+                    print(cell.value, end=' ') 
             print()
 
     wb.close()
