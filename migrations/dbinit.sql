@@ -1,12 +1,12 @@
 CREATE TABLE members (
-	member_id VARCHAR PRIMARY KEY,
+	member_id VARCHAR NOT NULL PRIMARY KEY,
 	email VARCHAR UNIQUE NOT NULL,
 	password VARCHAR NOT NULL,
 	active BOOLEAN NOT NULL
 );
 
 CREATE TABLE bike_types (
-	name VARCHAR PRIMARY KEY
+	name VARCHAR NOT NULL PRIMARY KEY
 );
 
 INSERT INTO bike_types
@@ -15,7 +15,7 @@ VALUES ('VTT'),
 	('Route');
 
 CREATE TABLE bikes (
-	bike_id VARCHAR PRIMARY KEY,
+	bike_id VARCHAR NOT NULL PRIMARY KEY,
 	name VARCHAR NOT NULL,
 	electric BOOLEAN NOT NULL,
 	average_use_week INTEGER NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE members_bikes (
 );
 
 CREATE TABLE components_type (
-	name VARCHAR PRIMARY KEY,
+	name VARCHAR NOT NULL PRIMARY KEY,
 	average_duration NUMERIC NOT NULL,
 	unit VARCHAR NOT NULL
 );
@@ -46,8 +46,9 @@ VALUES ('Chaîne', 5000, 'km'),
 	('Cassette', 4000, 'km');
 
 CREATE TABLE components (
-	component_id VARCHAR PRIMARY KEY,
+	component_id VARCHAR NOT NULL PRIMARY KEY,
 	duration NUMERIC NOT NULL,
+	active BOOLEAN NOT NULL,
 	fk_component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE
 );
 
@@ -59,8 +60,11 @@ CREATE TABLE bikes_components (
 CREATE TABLE revisions (
 	revision_id SERIAL PRIMARY KEY,
 	made_at DATE NOT NULL,
-	commentary TEXT,
-	fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE
+);
+
+CREATE TABLE components_revisions (
+	fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE,
+	fk_revision INTEGER NOT NULL REFERENCES revisions(revision_id) ON DELETE CASCADE
 );
 
 CREATE TABLE topics (
@@ -77,7 +81,7 @@ VALUES ('Chaîne'),
 	('Cassette');
 
 CREATE TABLE tips (
-	tip_id VARCHAR PRIMARY KEY,
+	tip_id SERIAL PRIMARY KEY,
 	title VARCHAR NOT NULL,
 	content TEXT NOT NULL,
 	write_date DATE NOT NULL,
@@ -86,16 +90,16 @@ CREATE TABLE tips (
 
 INSERT INTO tips
 VALUES 
-('d45s4d5s4d545sds4ds', 'Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
+('Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
 - Lorsque vous n’utilisez pas votre vélo, évitez de mettre votre chaine sur un braquet trop élevé ou évitez simplement de la « croiser ». Il est donc important de ne pas la placer sur une configuration « grand plateau, grand pignon » ou « grand plateau, petit pignon ». L’objectif est qu’elle ne soit pas trop tendue. Cela a tendance à l’étirer et à réduire sa durée de vie. 
 - Lorsque vous arrivez à 4000kms, démontez votre chaine, étalez-là à côté d’une chaine neuve. Si la différence entre les deux est de plus d’un moyeu, changez de chaine.
 - Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', NOW(), 'Chaîne'), 
 
-('dad89a8s9d5a56d2az', 'Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
+('Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
 Pour les VTC, le gonflage est plus classique et se situe généralement entre 2 et 3 bars par pneu. 
 Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', NOW(), 'Pneu'),
 
-('dsq4dq56d1s1q4e1fq', 'Changer un pneu sur le vélo', '1/ DÉMONTER UN PNEU DE VÉLO : ÉTAPE 1
+('Changer un pneu sur le vélo', '1/ DÉMONTER UN PNEU DE VÉLO : ÉTAPE 1
 Pour retirer la roue du vélo, commencez par desserrer les boulons de chaque côté de l’axe. Enlevez ensuite le bouchon de valve, c’est-à-dire l’endroit par lequel vous pouvez gonfler votre roue.
 Il ne vous reste plus qu’à appuyer sur le petit picot situé au milieu de la valve, de manière à dégonfler le pneu. Inutile d’attendre que le pneu soit entièrement dégonflé : une fois que le pneu est très mou, cela suffit.
 ÉTAPE 2 : DÉGAGER LE PNEU DE VÉLO DE LA JANTE

@@ -7,6 +7,6 @@ router.get('/tips', guard.checkToken, tipService.getAll);
 
 router.get('/tips/:tipId', guard.checkToken, tipService.getTip);
 
-router.get('/tips/types/:componentType', guard.checkToken, tipService.getByType);
+router.get('/topics/:topic/tips', guard.checkToken, tipService.getByTopic);
 
 module.exports = router;

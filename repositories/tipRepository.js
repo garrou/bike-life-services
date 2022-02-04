@@ -25,7 +25,7 @@ module.exports.getById = async (tipId) => {
     return res;
 }
 
-module.exports.getByType = async (componentType) => {
+module.exports.getByTopic = async (componentType) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 

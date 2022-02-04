@@ -20,7 +20,7 @@ module.exports.create = async (member) => {
  */
 module.exports.getActive = async (email) => {
     const client = await pool.connect();
-    const res = await client.query(`SELECT * 
+    const res = await client.query(`SELECT members.* 
                                     FROM members 
                                     WHERE email = $1 AND active = true`, 
                                     [email]);
@@ -34,7 +34,7 @@ module.exports.getActive = async (email) => {
  */
 module.exports.get = async (email) => {
     const client = await pool.connect();
-    const res = await client.query(`SELECT * 
+    const res = await client.query(`SELECT members.* 
                                     FROM members 
                                     WHERE email = $1`, 
                                     [email]);
