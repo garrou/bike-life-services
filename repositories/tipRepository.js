@@ -29,7 +29,7 @@ module.exports.getByType = async (componentType) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 
-                                    WHERE component_type LIKE $1`, [componentType]);
+                                    WHERE fk_topic LIKE $1`, [componentType]);
     client.release(true);
     return res;
 }

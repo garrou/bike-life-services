@@ -1,19 +1,16 @@
 const pool = require('../db/db');
 
 /**
- * @param {String} bikeId
- * @param {Number} memberId 
- * @param {String} name
- * @param {String} image 
- * @param {String} dateOfPurchase 
- * @param {Number} nbKm 
+ * @param {Number} memberId
+ * @param {Bike} bike
  * @returns QueryResult<any>
  */
-module.exports.createBike = async (bikeId, memberId, name, image, dateOfPurchase, nbKm, electric) => {
+module.exports.create = async (memberId, bike) => {
     const client = await pool.connect();
-    const res = await client.query(`INSERT INTO bikes (bike_id, name, image, date_of_purchase, fk_member, nb_km, electric) 
+    let res = await client.query(`INSERT INTO bikes
                                     VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
-                                    [bikeId, name, image, dateOfPurchase, memberId, nbKm, electric]);
+                                    [bike.id, bike.name, bike.electric, bike.nbUsedPerWeek, bike.kmPerWeek, bike.addedAt, bike.type]);
+    res = await client.query(`INSERT INTO members_bikes VALUES ($1, $2)`, [memberId, bike.id]);
     client.release(true);
     return res;
 }
@@ -22,12 +19,12 @@ module.exports.createBike = async (bikeId, memberId, name, image, dateOfPurchase
  * @param {Number} memberId 
  * @returns QueryResult<any>
  */
-module.exports.getBikes = async (memberId) => {
+module.exports.getByMember = async (memberId) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
-                                    FROM bikes 
-                                    WHERE fk_member = $1
-                                    ORDER BY nb_km DESC`, 
+                                    FROM bikes, members_bikes
+                                    WHERE bike_id = fk_bike
+                                    AND fk_member = $1`, 
                                     [memberId]);
     client.release(true);
     return res;
@@ -37,7 +34,7 @@ module.exports.getBikes = async (memberId) => {
  * @param {Number} bikeId 
  * @returns QueryResult<any>
  */
-module.exports.getBike = async (bikeId) => {
+module.exports.get = async (bikeId) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM bikes 
@@ -51,7 +48,7 @@ module.exports.getBike = async (bikeId) => {
  * @param {Number} bikeId 
  * @returns QueryResult<any>
  */
-module.exports.deleteBike = async (bikeId) => {
+module.exports.delete = async (bikeId) => {
     const client = await pool.connect();
     const res = await client.query(`DELETE FROM bikes 
                                     WHERE bike_id = $1`, 
@@ -64,27 +61,12 @@ module.exports.deleteBike = async (bikeId) => {
  * @param {Bike} bike 
  * @returns QueryResult<any>
  */
-module.exports.updateBike = async (bike) => {
+ module.exports.update = async (bike) => {
     const client = await pool.connect();
     const res = await client.query(`UPDATE bikes 
-                                    SET name = $1, image = $2, nb_km = $3, date_of_purchase = $4, electric = $5
+                                    SET name = $1, electric = $2, average_use_week = $3, average_km_week = $4, bike_type = $5
                                     WHERE bike_id = $6`,
-                                    [bike.name, bike.image, bike.nbKm, bike.dateOfPurchase, bike.electric, bike.id]);
-    client.release(true);
-    return res;
-}
-
-/**
- * @param {Number} bikeId
- * @param {Number} toAdd
- * @returns QueryResult<any>
- */
-module.exports.addKm = async (bikeId, kmToAdd) => {
-    const client = await pool.connect();
-    const res = await client.query(`UPDATE bikes 
-                                    SET nb_km = nb_km + $1
-                                    WHERE bike_id = $2`,
-                                    [kmToAdd, bikeId]);
+                                    [bike.name, bike.electric, bike.nbUsedPerWeek, bike.kmPerWeek, bike.type, bike.id]);
     client.release(true);
     return res;
 }

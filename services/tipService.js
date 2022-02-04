@@ -4,14 +4,16 @@ const Tip = require('../models/Tip');
 const tipRepository = require('../repositories/tipRepository');
 
 module.exports.getAll = async (_, res) => {
+
     const resp = await tipRepository.getAll();
     const tips = Tip.createFromList(resp.rows);
     return res.status(http.OK).json(tips);
 }
 
 module.exports.getTip = async (req, res) => {
+
     const { tipId } = req.params;
-    const resp = await tipRepository.getById(tipId);
+    const resp = await tipRepository.get(tipId);
     const tip = new Tip(resp.rows[0].tip_id, 
                         resp.rows[0].component_type, 
                         resp.rows[0].title,
@@ -23,6 +25,7 @@ module.exports.getTip = async (req, res) => {
 }
 
 module.exports.getByType = async (req, res) => {
+
     const { componentType } = req.params;
     const resp = await tipRepository.getByType(componentType);
     const tips = createFromList(resp.rows);

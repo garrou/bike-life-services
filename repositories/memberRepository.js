@@ -1,17 +1,15 @@
 const pool = require('../db/db');
+const Member = require('../models/Member');
 
 /**
- * @param {String} memberId
- * @param {String} email 
- * @param {String} password
- * @param {Boolean} active
+ * @param {Member} member
  * @returns QueryResult<any> 
  */
-module.exports.createMember = async (memberId, email, password, active) => {
+module.exports.create = async (member) => {
     const client = await pool.connect();
     const res = await client.query(`INSERT INTO members (member_id, email, password, active) 
                                     VALUES ($1, $2, $3, $4)`, 
-                                    [memberId, email, password, active]);
+                                    [member.id, member.email, member.password, member.active]);
     client.release(true);
     return res;
 }
@@ -20,11 +18,11 @@ module.exports.createMember = async (memberId, email, password, active) => {
  * @param {string} email 
  * @returns QueryResult<any>
  */
-module.exports.getActiveMember = async (email) => {
+module.exports.getActive = async (email) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM members 
-                                    WHERE email = $1 AND active = TRUE`, 
+                                    WHERE email = $1 AND active = true`, 
                                     [email]);
     client.release(true);
     return res;
@@ -34,7 +32,7 @@ module.exports.getActiveMember = async (email) => {
  * @param {string} email 
  * @returns QueryResult<any>
  */
-module.exports.getMember = async (email) => {
+module.exports.get = async (email) => {
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM members 
@@ -64,7 +62,7 @@ module.exports.getEmailById = async (id) => {
  * @param {String} password 
  * @returns QueryResult<any>
  */
-module.exports.updateMember = async (id, email, password) => {
+module.exports.update = async (id, email, password) => {
     const client = await pool.connect();
     const res = await client.query(`UPDATE members 
                                     SET email = $1, password = $2 

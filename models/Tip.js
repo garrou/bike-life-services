@@ -21,7 +21,7 @@ class Tip {
      */
     static createFromList(records) {
         return records.map((tip) => new Tip(tip.tip_id,
-                                            tip.component_type,
+                                            tip.fk_topic,
                                             tip.title,
                                             tip.content,
                                             tip.write_date));

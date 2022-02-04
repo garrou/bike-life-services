@@ -3,7 +3,7 @@ const pool = require('../db/db');
 /**
  * @returns QueryResult<any>
  */
-module.exports.getTypesNames = async () => {
+module.exports.getNames = async () => {
     const client = await pool.connect();
     const res = await client.query(`SELECT name 
                                     FROM components_type 
