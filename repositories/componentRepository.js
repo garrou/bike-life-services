@@ -44,12 +44,15 @@ module.exports.getAlerts = async (memberId, percent) => {
                                     AND members_bikes.fk_bike = bikes_components.fk_bike
                                     AND bikes_components.fk_component = components.component_id
                                     AND components.active = true
-                                    AND DATE_PART('day', NOW() - (SELECT CASE WHEN MAX(changed_at) IS NULL THEN bikes.added_at
-                                                                            ELSE MAX(changed_at)
-                                                                        END
-                                                                    FROM components_changed
-                                                                    WHERE components_changed.fk_component = component_id)) 
-                                    * (bikes.average_km_week / 7) / components.duration >= $2`,
+                                    AND DATE_PART('day', 
+                                                NOW() - 
+                                                (SELECT CASE WHEN MAX(changed_at) IS NULL 
+                                                            THEN bikes.added_at
+                                                            ELSE MAX(changed_at)
+                                                        END
+                                                FROM components_changed
+                                                WHERE components_changed.fk_component = component_id)
+                                    ) * (bikes.average_km_week / 7) / components.duration >= $2`,
                                     [memberId, percent]);
     client.release(true);
     return res;
@@ -59,20 +62,23 @@ module.exports.changeComponent = async (componentId, changedAt) => {
     const client = await pool.connect();
     const res = await client.query(`INSERT INTO components_changed
                                     VALUES 
-                                    ($1, 
-                                    $2, 
-                                    SELECT DATE_PART('day', $2 - (SELECT CASE WHEN MAX(changed_at) IS NULL THEN (SELECT bikes.added_at
-                                                                                                                    FROM bikes, bikes_components
-                                                                                                                    WHERE fk_component = $1
-                                                                                                                    AND bikes_components.fk_bike = bikes.bike_id) 
-                                                                                ELSE MAX(changed_at)
-                                                                            END
-                                                                    FROM components_changed
-                                                                    WHERE components_changed.fk_component = $1)) * (bikes.average_km_week / 7) 
+                                    ('${componentId}', 
+                                    '${changedAt}', 
+                                    (SELECT DATE_PART('day', 
+                                                    TIMESTAMP '${changedAt}' - 
+                                                    (SELECT CASE WHEN MAX(changed_at) IS NULL 
+                                                                THEN (SELECT bikes.added_at
+                                                                    FROM bikes, bikes_components
+                                                                    WHERE fk_component = '${componentId}'
+                                                                    AND bikes_components.fk_bike = bikes.bike_id) 
+                                                                ELSE MAX(changed_at)
+                                                                END
+                                                    FROM components_changed
+                                                    WHERE components_changed.fk_component = '${componentId}')
+                                    ) * (bikes.average_km_week / 7) 
                                     FROM bikes, bikes_components
-                                    WHERE bikes_components.fk_component = $1
-                                    AND bikes_components.fk_bike = bikes.bike_id)`,
-                                    [componentId, changedAt])
+                                    WHERE bikes_components.fk_component = '${componentId}'
+                                    AND bikes_components.fk_bike = bikes.bike_id))`)
     client.release(true);
     return res;
 }
