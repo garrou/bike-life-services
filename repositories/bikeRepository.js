@@ -8,8 +8,8 @@ const pool = require('../db/db');
 module.exports.create = async (memberId, bike) => {
     const client = await pool.connect();
     let res = await client.query(`INSERT INTO bikes
-                                    VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
-                                    [bike.id, bike.name, bike.electric, bike.nbUsedPerWeek, bike.kmPerWeek, bike.addedAt, bike.type]);
+                                VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
+                                [bike.id, bike.name, bike.electric, bike.nbUsedPerWeek, bike.kmPerWeek, bike.addedAt, bike.type]);
     res = await client.query(`INSERT INTO members_bikes VALUES ($1, $2)`, [memberId, bike.id]);
     client.release(true);
     return res;

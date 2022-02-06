@@ -5,11 +5,11 @@ class Component {
      * @param {Number} duration 
      * @param {String} type
      */
-    constructor(id, duration, type, lastRevision) {
+    constructor(id, duration, type, active) {
         this.id = id;
         this.duration = duration;
         this.type = type;
-        this.lastRevision = lastRevision;
+        this.active = active;
     }
 
     /**
@@ -19,9 +19,9 @@ class Component {
     static createFromList(records) {
         return records
             .map((compo) => new Component(compo.component_id, 
-                                            compo.duration,
-                                            compo.fk_component_type,
-                                            compo.made_at));
+                                        compo.duration,
+                                        compo.fk_component_type,
+                                        compo.active));
     }
 }
 

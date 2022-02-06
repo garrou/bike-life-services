@@ -57,14 +57,10 @@ CREATE TABLE bikes_components (
 	fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE
 );
 
-CREATE TABLE revisions (
-	revision_id SERIAL PRIMARY KEY,
-	made_at DATE NOT NULL,
-);
-
-CREATE TABLE components_revisions (
+CREATE TABLE components_changed (
 	fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE,
-	fk_revision INTEGER NOT NULL REFERENCES revisions(revision_id) ON DELETE CASCADE
+	changed_at DATE NOT NULL,
+	km_realised NUMERIC NOT NULL
 );
 
 CREATE TABLE topics (
@@ -88,7 +84,7 @@ CREATE TABLE tips (
 	fk_topic VARCHAR NOT NULL REFERENCES topics(name) ON DELETE CASCADE
 );
 
-INSERT INTO tips
+INSERT INTO tips (title, content, write_date, fk_topic)
 VALUES 
 ('Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
 - Lorsque vous n’utilisez pas votre vélo, évitez de mettre votre chaine sur un braquet trop élevé ou évitez simplement de la « croiser ». Il est donc important de ne pas la placer sur une configuration « grand plateau, grand pignon » ou « grand plateau, petit pignon ». L’objectif est qu’elle ne soit pas trop tendue. Cela a tendance à l’étirer et à réduire sa durée de vie. 

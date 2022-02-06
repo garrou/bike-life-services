@@ -31,10 +31,24 @@ class Bike {
     }
 
     /**
+     * @param {JSON} json 
+     * @returns Bike
+     */
+    static fromJson = (json) => {
+        return new Bike(json.id, 
+                        json.name, 
+                        json.kmPerWeek, 
+                        parseInt(json.nbUsedPerWeek), 
+                        json.electric, 
+                        json.type, 
+                        json.addedAt);
+    }
+
+    /**
      * @param {Array} records 
      * @returns Array<Bike>
      */
-    static createFromList(records) {
+    static createFromList = (records) => {
         return records
                 .map((bike) => new Bike(bike.bike_id, 
                                         bike.name, 

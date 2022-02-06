@@ -7,4 +7,6 @@ router.get('/bikes/:bikeId/components', guard.checkToken, componentService.getBi
 
 router.get('/members/:memberId/components/alerts', guard.checkToken, componentService.getAlerts);
 
+router.patch('/components/:componentId', guard.checkToken, componentService.changeComponent);
+
 module.exports = router;

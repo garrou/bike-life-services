@@ -4,14 +4,12 @@ const componentRepository = require('../repositories/componentRepository');
 const componentTypeRepository = require('../repositories/componentTypesRepository');
 const http = require('../constants/http.json');
 const { v1: uuidv1 } = require('uuid');
-const validator = require('../utils/validator');
-const { createFromList } = require('../models/Bike');
+const { createFromList, fromJson } = require('../models/Bike');
 
 module.exports.create = async (req, res) => {
     
     const { memberId } = req.params;
     const { name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt } = req.body;
-
     const bike = new Bike(uuidv1(), name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt);
 
     if (!bike.isValid()) {
@@ -23,12 +21,9 @@ module.exports.create = async (req, res) => {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant l'ajout du vélo"});
     }
     let types = (await componentTypeRepository.getNames()).rows;
-
-    if (!electric) {
-        types = types.filter(elt => elt.name !== 'Batterie');
-    }
+    types = electric ? types : types.filter(elt => elt.name !== 'Batterie');
     types.forEach(async (type) => {
-        await componentRepository.create(uuidv1(), bike.id, type.name);
+        await componentRepository.create(uuidv1(), bike.id, type.name, bike.addedAt);
     });
     return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
 }
@@ -45,7 +40,7 @@ module.exports.getByMember = async (req, res) => {
 
     const { memberId } = req.params;
     const resp = await bikeRepository.getByMember(memberId);
-    const bikes = Bike.createFromList(resp.rows);
+    const bikes = createFromList(resp.rows);
     return res.status(http.OK).json(bikes);
 }
 
@@ -62,7 +57,7 @@ module.exports.delete = async (req, res) => {
 
 module.exports.update = async (req, res) => {
     
-    const bike = JSON.parse(req.body.bike);
+    const bike = fromJson(JSON.parse(req.body.bike));
     
     if (!bike.isValid()) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});

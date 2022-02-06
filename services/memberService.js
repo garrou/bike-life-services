@@ -45,7 +45,6 @@ module.exports.login = async (req, res) => {
     }
     const member = new Member(resp.rows[0].member_id, email, resp.rows[0].password, true);
     const accessToken = jwt.sign({data: JSON.stringify(member) }, process.env.SECRET_TOKEN);
-
     return res.status(http.OK).json({'member': member, 'accessToken': accessToken});
 }
 
@@ -67,7 +66,6 @@ module.exports.update = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const passHash = await bcrypt.hash(password, salt);
     await memberRepository.update(id, email, passHash);
-
     return res.status(http.OK).json({'confirm': 'Compte modifié'});
 }
 

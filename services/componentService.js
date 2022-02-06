@@ -17,3 +17,15 @@ module.exports.getAlerts = async (req, res) => {
     const components = createFromList(resp.rows);
     return res.status(http.OK).json(components);
 }
+
+module.exports.changeComponent = async (req, res) => {
+
+    const { componentId } = req.params;
+    const { changedAt } = req.body;
+    const resp = await componentRepository.changeComponent(componentId, changedAt);
+    
+    if (resp.rowCount == 1) {
+        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le changement du composant'});
+    }
+    return res.status(http.OK).json({'confirm': 'Composant changé'});
+}
