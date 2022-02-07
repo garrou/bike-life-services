@@ -125,3 +125,21 @@ Attention au sens du pneu : la plupart des pneus ont un sens. Il est en généra
 Il ne vous reste plus qu’à mettre la chambre à air, légèrement gonflée. Faites passer la valve par le trou de la jante, avant de placer la chambre à air entièrement dans le pneu.
 
 Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW(), 'Pneu');
+
+CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
+RETURNS DATE AS $$
+DECLARE change_date bikes.added_at%TYPE;
+BEGIN
+	SELECT INTO change_date 
+		CASE WHEN MAX(changed_at) IS NULL 
+			THEN (SELECT added_at
+					FROM bikes, bikes_components
+					WHERE bikes.bike_id = bikes_components.fk_bike
+					AND bikes_components.fk_component = compo_id)
+			ELSE MAX(changed_at)
+		END
+	FROM components_changed
+	WHERE components_changed.fk_component = compo_id;
+	RETURN change_date;
+END;
+$$ LANGUAGE PLPGSQL;

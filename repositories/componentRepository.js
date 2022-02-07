@@ -1,12 +1,12 @@
 const pool = require('../db/db');
 
 /**
- * @param {Number} bikeId 
+ * @param {String} bikeId 
  * @returns QueryResult<any>
  */
 module.exports.getBikeComponents = async (bikeId) => {
     const client = await pool.connect();
-    const res = await client.query(`SELECT components.* 
+    const res = await client.query(`SELECT components.*, get_last_changed_date(component_id) AS changed_at
                                     FROM components, bikes_components
                                     WHERE fk_bike = $1
                                     AND component_id = fk_component
@@ -18,8 +18,8 @@ module.exports.getBikeComponents = async (bikeId) => {
 }
 
 /**
- * @param {Number} id
- * @param  {Number} bikeId
+ * @param {String} componentId
+ * @param  {String} bikeId
  * @param {String} type
  * @returns QueryResult<any>
  */
@@ -35,50 +35,52 @@ module.exports.create = async (componentId, bikeId, type) => {
     return res;
 }
 
+/**
+ * @param {String} memberId 
+ * @param {Number} percent 
+ * @returns QueryResult<any>
+ */
 module.exports.getAlerts = async (memberId, percent) => {
     const client = await pool.connect();
-    const res = await client.query(`SELECT DISTINCT components.*, bikes.name
+    const res = await client.query(`SELECT DISTINCT components.*, get_last_changed_date(component_id) AS changed_at
                                     FROM bikes, components, members_bikes, bikes_components
                                     WHERE members_bikes.fk_member = $1
                                     AND members_bikes.fk_bike = bikes.bike_id
                                     AND members_bikes.fk_bike = bikes_components.fk_bike
                                     AND bikes_components.fk_component = components.component_id
                                     AND components.active = true
-                                    AND DATE_PART('day', 
-                                                NOW() - 
-                                                (SELECT CASE WHEN MAX(changed_at) IS NULL 
-                                                            THEN bikes.added_at
-                                                            ELSE MAX(changed_at)
-                                                        END
-                                                FROM components_changed
-                                                WHERE components_changed.fk_component = component_id)
-                                    ) * (bikes.average_km_week / 7) / components.duration >= $2`,
+                                    AND DATE_PART('day', NOW() - get_last_changed_date(component_id)) 
+                                        * (bikes.average_km_week / 7) / components.duration >= $2`,
                                     [memberId, percent]);
     client.release(true);
     return res;
 }
 
+/**
+ * @param {String} componentId 
+ * @param {Date} changedAt 
+ * @returns QueryResult<any>
+ */
 module.exports.changeComponent = async (componentId, changedAt) => {
     const client = await pool.connect();
     const res = await client.query(`INSERT INTO components_changed
-                                    VALUES 
-                                    ('${componentId}', 
-                                    '${changedAt}', 
-                                    (SELECT DATE_PART('day', 
-                                                    TIMESTAMP '${changedAt}' - 
-                                                    (SELECT CASE WHEN MAX(changed_at) IS NULL 
-                                                                THEN (SELECT bikes.added_at
-                                                                    FROM bikes, bikes_components
-                                                                    WHERE fk_component = '${componentId}'
-                                                                    AND bikes_components.fk_bike = bikes.bike_id) 
-                                                                ELSE MAX(changed_at)
-                                                                END
-                                                    FROM components_changed
-                                                    WHERE components_changed.fk_component = '${componentId}')
-                                    ) * (bikes.average_km_week / 7) 
-                                    FROM bikes, bikes_components
-                                    WHERE bikes_components.fk_component = '${componentId}'
-                                    AND bikes_components.fk_bike = bikes.bike_id))`)
+                                    VALUES ('$1', '$2', (SELECT DATE_PART('day', '$2' - get_last_changed_date('$1')) * (bikes.average_km_week / 7)))`,
+                                    [componentId, changedAt]);
+    client.release(true);
+    return res;
+}
+
+/**
+ * @param {String} componentId 
+ * @returns QueryResult<any>
+ */
+module.exports.getChangeHistoric = async (componentId) => {
+    const client = await pool.connect();
+    const res = await client.query(`SELECT *
+                                    FROM components_changed
+                                    WHERE fk_component = $1
+                                    ORDER by changed_at ASC`,
+                                    [componentId]);
     client.release(true);
     return res;
 }

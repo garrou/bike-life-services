@@ -9,4 +9,6 @@ router.get('/members/:memberId/components/alerts', guard.checkToken, componentSe
 
 router.patch('/components/:componentId', guard.checkToken, componentService.changeComponent);
 
+router.get('/components/:componentId/change-historic', guard.checkToken, componentService.getChangeHistoric);
+
 module.exports = router;
