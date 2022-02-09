@@ -6,6 +6,7 @@ const pool = require('../db/db');
  * @returns QueryResult<any>
  */
 module.exports.create = async (memberId, bike) => {
+
     const client = await pool.connect();
     let res = await client.query(`INSERT INTO bikes
                                 VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
@@ -20,6 +21,7 @@ module.exports.create = async (memberId, bike) => {
  * @returns QueryResult<any>
  */
 module.exports.getByMember = async (memberId) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT bikes.* 
                                     FROM bikes, members_bikes
@@ -35,6 +37,7 @@ module.exports.getByMember = async (memberId) => {
  * @returns QueryResult<any>
  */
 module.exports.get = async (bikeId) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT bikes.* 
                                     FROM bikes 
@@ -49,10 +52,9 @@ module.exports.get = async (bikeId) => {
  * @returns QueryResult<any>
  */
 module.exports.delete = async (bikeId) => {
+
     const client = await pool.connect();
-    const res = await client.query(`DELETE FROM bikes 
-                                    WHERE bike_id = $1`, 
-                                    [bikeId]);
+    const res = await client.query(`CALL delete_bike($1)`, [bikeId]);
     client.release(true);
     return res;
 }
@@ -62,6 +64,7 @@ module.exports.delete = async (bikeId) => {
  * @returns QueryResult<any>
  */
  module.exports.update = async (bike) => {
+     
     const client = await pool.connect();
     const res = await client.query(`UPDATE bikes 
                                     SET name = $1, electric = $2, average_use_week = $3, average_km_week = $4, bike_type = $5

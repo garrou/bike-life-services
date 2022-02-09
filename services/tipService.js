@@ -5,7 +5,7 @@ const tipRepository = require('../repositories/tipRepository');
 
 module.exports.getAll = async (_, res) => {
 
-    const resp = await tipRepository.getAll();
+    const resp = await tipRepository.get();
     const tips = Tip.createFromList(resp.rows);
     return res.status(http.OK).json(tips);
 }
@@ -13,7 +13,7 @@ module.exports.getAll = async (_, res) => {
 module.exports.getTip = async (req, res) => {
 
     const { tipId } = req.params;
-    const resp = await tipRepository.get(tipId);
+    const resp = await tipRepository.getById(tipId);
     const tip = createFromList(resp.rows)[0];
     return res.status(http.OK).json(tip);
 }

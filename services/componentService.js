@@ -24,9 +24,8 @@ module.exports.changeComponent = async (req, res) => {
     const { componentId } = req.params;
     const { changedAt } = req.body;
     const resp = await componentRepository.changeComponent(componentId, changedAt);
-    
-    console.log('coucou');
-    if (resp.rowCount != 3) {
+
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le changement du composant'});
     }
     return res.status(http.OK).json({'confirm': 'Composant changé'});

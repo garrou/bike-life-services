@@ -24,40 +24,36 @@ class Bike {
     /**
      * @returns {Boolean}
      */
-    isValid = () => {
-        return validator.isDate(this.addedAt) 
-            && validator.isKm(this.kmPerWeek)
-            && validator.isWeekDay(this.nbUsedPerWeek);
-    }
+    isValid = () => validator.isDate(this.addedAt) 
+                    && validator.isKm(this.kmPerWeek)
+                    && validator.isWeekDay(this.nbUsedPerWeek);
+    
 
     /**
      * @param {JSON} json 
      * @returns Bike
      */
-    static fromJson = (json) => {
-        return new Bike(json.id, 
-                        json.name, 
-                        json.kmPerWeek, 
-                        parseInt(json.nbUsedPerWeek), 
-                        json.electric, 
-                        json.type, 
-                        json.addedAt);
-    }
+    static fromJson = (json) => new Bike(json.id, 
+                                        json.name, 
+                                        json.kmPerWeek, 
+                                        parseInt(json.nbUsedPerWeek), 
+                                        json.electric, 
+                                        json.type, 
+                                        json.addedAt);
+    
 
     /**
      * @param {Array} records 
      * @returns Array<Bike>
      */
-    static createFromList = (records) => {
-        return records
-                .map((bike) => new Bike(bike.bike_id, 
-                                        bike.name, 
-                                        bike.average_km_week, 
-                                        bike.average_use_week, 
-                                        bike.electric,
-                                        bike.bike_type,
-                                        bike.added_at));
-    }
+    static createFromList = (records) => records
+                                            .map((bike) => new Bike(bike.bike_id, 
+                                                                    bike.name, 
+                                                                    bike.average_km_week, 
+                                                                    bike.average_use_week, 
+                                                                    bike.electric,
+                                                                    bike.bike_type,
+                                                                    bike.added_at));
 }
 
 module.exports = Bike;

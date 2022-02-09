@@ -19,13 +19,13 @@ class Component {
      * @param {Array} records 
      * @returns Array<Component> 
      */
-    static createFromList = (records) => {
-        return records.map((compo) => new Component(compo.component_id, 
-                                                    compo.duration,
-                                                    compo.fk_component_type,
-                                                    compo.active,
-                                                    compo.changed_at));
-    }
+    static createFromList = (records) => records
+                                            .map((compo) => new Component(compo.component_id, 
+                                                                        compo.duration,
+                                                                        compo.fk_component_type,
+                                                                        compo.active,
+                                                                        compo.changed_at));
+    
 }
 
 module.exports = Component;

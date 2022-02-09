@@ -3,7 +3,8 @@ const pool = require('../db/db');
 /**
  * @returns QueryResult<any>
  */
-module.exports.getAll = async () => {
+module.exports.get = async () => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 
@@ -17,6 +18,7 @@ module.exports.getAll = async () => {
  * @returns QueryResult<any> 
  */
 module.exports.getById = async (tipId) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 
@@ -26,6 +28,7 @@ module.exports.getById = async (tipId) => {
 }
 
 module.exports.getByTopic = async (componentType) => {
+    
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 

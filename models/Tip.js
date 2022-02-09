@@ -19,13 +19,13 @@ class Tip {
      * @param {Array} records 
      * @returns Array<Tip>
      */
-    static createFromList(records) {
-        return records.map((tip) => new Tip(tip.tip_id,
-                                            tip.fk_topic,
-                                            tip.title,
-                                            tip.content,
-                                            tip.write_date));
-    }
+    static createFromList = (records) => records
+                                        .map((tip) => new Tip(tip.tip_id,
+                                                            tip.fk_topic,
+                                                            tip.title,
+                                                            tip.content,
+                                                            tip.write_date));
+    
 }
 
 module.exports = Tip;

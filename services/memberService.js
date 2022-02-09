@@ -16,7 +16,7 @@ module.exports.signup = async (req, res) => {
     }
     let resp = await memberRepository.get(email);
 
-    if (resp.rowCount == 1) {
+    if (resp.rowCount === 1) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
     }
     const salt = await bcrypt.genSalt();
@@ -24,7 +24,7 @@ module.exports.signup = async (req, res) => {
     const member = new Member(uuidv1(), email, passHash, true);
     resp = await memberRepository.create(member);
 
-    if (resp.rowCount !== 1) {
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la création du compte'});
     }
     return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': member});
@@ -58,14 +58,18 @@ module.exports.update = async (req, res) => {
     if (!validator.isPassword(password)) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
     } 
-    const resp = await memberRepository.get(email);
+    let resp = await memberRepository.get(email);
 
-    if (resp.rowCount == 1) {
+    if (resp.rowCount === 1) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
     }
     const salt = await bcrypt.genSalt();
     const passHash = await bcrypt.hash(password, salt);
-    await memberRepository.update(id, email, passHash);
+    resp = await memberRepository.update(id, email, passHash);
+
+    if (resp.rowCount === 0) {
+        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la mise à jour.'});
+    }
     return res.status(http.OK).json({'confirm': 'Compte modifié'});
 }
 
@@ -73,9 +77,5 @@ module.exports.getEmail = async (req, res) => {
     
     const { id } = req.params;
     const resp = await memberRepository.getEmailById(id);
-    
-    if (resp.rowCount !== 1) {
-        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant la récupération de l'email"});
-    }
     return res.status(http.OK).json({'email': resp.rows[0].email});
 }

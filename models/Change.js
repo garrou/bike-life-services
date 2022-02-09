@@ -9,9 +9,9 @@ class Change {
         this.km = km;
     }
 
-    static createFromList = (records) => {
-        return records.map((change) => new Change(change.changed_at, change.km_realised));
-    }
+    static createFromList = (records) => records
+                                            .map((change) => new Change(change.changed_at, 
+                                                                        change.km_realised));
 }
 
 module.exports = Change;

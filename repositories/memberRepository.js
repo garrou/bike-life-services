@@ -6,6 +6,7 @@ const Member = require('../models/Member');
  * @returns QueryResult<any> 
  */
 module.exports.create = async (member) => {
+
     const client = await pool.connect();
     const res = await client.query(`INSERT INTO members (member_id, email, password, active) 
                                     VALUES ($1, $2, $3, $4)`, 
@@ -19,6 +20,7 @@ module.exports.create = async (member) => {
  * @returns QueryResult<any>
  */
 module.exports.getActive = async (email) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT members.* 
                                     FROM members 
@@ -33,6 +35,7 @@ module.exports.getActive = async (email) => {
  * @returns QueryResult<any>
  */
 module.exports.get = async (email) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT members.* 
                                     FROM members 
@@ -47,6 +50,7 @@ module.exports.get = async (email) => {
  * @returns QueryResult<any> 
  */
 module.exports.getEmailById = async (id) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT email 
                                     FROM members 
@@ -63,6 +67,7 @@ module.exports.getEmailById = async (id) => {
  * @returns QueryResult<any>
  */
 module.exports.update = async (id, email, password) => {
+    
     const client = await pool.connect();
     const res = await client.query(`UPDATE members 
                                     SET email = $1, password = $2 

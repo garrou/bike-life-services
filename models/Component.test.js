@@ -7,7 +7,7 @@ const components = createFromList([{
     'active': false
 }]);
 
-test('Check values of component', async () => {
+test('Check values of component', () => {
     expect(components.length).toBe(1);
     expect(components[0].id).toBe('flqfkldmqkf57');
     expect(components[0].duration).toBe(2568.85);

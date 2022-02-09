@@ -17,13 +17,15 @@ module.exports.create = async (req, res) => {
     }
     const resp = await bikeRepository.create(memberId, bike);
     
-    if (resp.rowCount !== 1) {
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant l'ajout du vélo"});
     }
-    let types = (await componentTypeRepository.getNames()).rows;
-    types = electric ? types : types.filter(elt => elt.name !== 'Batterie');
+    const types = electric 
+                ? (await componentTypeRepository.get()).rows
+                : (await componentTypeRepository.getWithoutBattery()).rows;
+
     types.forEach(async (type) => {
-        await componentRepository.create(uuidv1(), bike.id, type.name, bike.addedAt);
+        await componentRepository.create(uuidv1(), bike.id, type.average_duration, type.name);
     });
     return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
 }
@@ -49,7 +51,7 @@ module.exports.delete = async (req, res) => {
     const { bikeId } = req.params;
     const resp = await bikeRepository.delete(bikeId);
 
-    if (resp.rowCount !== 1) {
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la suppression du vélo'});
     }
     return res.status(http.OK).json({'confirm': 'Vélo supprimé'});
@@ -64,7 +66,7 @@ module.exports.update = async (req, res) => {
     }
     const resp = await bikeRepository.update(bike);
 
-    if (resp.rowCount !== 1) {
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la modification du vélo'});
     }
     return res.status(http.OK).json({'confirm': 'Vélo modifié', 'bike': bike});

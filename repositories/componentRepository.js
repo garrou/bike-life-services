@@ -5,6 +5,7 @@ const pool = require('../db/db');
  * @returns QueryResult<any>
  */
 module.exports.getBikeComponents = async (bikeId) => {
+    
     const client = await pool.connect();
     const res = await client.query(`SELECT components.*, get_last_changed_date(component_id) AS changed_at
                                     FROM components, bikes_components
@@ -21,13 +22,15 @@ module.exports.getBikeComponents = async (bikeId) => {
  * @param {String} componentId
  * @param  {String} bikeId
  * @param {String} type
+ * @param {Number} duration
  * @returns QueryResult<any>
  */
-module.exports.create = async (componentId, bikeId, type) => {
+module.exports.create = async (componentId, bikeId, duration, type) => {
+
     const client = await pool.connect();
     const res = await client.query(`INSERT INTO components (component_id, duration, fk_component_type, active)
-                                    VALUES ($1, (SELECT average_duration FROM components_type WHERE name = $2), $2, true)`,
-                                    [componentId, type]);
+                                    VALUES ($1, $2, $3, true)`,
+                                    [componentId, duration, type]);
     await client.query(`INSERT INTO bikes_components 
                         VALUES ($1, $2)`, 
                         [bikeId, componentId]);
@@ -41,6 +44,7 @@ module.exports.create = async (componentId, bikeId, type) => {
  * @returns QueryResult<any>
  */
 module.exports.getAlerts = async (memberId, percent) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT DISTINCT components.*, get_last_changed_date(component_id) AS changed_at
                                     FROM bikes, components, members_bikes, bikes_components
@@ -62,9 +66,10 @@ module.exports.getAlerts = async (memberId, percent) => {
  * @returns QueryResult<any>
  */
 module.exports.changeComponent = async (componentId, changedAt) => {
+
     const client = await pool.connect();
     const res = await client.query(`INSERT INTO components_changed
-                                    VALUES ('$1', '$2', (SELECT DATE_PART('day', '$2' - get_last_changed_date('$1')) * (bikes.average_km_week / 7)))`,
+                                    VALUES ($1, $2, (SELECT get_km_since_date_and_last_change($1, $2)))`,
                                     [componentId, changedAt]);
     client.release(true);
     return res;
@@ -75,6 +80,7 @@ module.exports.changeComponent = async (componentId, changedAt) => {
  * @returns QueryResult<any>
  */
 module.exports.getChangeHistoric = async (componentId) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT *
                                     FROM components_changed

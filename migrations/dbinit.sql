@@ -21,7 +21,7 @@ CREATE TABLE bikes (
 	average_use_week INTEGER NOT NULL,
 	average_km_week NUMERIC NOT NULL,
 	added_at DATE NOT NULL,
-	bike_type VARCHAR NOT NULL REFERENCES bike_types(name) ON DELETE CASCADE
+	bike_type VARCHAR NOT NULL REFERENCES bike_types(name)
 );
 
 CREATE TABLE members_bikes (
@@ -31,25 +31,24 @@ CREATE TABLE members_bikes (
 
 CREATE TABLE components_type (
 	name VARCHAR NOT NULL PRIMARY KEY,
-	average_duration NUMERIC NOT NULL,
-	unit VARCHAR NOT NULL
+	average_duration NUMERIC NOT NULL
 );
 
 INSERT INTO components_type 
-VALUES ('Chaîne', 5000, 'km'),
-	('Batterie', 500, 'cycles'),
-	('Pneu avant', 7500, 'km'),
-	('Pneu arrière', 7500, 'km'),
-	('Frein avant', 4000, 'km'),
-	('Frein arrière', 4000, 'km'),
-	('Plaquette', 4000, 'km'),
-	('Cassette', 4000, 'km');
+VALUES ('Chaîne', 5000),
+	('Batterie', 9000),
+	('Pneu avant', 7500),
+	('Pneu arrière', 7500),
+	('Frein avant', 4000),
+	('Frein arrière', 4000),
+	('Plaquette', 4000),
+	('Cassette', 4000);
 
 CREATE TABLE components (
 	component_id VARCHAR NOT NULL PRIMARY KEY,
 	duration NUMERIC NOT NULL,
 	active BOOLEAN NOT NULL,
-	fk_component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE
+	fk_component_type VARCHAR NOT NULL REFERENCES components_type(name)
 );
 
 CREATE TABLE bikes_components (
@@ -69,11 +68,11 @@ CREATE TABLE topics (
 
 INSERT INTO topics 
 VALUES ('Chaîne'), 
+	('Batterie'),
 	('Pneu'),
 	('Frein'),
 	('Plaquette'),
 	('Dérailleur'),
-	('Batterie'),
 	('Cassette');
 
 CREATE TABLE tips (
@@ -133,13 +132,48 @@ BEGIN
 	SELECT INTO change_date 
 		CASE WHEN MAX(changed_at) IS NULL 
 			THEN (SELECT added_at
-					FROM bikes, bikes_components
-					WHERE bikes.bike_id = bikes_components.fk_bike
-					AND bikes_components.fk_component = compo_id)
+				FROM bikes, bikes_components
+				WHERE bikes.bike_id = bikes_components.fk_bike
+				AND bikes_components.fk_component = compo_id)
 			ELSE MAX(changed_at)
 		END
 	FROM components_changed
 	WHERE components_changed.fk_component = compo_id;
 	RETURN change_date;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION get_km_since_date_and_last_change(compo_id VARCHAR, change_date DATE)
+RETURNS NUMERIC AS $$
+DECLARE km bikes.average_km_week%TYPE;
+BEGIN
+	SELECT DATE_PART('day', change_date::TIMESTAMP - get_last_changed_date(compo_id)) * (bikes.average_km_week / 7)
+	INTO km
+	FROM bikes, bikes_components
+	WHERE bikes_components.fk_component = compo_id;
+	
+	RETURN km;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE PROCEDURE delete_bike(b_id VARCHAR)
+AS $$
+DECLARE 
+compo_id components.component_id%TYPE;
+compo_curs CURSOR FOR 
+	SELECT DISTINCT components.component_id
+	FROM bikes_components, components
+	WHERE bikes_components.fk_bike = b_id
+	AND bikes_components.fk_component = components.component_id;
+BEGIN 
+	OPEN compo_curs;
+	LOOP 
+		FETCH compo_curs INTO compo_id;
+		DELETE FROM components WHERE component_id = compo_id;
+		EXIT WHEN NOT FOUND compo_curs;
+	END LOOP;
+    CLOSE compo_curs;
+	
+	DELETE FROM bikes WHERE bikes.bike_id = b_id;
 END;
 $$ LANGUAGE PLPGSQL;
