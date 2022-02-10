@@ -1,77 +1,73 @@
 const Bike = require('../models/Bike');
 const bikeRepository = require('../repositories/bikeRepository');
 const componentRepository = require('../repositories/componentRepository');
+const componentTypeRepository = require('../repositories/componentTypesRepository');
 const http = require('../constants/http.json');
 const { v1: uuidv1 } = require('uuid');
-const validator = require('../utils/validator');
-const { createFromList } = require('../models/Bike');
+const { createFromList, fromJson } = require('../models/Bike');
 
-module.exports.addBike = async (req, res) => {
-    const { memberId, name, image, dateOfPurchase, nbKm, electric } = req.body;
+module.exports.create = async (req, res) => {
+    
+    const { memberId } = req.params;
+    const { name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt } = req.body;
+    const bike = new Bike(uuidv1(), name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt);
 
-    if (!validator.isDate(dateOfPurchase) || !validator.isValidKm(Number.parseFloat(nbKm))) {
+    if (!bike.isValid()) {
         return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});    
     }
-    const bikeId = uuidv1();
-    const resp = await bikeRepository.createBike(bikeId, memberId, name, image, dateOfPurchase, parseFloat(nbKm), electric);
+    const resp = await bikeRepository.create(memberId, bike);
     
-    if (resp.rowCount !== 1) {
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant l'ajout du vélo"});
     }
-    const bike = new Bike(bikeId, name, image, dateOfPurchase, parseFloat(nbKm), electric);
+    const types = electric 
+                ? (await componentTypeRepository.get()).rows
+                : (await componentTypeRepository.getWithoutBattery()).rows;
+
+    types.forEach(async (type) => {
+        await componentRepository.create(uuidv1(), bike.id, type.average_duration, type.name);
+    });
     return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
 }
 
-module.exports.getBike = async (req, res) => {
+module.exports.get = async (req, res) => {
+
     const { bikeId } = req.params;
-    const resp = await bikeRepository.getBike(bikeId);
+    const resp = await bikeRepository.get(bikeId);
     const bike = createFromList(resp.rows)[0];
     return res.status(http.OK).json(bike);
 }
 
-module.exports.getMemberBikes = async (req, res) => {
+module.exports.getByMember = async (req, res) => {
+
     const { memberId } = req.params;
-    const resp = await bikeRepository.getBikes(memberId);
-    const bikes = Bike.createFromList(resp.rows);
+    const resp = await bikeRepository.getByMember(memberId);
+    const bikes = createFromList(resp.rows);
     return res.status(http.OK).json(bikes);
 }
 
-module.exports.deleteBike = async (req, res) => {
-    const { bikeId } = req.params;
-    const resp = await bikeRepository.deleteBike(bikeId);
+module.exports.delete = async (req, res) => {
 
-    if (resp.rowCount !== 1) {
+    const { bikeId } = req.params;
+    const resp = await bikeRepository.delete(bikeId);
+
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la suppression du vélo'});
     }
     return res.status(http.OK).json({'confirm': 'Vélo supprimé'});
 }
 
 module.exports.update = async (req, res) => {
-    const bike = JSON.parse(req.body.bike);
     
-    if (!validator.isDate(bike.dateOfPurchase) || !validator.isValidKm(bike.nbKm)) {
+    const bike = fromJson(JSON.parse(req.body.bike));
+    
+    if (!bike.isValid()) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
     }
-    const resp = await bikeRepository.updateBike(bike);
+    const resp = await bikeRepository.update(bike);
 
-    if (resp.rowCount !== 1) {
+    if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la modification du vélo'});
     }
     return res.status(http.OK).json({'confirm': 'Vélo modifié', 'bike': bike});
-}
-
-module.exports.addKm = async (req, res) => {
-    const { bikeId } = req.params;
-    const { km } = req.body;
-    
-    if (!validator.isValidKm(km)) {
-        return res.status(http.FORBIDDEN).json({'confirm': 'Kilomètres invalides'});
-    }
-    const resp = await bikeRepository.updateBikeKm(bikeId, km);
-
-    if (resp.rowCount !== 1) {
-        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la modification du vélo'});
-    }
-    await componentRepository.updateKmBikeComponents(km, bikeId);
-    return res.status(http.OK).json({'confirm': 'Kilomètre(s) ajouté(s)'});
 }

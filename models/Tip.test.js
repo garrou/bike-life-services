@@ -2,13 +2,13 @@ const { createFromList } = require('./Tip');
 
 const tips = createFromList([{
     'tip_id': 'fd5q65fd65g6d',
-    'component_type': 'Pneu',
+    'fk_topic': 'Pneu',
     'title': 'Test title',
     'content': 'Test content',
     'write_date': '2022-01-25'
 }]);
 
-test('Check values of tip', async () => {
+test('Check values of tip', () => {
     expect(tips.length).toBe(1);
     expect(tips[0].id).toBe('fd5q65fd65g6d');
     expect(tips[0].type).toBe('Pneu');

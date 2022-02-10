@@ -20,6 +20,12 @@ SERVER_PORT=
 SECRET_TOKEN=
 ```
 
+## Scripts
+
+```sh
+pip install -r requirements.txt
+```
+
 ## First start
 
 ```

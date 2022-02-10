@@ -1,70 +1,100 @@
 CREATE TABLE members (
-	member_id VARCHAR PRIMARY KEY,
+	member_id VARCHAR NOT NULL PRIMARY KEY,
 	email VARCHAR UNIQUE NOT NULL,
 	password VARCHAR NOT NULL,
 	active BOOLEAN NOT NULL
 );
 
+CREATE TABLE bike_types (
+	name VARCHAR NOT NULL PRIMARY KEY
+);
+
+INSERT INTO bike_types
+VALUES ('VTT'),
+	('Ville'),
+	('Route');
+
 CREATE TABLE bikes (
-	bike_id VARCHAR PRIMARY KEY,
+	bike_id VARCHAR NOT NULL PRIMARY KEY,
 	name VARCHAR NOT NULL,
-	image TEXT,
 	electric BOOLEAN NOT NULL,
-	nb_km NUMERIC NOT NULL,
-	date_of_purchase DATE NOT NULL,
-	fk_member VARCHAR NOT NULL REFERENCES members(member_id) ON DELETE CASCADE
+	average_use_week INTEGER NOT NULL,
+	average_km_week NUMERIC NOT NULL,
+	added_at DATE NOT NULL,
+	bike_type VARCHAR NOT NULL REFERENCES bike_types(name)
+);
+
+CREATE TABLE members_bikes (
+	fk_member VARCHAR NOT NULL REFERENCES members(member_id) ON DELETE CASCADE,
+	fk_bike VARCHAR NOT NULL REFERENCES bikes(bike_id) ON DELETE CASCADE
 );
 
 CREATE TABLE components_type (
-	name VARCHAR PRIMARY KEY,
+	name VARCHAR NOT NULL PRIMARY KEY,
 	average_duration NUMERIC NOT NULL
 );
 
+INSERT INTO components_type 
+VALUES ('Chaîne', 5000),
+	('Batterie', 9000),
+	('Pneu avant', 7500),
+	('Pneu arrière', 7500),
+	('Frein avant', 4000),
+	('Frein arrière', 4000),
+	('Plaquette', 4000),
+	('Cassette', 4000);
+
 CREATE TABLE components (
-	component_id VARCHAR PRIMARY KEY,
-	fk_bike VARCHAR NOT NULL REFERENCES bikes(bike_id) ON DELETE CASCADE,
-	nb_km NUMERIC NOT NULL,
-	date_of_purchase DATE NOT NULL,
-	brand VARCHAR,
-	image VARCHAR,
+	component_id VARCHAR NOT NULL PRIMARY KEY,
 	duration NUMERIC NOT NULL,
-	component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE,
-	archived BOOLEAN NOT NULL
+	active BOOLEAN NOT NULL,
+	fk_component_type VARCHAR NOT NULL REFERENCES components_type(name)
 );
 
-INSERT INTO components_type 
-VALUES ('Cadre', 20000),
-	('Fourche', 20000),
-	('Jante', 25000),
-	('Guidon', 25000),
-	('Chaîne', 7000),
-	('Batterie', 30000),
-	('Pneu', 7500),
-	('Dérailleur', 20000),
-	('Selle', 25000),
-	('Frein', 4000),
-	('Chambre à air', 7500);
+CREATE TABLE bikes_components (
+	fk_bike VARCHAR NOT NULL REFERENCES bikes(bike_id) ON DELETE CASCADE,
+	fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE
+);
+
+CREATE TABLE components_changed (
+	fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE,
+	changed_at DATE NOT NULL,
+	km_realised NUMERIC NOT NULL
+);
+
+CREATE TABLE topics (
+	name VARCHAR NOT NULL PRIMARY KEY
+);
+
+INSERT INTO topics 
+VALUES ('Chaîne'), 
+	('Batterie'),
+	('Pneu'),
+	('Frein'),
+	('Plaquette'),
+	('Dérailleur'),
+	('Cassette');
 
 CREATE TABLE tips (
-	tip_id VARCHAR PRIMARY KEY,
-	component_type VARCHAR NOT NULL REFERENCES components_type(name) ON DELETE CASCADE,
+	tip_id SERIAL PRIMARY KEY,
 	title VARCHAR NOT NULL,
 	content TEXT NOT NULL,
-	write_date DATE NOT NULL
+	write_date DATE NOT NULL,
+	fk_topic VARCHAR NOT NULL REFERENCES topics(name) ON DELETE CASCADE
 );
 
-INSERT INTO tips (tip_id, component_type, title, content, write_date) 
+INSERT INTO tips (title, content, write_date, fk_topic)
 VALUES 
-('d45s4d5s4d545sds4ds', 'Chaîne', 'Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
+('Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
 - Lorsque vous n’utilisez pas votre vélo, évitez de mettre votre chaine sur un braquet trop élevé ou évitez simplement de la « croiser ». Il est donc important de ne pas la placer sur une configuration « grand plateau, grand pignon » ou « grand plateau, petit pignon ». L’objectif est qu’elle ne soit pas trop tendue. Cela a tendance à l’étirer et à réduire sa durée de vie. 
 - Lorsque vous arrivez à 4000kms, démontez votre chaine, étalez-là à côté d’une chaine neuve. Si la différence entre les deux est de plus d’un moyeu, changez de chaine.
-- Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', NOW()), 
+- Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', NOW(), 'Chaîne'), 
 
-('dad89a8s9d5a56d2az', 'Pneu', 'Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
+('Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
 Pour les VTC, le gonflage est plus classique et se situe généralement entre 2 et 3 bars par pneu. 
-Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', NOW()),
+Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', NOW(), 'Pneu'),
 
-('dsq4dq56d1s1q4e1fq', 'Pneu', 'Changer un pneu sur le vélo', '1/ DÉMONTER UN PNEU DE VÉLO : ÉTAPE 1
+('Changer un pneu sur le vélo', '1/ DÉMONTER UN PNEU DE VÉLO : ÉTAPE 1
 Pour retirer la roue du vélo, commencez par desserrer les boulons de chaque côté de l’axe. Enlevez ensuite le bouchon de valve, c’est-à-dire l’endroit par lequel vous pouvez gonfler votre roue.
 Il ne vous reste plus qu’à appuyer sur le petit picot situé au milieu de la valve, de manière à dégonfler le pneu. Inutile d’attendre que le pneu soit entièrement dégonflé : une fois que le pneu est très mou, cela suffit.
 ÉTAPE 2 : DÉGAGER LE PNEU DE VÉLO DE LA JANTE
@@ -93,4 +123,57 @@ Attention au sens du pneu : la plupart des pneus ont un sens. Il est en généra
 ÉTAPE 3 : METTRE LA CHAMBRE À AIR
 Il ne vous reste plus qu’à mettre la chambre à air, légèrement gonflée. Faites passer la valve par le trou de la jante, avant de placer la chambre à air entièrement dans le pneu.
 
-Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW());
+Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW(), 'Pneu');
+
+CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
+RETURNS DATE AS $$
+DECLARE change_date bikes.added_at%TYPE;
+BEGIN
+	SELECT INTO change_date 
+		CASE WHEN MAX(changed_at) IS NULL 
+			THEN (SELECT added_at
+				FROM bikes, bikes_components
+				WHERE bikes.bike_id = bikes_components.fk_bike
+				AND bikes_components.fk_component = compo_id)
+			ELSE MAX(changed_at)
+		END
+	FROM components_changed
+	WHERE components_changed.fk_component = compo_id;
+	RETURN change_date;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION get_km_since_date_and_last_change(compo_id VARCHAR, change_date DATE)
+RETURNS NUMERIC AS $$
+DECLARE km bikes.average_km_week%TYPE;
+BEGIN
+	SELECT DATE_PART('day', change_date::TIMESTAMP - get_last_changed_date(compo_id)) * (bikes.average_km_week / 7)
+	INTO km
+	FROM bikes, bikes_components
+	WHERE bikes_components.fk_component = compo_id;
+	
+	RETURN km;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE PROCEDURE delete_bike(b_id VARCHAR)
+AS $$
+DECLARE 
+compo_id components.component_id%TYPE;
+compo_curs CURSOR FOR 
+	SELECT DISTINCT components.component_id
+	FROM bikes_components, components
+	WHERE bikes_components.fk_bike = b_id
+	AND bikes_components.fk_component = components.component_id;
+BEGIN 
+	OPEN compo_curs;
+	LOOP 
+		FETCH compo_curs INTO compo_id;
+		DELETE FROM components WHERE component_id = compo_id;
+		EXIT WHEN NOT FOUND compo_curs;
+	END LOOP;
+    CLOSE compo_curs;
+	
+	DELETE FROM bikes WHERE bikes.bike_id = b_id;
+END;
+$$ LANGUAGE PLPGSQL;

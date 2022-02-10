@@ -3,7 +3,8 @@ const pool = require('../db/db');
 /**
  * @returns QueryResult<any>
  */
-module.exports.getAll = async () => {
+module.exports.get = async () => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 
@@ -17,6 +18,7 @@ module.exports.getAll = async () => {
  * @returns QueryResult<any> 
  */
 module.exports.getById = async (tipId) => {
+
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 
@@ -25,11 +27,16 @@ module.exports.getById = async (tipId) => {
     return res;
 }
 
-module.exports.getByType = async (componentType) => {
+/**
+ * @param {String} topic 
+ * @returns QueryResult<any>
+ */
+module.exports.getByTopic = async (topic) => {
+    
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 
-                                    WHERE component_type LIKE $1`, [componentType]);
+                                    WHERE fk_topic LIKE $1`, [topic]);
     client.release(true);
     return res;
 }
