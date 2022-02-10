@@ -27,12 +27,16 @@ module.exports.getById = async (tipId) => {
     return res;
 }
 
-module.exports.getByTopic = async (componentType) => {
+/**
+ * @param {String} topic 
+ * @returns QueryResult<any>
+ */
+module.exports.getByTopic = async (topic) => {
     
     const client = await pool.connect();
     const res = await client.query(`SELECT * 
                                     FROM tips 
-                                    WHERE fk_topic LIKE $1`, [componentType]);
+                                    WHERE fk_topic LIKE $1`, [topic]);
     client.release(true);
     return res;
 }

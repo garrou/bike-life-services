@@ -1,7 +1,7 @@
 const pool = require('../db/db');
 
 /**
- * @param {Number} memberId
+ * @param {String} memberId
  * @param {Bike} bike
  * @returns QueryResult<any>
  */
@@ -17,7 +17,7 @@ module.exports.create = async (memberId, bike) => {
 }
 
 /**
- * @param {Number} memberId 
+ * @param {String} memberId 
  * @returns QueryResult<any>
  */
 module.exports.getByMember = async (memberId) => {
@@ -33,7 +33,7 @@ module.exports.getByMember = async (memberId) => {
 }
 
 /**
- * @param {Number} bikeId 
+ * @param {String} bikeId 
  * @returns QueryResult<any>
  */
 module.exports.get = async (bikeId) => {
@@ -48,7 +48,7 @@ module.exports.get = async (bikeId) => {
 }
 
 /**
- * @param {Number} bikeId 
+ * @param {String} bikeId 
  * @returns QueryResult<any>
  */
 module.exports.delete = async (bikeId) => {

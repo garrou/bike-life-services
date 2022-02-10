@@ -16,7 +16,7 @@ module.exports.signup = async (req, res) => {
     }
     let resp = await memberRepository.get(email);
 
-    if (resp.rowCount === 1) {
+    if (resp.rowCount !== 0) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
     }
     const salt = await bcrypt.genSalt();
@@ -48,29 +48,43 @@ module.exports.login = async (req, res) => {
     return res.status(http.OK).json({'member': member, 'accessToken': accessToken});
 }
 
-module.exports.update = async (req, res) => {
+module.exports.updatePassword = async (req, res) => {
 
-    const { id, email, password } = req.body;
+    const { id } = req.params;
+    const { password } = req.body;
 
-    if (!validator.isEmail(email)) {
-        return res.status(http.FORBIDDEN).json({'confirm': 'Email invalide'});
-    }
     if (!validator.isPassword(password)) {
         return res.status(http.FORBIDDEN).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
     } 
-    let resp = await memberRepository.get(email);
-
-    if (resp.rowCount === 1) {
-        return res.status(http.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
-    }
     const salt = await bcrypt.genSalt();
     const passHash = await bcrypt.hash(password, salt);
-    resp = await memberRepository.update(id, email, passHash);
+    const resp = await memberRepository.updatePassword(id, passHash);
 
     if (resp.rowCount === 0) {
         return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la mise à jour.'});
     }
-    return res.status(http.OK).json({'confirm': 'Compte modifié'});
+    return res.status(http.OK).json({'confirm': 'Mot de passe modifié'});
+}
+
+module.exports.updateEmail = async (req, res) => {
+
+    const { id } = req.params;
+    const { email } = req.body;
+
+    if (!validator.isEmail(email)) {
+        return res.status(http.FORBIDDEN).json({'confirm': 'Email invalide.'});
+    } 
+    let resp = await memberRepository.get(email);
+
+    if (resp.rowCount !== 0) {
+        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Cet email est déjà associé à un compte.'});
+    }
+    resp = await memberRepository.updateEmail(id, email);
+
+    if (resp.rowCount === 0) {
+        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la mise à jour.'});
+    }
+    return res.status(http.OK).json({'confirm': 'Email modifié'});
 }
 
 module.exports.getEmail = async (req, res) => {

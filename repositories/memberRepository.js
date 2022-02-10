@@ -46,7 +46,7 @@ module.exports.get = async (email) => {
 }
 
 /**
- * @param {Number} id 
+ * @param {String} id 
  * @returns QueryResult<any> 
  */
 module.exports.getEmailById = async (id) => {
@@ -61,18 +61,33 @@ module.exports.getEmailById = async (id) => {
 }
 
 /**
- * @param {Number} id 
+ * @param {String} id 
  * @param {String} email 
- * @param {String} password 
  * @returns QueryResult<any>
  */
-module.exports.update = async (id, email, password) => {
+module.exports.updateEmail = async (id, email) => {
     
     const client = await pool.connect();
     const res = await client.query(`UPDATE members 
-                                    SET email = $1, password = $2 
-                                    WHERE id = $3`, 
-                                    [email, password, id]);
+                                    SET email = $1
+                                    WHERE member_id = $2`, 
+                                    [email, id]);
+    client.release(true);
+    return res;
+}
+
+/**
+ * @param {String} id 
+ * @param {String} password 
+ * @returns QueryResult<any>
+ */
+ module.exports.updatePassword = async (id, password) => {
+    
+    const client = await pool.connect();
+    const res = await client.query(`UPDATE members 
+                                    SET password = $1
+                                    WHERE member_id = $2`, 
+                                    [password, id]);
     client.release(true);
     return res;
 }
