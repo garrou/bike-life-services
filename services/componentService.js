@@ -38,3 +38,10 @@ module.exports.getChangeHistoric = async (req, res) => {
     const changes = Change.createFromList(resp.rows);
     return res.status(http.OK).json(changes);
 }
+
+module.exports.numberOfComponentChangeByMember = async (req, res) => {
+
+    const { memberId, year } = req.params;
+    const resp = await componentRepository.numberOfComponentChangeByMember(memberId, year);
+    return res.status(http.OK).json(resp.rows);
+}

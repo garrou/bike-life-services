@@ -90,3 +90,21 @@ module.exports.getChangeHistoric = async (componentId) => {
     client.release(true);
     return res;
 }
+
+module.exports.numberOfComponentChangeByMember = async (memberId, year) => {
+
+    const client = await pool.connect();
+    const res = await client.query(`SELECT components.fk_component_type, COUNT(*) AS num
+                                    FROM bikes, components, members_bikes, bikes_components, components_changed
+                                    WHERE members_bikes.fk_member = $1
+                                    AND members_bikes.fk_bike = bikes.bike_id
+                                    AND members_bikes.fk_bike = bikes_components.fk_bike
+                                    AND bikes_components.fk_component = components.component_id
+                                    AND components_changed.fk_component = components.component_id
+                                    AND components.active = true
+                                    AND EXTRACT(YEAR FROM changed_at) = $2
+                                    GROUP BY components.fk_component_type`,
+                                    [memberId, year]);
+    client.release(true);
+    return res;
+}

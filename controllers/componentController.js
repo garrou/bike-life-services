@@ -11,4 +11,6 @@ router.patch('/components/:componentId', guard.checkToken, componentService.chan
 
 router.get('/components/:componentId/change-historic', guard.checkToken, componentService.getChangeHistoric);
 
+router.get('/members/:memberId/components/change-stats/years/:year', guard.checkToken, componentService.numberOfComponentChangeByMember);
+
 module.exports = router;
