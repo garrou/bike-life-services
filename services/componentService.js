@@ -39,9 +39,16 @@ module.exports.getChangeHistoric = async (req, res) => {
     return res.status(http.OK).json(changes);
 }
 
-module.exports.numberOfComponentChangeByMember = async (req, res) => {
+module.exports.numberOfComponentChangeByMemberByYear = async (req, res) => {
 
     const { memberId, year } = req.params;
-    const resp = await componentRepository.numberOfComponentChangeByMember(memberId, year);
+    const resp = await componentRepository.numberOfComponentChangeByMemberByYear(memberId, year);
+    return res.status(http.OK).json(resp.rows);
+}
+
+module.exports.averageKmComponentChangeByMemberByYear = async (req, res) => {
+ 
+    const { memberId, year } = req.params;
+    const resp = await componentRepository.averageKmComponentChangeByMemberByYear(memberId, year);
     return res.status(http.OK).json(resp.rows);
 }
