@@ -16,7 +16,7 @@ VALUES ('VTT'),
 
 CREATE TABLE bikes (
 	bike_id VARCHAR NOT NULL PRIMARY KEY,
-	name VARCHAR NOT NULL,
+	name VARCHAR(50) NOT NULL,
 	electric BOOLEAN NOT NULL,
 	average_use_week INTEGER NOT NULL,
 	average_km_week NUMERIC NOT NULL,

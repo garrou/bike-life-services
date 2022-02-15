@@ -11,4 +11,10 @@ router.patch('/components/:componentId', guard.checkToken, componentService.chan
 
 router.get('/components/:componentId/change-historic', guard.checkToken, componentService.getChangeHistoric);
 
+router.get('/members/:memberId/components/nb-change-stats/years/:year', guard.checkToken, componentService.numberOfComponentChangeByMemberByYear);
+
+router.get('/members/:memberId/components/km-change-stats/years/:year', guard.checkToken, componentService.averageKmComponentChangeByMemberByYear);
+
+router.get('/members/:memberId/components/changes', guard.checkToken, componentService.totalNbChanges);
+
 module.exports = router;

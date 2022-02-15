@@ -1,7 +1,7 @@
 const componentRepository = require('../repositories/componentRepository');
 const http = require('../constants/http.json');
-const Change = require('../models/Change');
 const Component = require('../models/Component');
+const { createFromList } = require('../models/ComponentChange');
 
 module.exports.getBikeComponents = async (req, res) => {
     
@@ -35,6 +35,30 @@ module.exports.getChangeHistoric = async (req, res) => {
 
     const { componentId } = req.params;
     const resp = await componentRepository.getChangeHistoric(componentId);
-    const changes = Change.createFromList(resp.rows);
+    const changes = createFromList(resp.rows);
+    return res.status(http.OK).json(changes);
+}
+
+module.exports.numberOfComponentChangeByMemberByYear = async (req, res) => {
+
+    const { memberId, year } = req.params;
+    const resp = await componentRepository.numberOfComponentChangeByMemberByYear(memberId, year);
+    const changes = createFromList(resp.rows);
+    return res.status(http.OK).json(changes);
+}
+
+module.exports.averageKmComponentChangeByMemberByYear = async (req, res) => {
+ 
+    const { memberId, year } = req.params;
+    const resp = await componentRepository.averageKmComponentChangeByMemberByYear(memberId, year);
+    const changes = createFromList(resp.rows);
+    return res.status(http.OK).json(changes);
+}
+
+module.exports.totalNbChanges = async (req, res) => {
+
+    const { memberId } = req.params;
+    const resp = await componentRepository.totalNbChange(memberId);
+    const changes = createFromList(resp.rows);
     return res.status(http.OK).json(changes);
 }

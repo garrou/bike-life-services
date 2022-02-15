@@ -50,6 +50,11 @@ test('Check if is not a valid bike with negative number', () => {
     expect(bike.isValid()).toBe(false);
 });
 
+test('Check if is not a valid bike with too big name', () => {
+    bike.name = new Array(52).join('a');
+    expect(bike.isValid()).toBe(false);
+});
+
 test('Check if Bike is created from json', () => {
     expect(bike.id).toBe('eeefzfz');
     expect(bike.name).toBe('test');
