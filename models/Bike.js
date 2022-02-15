@@ -26,7 +26,8 @@ class Bike {
      */
     isValid = () => validator.isDate(this.addedAt) 
                     && validator.isKm(this.kmPerWeek)
-                    && validator.isWeekDay(this.nbUsedPerWeek);
+                    && validator.isWeekDay(this.nbUsedPerWeek)
+                    && validator.isValidName(this.name);
     
 
     /**
