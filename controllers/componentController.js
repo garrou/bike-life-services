@@ -15,4 +15,6 @@ router.get('/members/:memberId/components/nb-change-stats/years/:year', guard.ch
 
 router.get('/members/:memberId/components/km-change-stats/years/:year', guard.checkToken, componentService.averageKmComponentChangeByMemberByYear);
 
+router.get('/members/:memberId/components/changes', guard.checkToken, componentService.totalNbChanges);
+
 module.exports = router;
