@@ -6,25 +6,28 @@ class Component {
      * @param {String} type
      * @param {Boolean} active
      * @param {Date} changedAt
+     * @param {Number} totalKm
      */
-    constructor(id, duration, type, active, changedAt) {
+    constructor(id, duration, type, active, changedAt, totalKm) {
         this.id = id;
         this.duration = duration;
         this.type = type;
         this.active = active;
         this.changedAt = changedAt;
+        this.totalKm = totalKm;
     }
 
     /**
      * @param {Array} records 
-     * @returns Array<Component> 
+     * @returns {Array<Component>} 
      */
     static createFromList = (records) => records
                                             .map((compo) => new Component(compo.component_id, 
                                                                         compo.duration,
                                                                         compo.fk_component_type,
                                                                         compo.active,
-                                                                        compo.changed_at));
+                                                                        compo.changed_at,
+                                                                        compo.total_km));
     
 }
 

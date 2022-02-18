@@ -10,8 +10,9 @@ class Bike {
      * @param {Boolean} electric
      * @param {String} type
      * @param {Date} addedAt
+     * @param {Number} totalKm
      */
-    constructor(id, name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt) {
+    constructor(id, name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt, totalKm) {
         this.id = id;
         this.name = name;
         this.kmPerWeek = kmPerWeek;
@@ -19,6 +20,7 @@ class Bike {
         this.electric = electric;
         this.type = type;
         this.addedAt = addedAt;
+        this.totalKm = totalKm;
     }
 
     /**
@@ -32,7 +34,7 @@ class Bike {
 
     /**
      * @param {JSON} json 
-     * @returns Bike
+     * @returns {Bike}
      */
     static fromJson = (json) => new Bike(json.id, 
                                         json.name, 
@@ -40,12 +42,13 @@ class Bike {
                                         parseInt(json.nbUsedPerWeek), 
                                         json.electric, 
                                         json.type, 
-                                        json.addedAt);
+                                        json.addedAt,
+                                        0);
     
 
     /**
      * @param {Array} records 
-     * @returns Array<Bike>
+     * @returns {Array<Bike>}
      */
     static createFromList = (records) => records
                                             .map((bike) => new Bike(bike.bike_id, 
@@ -54,7 +57,8 @@ class Bike {
                                                                     bike.average_use_week, 
                                                                     bike.electric,
                                                                     bike.bike_type,
-                                                                    bike.added_at));
+                                                                    bike.added_at,
+                                                                    bike.total_km));
 }
 
 module.exports = Bike;

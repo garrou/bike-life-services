@@ -7,7 +7,11 @@ const pool = require('../db/db');
 module.exports.getBikeComponents = async (bikeId) => {
     
     const client = await pool.connect();
-    const res = await client.query(`SELECT components.*, get_last_changed_date(component_id) AS changed_at
+    const res = await client.query(`SELECT components.*, get_last_changed_date(component_id) AS changed_at,
+                                    DATE_PART('day', NOW() - get_last_changed_date(component_id)) 
+                                        * (SELECT average_km_week / 7 
+                                           FROM bikes 
+                                           WHERE bike_id = $1) AS total_km
                                     FROM components, bikes_components
                                     WHERE fk_bike = $1
                                     AND component_id = fk_component
@@ -46,7 +50,9 @@ module.exports.create = async (componentId, bikeId, duration, type) => {
 module.exports.getAlerts = async (memberId, percent) => {
 
     const client = await pool.connect();
-    const res = await client.query(`SELECT DISTINCT components.*, get_last_changed_date(component_id) AS changed_at
+    const res = await client.query(`SELECT DISTINCT components.*, get_last_changed_date(component_id) AS changed_at,
+                                    DATE_PART('day', NOW() - get_last_changed_date(component_id)) * (bikes.average_km_week / 7) 
+                                    AS total_km
                                     FROM bikes, components, members_bikes, bikes_components
                                     WHERE members_bikes.fk_member = $1
                                     AND members_bikes.fk_bike = bikes.bike_id

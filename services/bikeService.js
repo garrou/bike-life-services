@@ -10,7 +10,7 @@ module.exports.create = async (req, res) => {
     
     const { memberId } = req.params;
     const { name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt } = req.body;
-    const bike = new Bike(uuidv1(), name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt);
+    const bike = new Bike(uuidv1(), name, kmPerWeek, nbUsedPerWeek, electric, type, addedAt, 0);
 
     if (!bike.isValid()) {
         return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});    

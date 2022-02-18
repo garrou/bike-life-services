@@ -17,7 +17,7 @@ class Tip {
 
     /**
      * @param {Array} records 
-     * @returns Array<Tip>
+     * @returns {Array<Tip>}
      */
     static createFromList = (records) => records
                                         .map((tip) => new Tip(tip.tip_id,

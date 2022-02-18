@@ -11,7 +11,7 @@ class ComponentChange {
 
     /**
      * @param {Array} records 
-     * @returns Array<Component> 
+     * @returns {Array<Component>} 
      */
     static createFromList = (records) => records
                                             .map((compo) => new ComponentChange(compo.label, 

@@ -23,7 +23,8 @@ module.exports.create = async (memberId, bike) => {
 module.exports.getByMember = async (memberId) => {
 
     const client = await pool.connect();
-    const res = await client.query(`SELECT bikes.* 
+    const res = await client.query(`SELECT bikes.*, DATE_PART('day', NOW() - bikes.added_at) * (bikes.average_km_week / 7) 
+                                    AS total_km 
                                     FROM bikes, members_bikes
                                     WHERE bike_id = fk_bike
                                     AND fk_member = $1`, 
@@ -39,7 +40,8 @@ module.exports.getByMember = async (memberId) => {
 module.exports.get = async (bikeId) => {
 
     const client = await pool.connect();
-    const res = await client.query(`SELECT bikes.* 
+    const res = await client.query(`SELECT bikes.*, DATE_PART('day', NOW() - bikes.added_at) * (bikes.average_km_week / 7) 
+                                    AS total_km 
                                     FROM bikes 
                                     WHERE bike_id = $1`, 
                                     [bikeId]);
