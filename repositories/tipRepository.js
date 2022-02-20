@@ -1,7 +1,7 @@
 const pool = require('../db/db');
 
 /**
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.get = async () => {
 
@@ -15,7 +15,7 @@ module.exports.get = async () => {
 
 /**
  * @param {Number} tipId 
- * @returns QueryResult<any> 
+ * @returns {QueryResult<any>}
  */
 module.exports.getById = async (tipId) => {
 
@@ -29,7 +29,7 @@ module.exports.getById = async (tipId) => {
 
 /**
  * @param {String} topic 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.getByTopic = async (topic) => {
     

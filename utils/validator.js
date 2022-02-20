@@ -16,10 +16,6 @@ module.exports.isKm = (toCheck) => {
     return toCheck >= 0 && toCheck < Number.MAX_VALUE;
 }
 
-module.exports.isWeekDay = (toCheck) => {
-    return toCheck > 0 && toCheck < 8;
-}
-
 module.exports.isValidName = (toCheck) => {
     return validator.isLength(toCheck, {min: 1, max: 50});
 }

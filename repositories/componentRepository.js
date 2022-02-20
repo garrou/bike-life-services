@@ -2,15 +2,15 @@ const pool = require('../db/db');
 
 /**
  * @param {String} bikeId 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.getBikeComponents = async (bikeId) => {
     
     const client = await pool.connect();
     const res = await client.query(`SELECT components.*, get_last_changed_date(component_id) AS changed_at
                                     FROM components, bikes_components
-                                    WHERE fk_bike = $1
-                                    AND component_id = fk_component
+                                    WHERE component_id = fk_component
+                                    AND fk_bike = $1
                                     AND active = true
                                     ORDER BY fk_component_type`,
                                     [bikeId]);
@@ -20,17 +20,18 @@ module.exports.getBikeComponents = async (bikeId) => {
 
 /**
  * @param {String} componentId
- * @param  {String} bikeId
- * @param {String} type
+ * @param {String} bikeId
+ * @param {Number} km
  * @param {Number} duration
- * @returns QueryResult<any>
+ * @param {String} type
+ * @returns {QueryResult<any>}
  */
-module.exports.create = async (componentId, bikeId, duration, type) => {
+module.exports.create = async (componentId, bikeId, km, duration, type) => {
 
     const client = await pool.connect();
-    const res = await client.query(`INSERT INTO components (component_id, duration, fk_component_type, active)
-                                    VALUES ($1, $2, $3, true)`,
-                                    [componentId, duration, type]);
+    const res = await client.query(`INSERT INTO components (component_id, duration, fk_component_type, active, total_km)
+                                    VALUES ($1, $2, $3, true, $4)`,
+                                    [componentId, duration, type, km]);
     await client.query(`INSERT INTO bikes_components 
                         VALUES ($1, $2)`, 
                         [bikeId, componentId]);
@@ -39,9 +40,38 @@ module.exports.create = async (componentId, bikeId, duration, type) => {
 }
 
 /**
+ * @param {String} componentId 
+ * @returns {QueryResult<any>}
+ */
+module.exports.resetKm = async (componentId) => {
+
+    const client = await pool.connect();
+    const res = await client.query(`UPDATE components
+                                    SET total_km = 0
+                                    WHERE component_id = $1`,
+                                    [componentId]);
+    client.release(true);
+    return res;
+}
+
+/**
+ * @param {String} componentId 
+ * @param {Number} km 
+ */
+module.exports.addDailyKm = async (componentId, km) => {
+
+    const client = await pool.connect();
+    await client.query(`UPDATE components
+                        SET total_km = total_km + $1
+                        WHERE component_id = $2`,
+                        [km, componentId]);
+    client.release(true);
+}
+
+/**
  * @param {String} memberId 
  * @param {Number} percent 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.getAlerts = async (memberId, percent) => {
 
@@ -53,8 +83,7 @@ module.exports.getAlerts = async (memberId, percent) => {
                                     AND members_bikes.fk_bike = bikes_components.fk_bike
                                     AND bikes_components.fk_component = components.component_id
                                     AND components.active = true
-                                    AND DATE_PART('day', NOW() - get_last_changed_date(component_id)) 
-                                        * (bikes.average_km_week / 7) / components.duration >= $2`,
+                                    AND components.total_km / components.duration >= $2`,
                                     [memberId, percent]);
     client.release(true);
     return res;
@@ -63,21 +92,25 @@ module.exports.getAlerts = async (memberId, percent) => {
 /**
  * @param {String} componentId 
  * @param {Date} changedAt 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
-module.exports.changeComponent = async (componentId, changedAt) => {
+module.exports.changeComponent = async (componentId, changedAt, km) => {
 
     const client = await pool.connect();
     const res = await client.query(`INSERT INTO components_changed
-                                    VALUES ($1, $2, (SELECT get_km_since_date_and_last_change($1, $2)))`,
-                                    [componentId, changedAt]);
+                                    VALUES ($1, $2, $3)`,
+                                    [componentId, changedAt, km]);
+    await client.query(`UPDATE components
+                        SET total_km = 0
+                        WHERE component_id = $1`,
+                        [componentId]);
     client.release(true);
     return res;
 }
 
 /**
  * @param {String} componentId 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.getChangeHistoric = async (componentId) => {
 
@@ -91,7 +124,12 @@ module.exports.getChangeHistoric = async (componentId) => {
     return res;
 }
 
-module.exports.numberOfComponentChangeByMemberByYear = async (memberId, year) => {
+/**
+ * @param {String} memberId 
+ * @param {Number} year 
+ * @returns {QueryResult<any>}
+ */
+module.exports.getNumOfComponentChangeByMemberByYear = async (memberId, year) => {
 
     const client = await pool.connect();
     const res = await client.query(`SELECT components.fk_component_type AS label, COUNT(*) AS value
@@ -109,7 +147,12 @@ module.exports.numberOfComponentChangeByMemberByYear = async (memberId, year) =>
     return res;
 }
 
-module.exports.averageKmComponentChangeByMemberByYear = async (memberId, year) => {
+/**
+ * @param {String} memberId 
+ * @param {Number} year 
+ * @returns {QueryResult<any>}
+ */
+module.exports.getAvgKmComponentChangeByMemberByYear = async (memberId, year) => {
 
     const client = await pool.connect();
     const res = await client.query(`SELECT components.fk_component_type AS label, AVG(components_changed.km_realised) AS value
@@ -127,7 +170,11 @@ module.exports.averageKmComponentChangeByMemberByYear = async (memberId, year) =
     return res;
 }
 
-module.exports.totalNbChange = async (memberId) => {
+/**
+ * @param {String} memberId 
+ * @returns {QueryResult<any>}
+ */
+module.exports.getTotalNbChange = async (memberId) => {
 
     const client = await pool.connect();
     const res = await client.query(`SELECT EXTRACT(YEAR FROM components_changed.changed_at) AS label, COUNT(*) AS value

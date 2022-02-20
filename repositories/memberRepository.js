@@ -3,7 +3,7 @@ const Member = require('../models/Member');
 
 /**
  * @param {Member} member
- * @returns QueryResult<any> 
+ * @returns {QueryResult<any>}
  */
 module.exports.create = async (member) => {
 
@@ -17,7 +17,7 @@ module.exports.create = async (member) => {
 
 /**
  * @param {string} email 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.getActive = async (email) => {
 
@@ -32,7 +32,7 @@ module.exports.getActive = async (email) => {
 
 /**
  * @param {string} email 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.get = async (email) => {
 
@@ -47,7 +47,7 @@ module.exports.get = async (email) => {
 
 /**
  * @param {String} id 
- * @returns QueryResult<any> 
+ * @returns {QueryResult<any>}
  */
 module.exports.getEmailById = async (id) => {
 
@@ -63,7 +63,7 @@ module.exports.getEmailById = async (id) => {
 /**
  * @param {String} id 
  * @param {String} email 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.updateEmail = async (id, email) => {
     
@@ -79,7 +79,7 @@ module.exports.updateEmail = async (id, email) => {
 /**
  * @param {String} id 
  * @param {String} password 
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
  module.exports.updatePassword = async (id, password) => {
     

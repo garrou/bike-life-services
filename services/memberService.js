@@ -1,11 +1,11 @@
+require('dotenv').config();
+const Member = require('../models/Member');
 const bcrypt = require('bcrypt');
+const generator = require('../utils/generator');
 const http = require('../constants/http.json');
 const jwt = require('jsonwebtoken');
 const memberRepository = require('../repositories/memberRepository');
-const Member = require('../models/Member');
-const { v1: uuidv1 } = require('uuid');
 const validator = require('../utils/validator');
-require('dotenv').config();
 
 module.exports.signup = async (req, res) => {
 
@@ -17,11 +17,11 @@ module.exports.signup = async (req, res) => {
     let resp = await memberRepository.get(email);
 
     if (resp.rowCount !== 0) {
-        return res.status(http.FORBIDDEN).json({'confirm': 'Un compte est déjà associé à cet email.'});
+        return res.status(http.CONFLICT).json({'confirm': 'Un compte est déjà associé à cet email.'});
     }
     const salt = await bcrypt.genSalt();
     const passHash = await bcrypt.hash(password, salt);
-    const member = new Member(uuidv1(), email, passHash, true);
+    const member = new Member(generator.uuid(), email, passHash, true);
     resp = await memberRepository.create(member);
 
     if (resp.rowCount === 0) {
@@ -91,5 +91,5 @@ module.exports.getEmail = async (req, res) => {
     
     const { id } = req.params;
     const resp = await memberRepository.getEmailById(id);
-    return res.status(http.OK).json({'email': resp.rows[0].email});
+    return res.status(http.OK).json({'email': resp.rows.length === 1 ? resp.rows[0].email : ''});
 }

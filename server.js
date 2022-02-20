@@ -1,3 +1,5 @@
+require('dotenv').config();
+require('./tasks/cron');
 const express = require('express');
 const bikeController = require('./controllers/bikeController');
 const componentController = require('./controllers/componentController');
@@ -6,7 +8,6 @@ const memberController = require('./controllers/memberController');
 const tipController = require('./controllers/tipController');
 const { cors } = require('./middlewares/cors');
 const app = express();
-require('dotenv').config();
 
 app.use(express.json());
 

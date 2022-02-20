@@ -13,6 +13,17 @@ class Member {
         this.active = active;
     }
 
+    /**
+     * @param {Array} records 
+     * @returns {Array<Member>}
+     */
+     static fromList = (records) => { 
+        return records
+                .map((member) => new Member(member.member_id, 
+                                            member.email, 
+                                            member.password, 
+                                            member.active));
+    }
 }
 
 module.exports = Member;
