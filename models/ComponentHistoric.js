@@ -1,11 +1,11 @@
-class ComponentChange {
+class ComponentHistoric {
 
     /**
      * @param {} label
      * @param {} value 
      */
     constructor(label, value) {
-        this.label = label.toString();
+        this.label = label;
         this.value = parseFloat(value);
     }
 
@@ -15,8 +15,8 @@ class ComponentChange {
      */
     static fromList = (records) => {
         return records
-                .map((compo) => new ComponentChange(compo.label, compo.value));
+                .map((compo) => new ComponentHistoric(compo.label, compo.value));
     }
 }
 
-module.exports = ComponentChange;
+module.exports = ComponentHistoric;

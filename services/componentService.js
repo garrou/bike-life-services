@@ -1,13 +1,14 @@
+const Component = require('../models/Component');
+const ComponentChange = require('../models/ComponentChange');
+const ComponentHistoric = require('../models/ComponentHistoric');
 const componentRepository = require('../repositories/componentRepository');
 const http = require('../constants/http.json');
-const Component = require('../models/Component');
-const { createFromList } = require('../models/ComponentChange');
 
 module.exports.getBikeComponents = async (req, res) => {
     
     const { bikeId } = req.params;
     const resp = await componentRepository.getBikeComponents(bikeId);
-    const components = Component.createFromList(resp.rows);
+    const components = Component.fromList(resp.rows);
     return res.status(http.OK).json(components);
 }
 
@@ -15,19 +16,16 @@ module.exports.getAlerts = async (req, res) => {
 
     const { memberId } = req.params;
     const resp = await componentRepository.getAlerts(memberId, 0.8);
-    const components = Component.createFromList(resp.rows);
+    const components = Component.fromList(resp.rows);
     return res.status(http.OK).json(components);
 }
 
 module.exports.changeComponent = async (req, res) => {
 
     const { componentId } = req.params;
-    const { changedAt } = req.body;
-    const resp = await componentRepository.changeComponent(componentId, changedAt);
-
-    if (resp.rowCount === 0) {
-        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le changement du composant'});
-    }
+    const { changedAt, km } = req.body;
+    await componentRepository.changeComponent(componentId, changedAt, km);
+    await componentRepository.resetKm(componentId);
     return res.status(http.OK).json({'confirm': 'Composant changé'});
 }
 
@@ -35,30 +33,30 @@ module.exports.getChangeHistoric = async (req, res) => {
 
     const { componentId } = req.params;
     const resp = await componentRepository.getChangeHistoric(componentId);
-    const changes = createFromList(resp.rows);
+    const changes = ComponentHistoric.fromList(resp.rows);
     return res.status(http.OK).json(changes);
 }
 
-module.exports.numberOfComponentChangeByMemberByYear = async (req, res) => {
+module.exports.getNumOfComponentChangeByMemberByYear = async (req, res) => {
 
     const { memberId, year } = req.params;
-    const resp = await componentRepository.numberOfComponentChangeByMemberByYear(memberId, year);
-    const changes = createFromList(resp.rows);
+    const resp = await componentRepository.getNumOfComponentChangeByMemberByYear(memberId, year);
+    const changes = ComponentChange.fromList(resp.rows);
     return res.status(http.OK).json(changes);
 }
 
-module.exports.averageKmComponentChangeByMemberByYear = async (req, res) => {
+module.exports.getAvgKmComponentChangeByMemberByYear = async (req, res) => {
  
     const { memberId, year } = req.params;
-    const resp = await componentRepository.averageKmComponentChangeByMemberByYear(memberId, year);
-    const changes = createFromList(resp.rows);
+    const resp = await componentRepository.getAvgKmComponentChangeByMemberByYear(memberId, year);
+    const changes = ComponentChange.fromList(resp.rows);
     return res.status(http.OK).json(changes);
 }
 
-module.exports.totalNbChanges = async (req, res) => {
+module.exports.getTotalNbChange = async (req, res) => {
 
     const { memberId } = req.params;
-    const resp = await componentRepository.totalNbChange(memberId);
-    const changes = createFromList(resp.rows);
+    const resp = await componentRepository.getTotalNbChange(memberId);
+    const changes = ComponentChange.fromList(resp.rows);
     return res.status(http.OK).json(changes);
 }

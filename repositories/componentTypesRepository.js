@@ -1,7 +1,7 @@
 const pool = require('../db/db');
 
 /**
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
 module.exports.get = async () => {
     
@@ -14,7 +14,7 @@ module.exports.get = async () => {
 }
 
 /**
- * @returns QueryResult<any>
+ * @returns {QueryResult<any>}
  */
  module.exports.getWithoutBattery = async () => {
 

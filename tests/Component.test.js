@@ -1,10 +1,11 @@
-const { createFromList } = require("./Component");
+const { fromList } = require("../models/Component");
 
-const components = createFromList([{
+const components = fromList([{
     'component_id': 'flqfkldmqkf57',
     'duration': 2568.85,
     'fk_component_type': 'Pneu',
-    'active': false
+    'active': false,
+    'total_km': '45'
 }]);
 
 test('Check values of component', () => {
@@ -13,4 +14,5 @@ test('Check values of component', () => {
     expect(components[0].duration).toBe(2568.85);
     expect(components[0].type).toBe('Pneu');
     expect(components[0].active).toBe(false);
+    expect(components[0].totalKm).toBe(45);
 });

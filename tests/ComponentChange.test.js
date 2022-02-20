@@ -1,8 +1,8 @@
-const { createFromList } = require("./ComponentChange");
+const { fromList } = require("../models/ComponentChange");
 
-const changes = createFromList([{
+const changes = fromList([{
     'label': '2022-02-09',
-    'value': 4536.45,
+    'value': '4536.45',
 }]);
 
 test('Check values of component', () => {

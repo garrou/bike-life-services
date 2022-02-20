@@ -18,10 +18,11 @@ CREATE TABLE bikes (
 	bike_id VARCHAR NOT NULL PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
 	electric BOOLEAN NOT NULL,
-	average_use_week INTEGER NOT NULL,
 	average_km_week NUMERIC NOT NULL,
 	added_at DATE NOT NULL,
-	bike_type VARCHAR NOT NULL REFERENCES bike_types(name)
+	bike_type VARCHAR NOT NULL REFERENCES bike_types(name),
+	total_km NUMERIC NOT NULL,
+	automatic_km BOOLEAN NOT NULL
 );
 
 CREATE TABLE members_bikes (
@@ -48,6 +49,7 @@ CREATE TABLE components (
 	component_id VARCHAR NOT NULL PRIMARY KEY,
 	duration NUMERIC NOT NULL,
 	active BOOLEAN NOT NULL,
+	total_km NUMERIC NOT NULL,
 	fk_component_type VARCHAR NOT NULL REFERENCES components_type(name)
 );
 
@@ -140,19 +142,6 @@ BEGIN
 	FROM components_changed
 	WHERE components_changed.fk_component = compo_id;
 	RETURN change_date;
-END;
-$$ LANGUAGE PLPGSQL;
-
-CREATE OR REPLACE FUNCTION get_km_since_date_and_last_change(compo_id VARCHAR, change_date DATE)
-RETURNS NUMERIC AS $$
-DECLARE km bikes.average_km_week%TYPE;
-BEGIN
-	SELECT DATE_PART('day', change_date::TIMESTAMP - get_last_changed_date(compo_id)) * (bikes.average_km_week / 7)
-	INTO km
-	FROM bikes, bikes_components
-	WHERE bikes_components.fk_component = compo_id;
-	
-	RETURN km;
 END;
 $$ LANGUAGE PLPGSQL;
 

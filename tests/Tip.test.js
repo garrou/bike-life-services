@@ -1,6 +1,6 @@
-const { createFromList } = require('./Tip');
+const {fromList } = require('../models/Tip');
 
-const tips = createFromList([{
+const tips = fromList([{
     'tip_id': 'fd5q65fd65g6d',
     'fk_topic': 'Pneu',
     'title': 'Test title',
