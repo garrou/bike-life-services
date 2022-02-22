@@ -1,21 +1,26 @@
 const validator = require('validator');
 
-module.exports.isDate = (toCheck) => {
-    return validator.isDate(new Date(toCheck));
+class Validator {
+
+    static isDate = (toCheck) => {
+        return validator.isDate(new Date(toCheck));
+    }
+    
+    static isPassword = (toCheck) => {
+        return validator.isLength(toCheck, {min: 8, max: 255});
+    }
+    
+    static isEmail = (toCheck) => {
+        return validator.isEmail(toCheck);
+    }
+    
+    static isKm = (toCheck) => {
+        return toCheck >= 0 && toCheck < Number.MAX_VALUE;
+    }
+    
+    static isValidName = (toCheck) => {
+        return validator.isLength(toCheck, {min: 1, max: 50});
+    }
 }
 
-module.exports.isPassword = (toCheck) => {
-    return validator.isLength(toCheck, {min: 8, max: 255});
-}
-
-module.exports.isEmail = (toCheck) => {
-    return validator.isEmail(toCheck);
-}
-
-module.exports.isKm = (toCheck) => {
-    return toCheck >= 0 && toCheck < Number.MAX_VALUE;
-}
-
-module.exports.isValidName = (toCheck) => {
-    return validator.isLength(toCheck, {min: 1, max: 50});
-}
+module.exports = Validator;

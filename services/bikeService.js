@@ -1,71 +1,84 @@
 const Bike = require('../models/Bike');
-const bikeRepository = require('../repositories/bikeRepository');
-const componentRepository = require('../repositories/componentRepository');
-const componentTypeRepository = require('../repositories/componentTypesRepository');
-const generator = require('../utils/generator');
+const BikeRepository = require('../repositories/BikeRepository');
+const ComponentRepository = require('../repositories/ComponentRepository');
+const ComponentTypeRepository = require('../repositories/ComponentTypesRepository');
+const generator = require('../utils/Generator');
 const http = require('../constants/http.json');
 
-module.exports.create = async (req, res) => {
+class BikeService {
+   
+    static create = async (req, res) => {
     
-    const { memberId } = req.params;
-    const bike = Bike.fromJson(req.body);
-
-    if (!bike.isValid()) {
-        return res.status(constants.FORBIDDEN).json({'confirm': 'Informations invalides'});    
-    }
-    const resp = await bikeRepository.create(memberId, bike);
+        try {
+            const { memberId } = req.params;
+            const bike = Bike.fromJson(req.body);
     
-    if (resp.rowCount === 0) {
-        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': "Erreur durant l'ajout"});
-    }
-    const types = bike.electric 
-                ? (await componentTypeRepository.get()).rows
-                : (await componentTypeRepository.getWithoutBattery()).rows;
-
-    types.forEach(async (type) => {
-        await componentRepository.create(generator.uuid(), bike.id, bike.totalKm, type.average_duration, type.name);
-    });
-    return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
-}
-
-module.exports.get = async (req, res) => {
-
-    const { bikeId } = req.params;
-    const resp = await bikeRepository.get(bikeId);
-    const bike = Bike.fromList(resp.rows)[0];
-    return res.status(http.OK).json(bike);
-}
-
-module.exports.getByMember = async (req, res) => {
-
-    const { memberId } = req.params;
-    const resp = await bikeRepository.getByMember(memberId);
-    const bikes = Bike.fromList(resp.rows);
-    return res.status(http.OK).json(bikes);
-}
-
-module.exports.delete = async (req, res) => {
-
-    const { bikeId } = req.params;
-    const resp = await bikeRepository.delete(bikeId);
-
-    if (resp.rowCount === 0) {
-        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la suppression'});
-    }
-    return res.status(http.OK).json({'confirm': 'Vélo supprimé'});
-}
-
-module.exports.update = async (req, res) => {
+            if (!bike.isValid()) {
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});    
+            }
+            await BikeRepository.create(memberId, bike);
+            const types = bike.electric 
+                    ? (await ComponentTypeRepository.get()).rows
+                    : (await ComponentTypeRepository.getWithoutBattery()).rows;
     
-    const bike = Bike.fromJson(JSON.parse(req.body.bike));
+            types.forEach(async (type) => {
+                await ComponentRepository.create(generator.uuid(), bike.id, bike.totalKm, type.average_duration, type.name);
+            });
+            return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur de communication avec le serveur'});
+        }
+    }
     
-    if (!bike.isValid()) {
-        return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
+    static get = async (req, res) => {
+        
+        try {
+            const { bikeId } = req.params;
+            const resp = await BikeRepository.get(bikeId);
+            const bike = Bike.fromList(resp.rows)[0];
+            return res.status(http.OK).json(bike);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+        }
     }
-    const resp = await bikeRepository.update(bike);
-
-    if (resp.rowCount === 0) {
-        return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la mise à jour'});
+    
+    static getByMember = async (req, res) => {
+    
+        try {
+            const { memberId } = req.params;
+            const resp = await BikeRepository.getByMember(memberId);
+            const bikes = Bike.fromList(resp.rows);
+            return res.status(http.OK).json(bikes);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+        }
     }
-    return res.status(http.OK).json({'confirm': 'Vélo modifié'});
+    
+    static delete = async (req, res) => {
+    
+        try {
+            const { bikeId } = req.params;
+            await BikeRepository.delete(bikeId);
+            return res.status(http.OK).json({'confirm': 'Vélo supprimé'});
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+        }
+    }
+    
+    static update = async (req, res) => {
+        
+        try {
+            const bike = Bike.fromJson(JSON.parse(req.body.bike));
+    
+            if (!bike.isValid()) {
+                return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
+            }   
+            await BikeRepository.update(bike);
+            return res.status(http.OK).json({'confirm': 'Vélo modifié'});
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
 }
+
+module.exports = BikeService;

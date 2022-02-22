@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const tipService = require('../services/tipService');
+const tipService = require('../services/TipService');
 const guard = require('../middlewares/guard');
 const router = Router();
 

@@ -1,5 +1,5 @@
-const validator = require('../utils/validator');
-const generator = require('../utils/generator');
+const validator = require('../utils/Validator');
+const generator = require('../utils/Generator');
 
 class Bike {
 

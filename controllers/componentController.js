@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const componentService = require('../services/componentService');
+const componentService = require('../services/ComponentService');
 const guard = require('../middlewares/guard');
 const router = Router();
 

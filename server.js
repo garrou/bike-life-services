@@ -7,6 +7,7 @@ const componentTypesController = require('./controllers/componentTypesController
 const memberController = require('./controllers/memberController');
 const tipController = require('./controllers/tipController');
 const { cors } = require('./middlewares/cors');
+
 const app = express();
 
 app.use(express.json());

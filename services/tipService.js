@@ -1,26 +1,41 @@
 const Tip = require('../models/Tip'); 
+const TipRepository = require('../repositories/TipRepository');
 const http = require('../constants/http.json');
-const tipRepository = require('../repositories/tipRepository');
 
-module.exports.getAll = async (_, res) => {
+class TipService {
 
-    const resp = await tipRepository.get();
-    const tips = Tip.fromList(resp.rows);
-    return res.status(http.OK).json(tips);
+    static getAll = async (_, res) => {
+
+        try {
+            const resp = await TipRepository.get();
+            const tips = Tip.fromList(resp.rows);
+            return res.status(http.OK).json(tips);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
+        }
+    }
+    
+    static getTip = async (req, res) => {
+    
+        try {
+            const resp = await TipRepository.getById(req.params.tipId);
+            const tip = Tip.fromList(resp.rows)[0];
+            return res.status(http.OK).json(tip);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
+        }
+    }
+    
+    static getByTopic = async (req, res) => {
+    
+        try {
+            const resp = await TipRepository.getByTopic(req.params.topic);
+            const tips = Tip.fromList(resp.rows);
+            return res.status(http.OK).json(tips);
+        } catch {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
+        }
+    }
 }
 
-module.exports.getTip = async (req, res) => {
-
-    const { tipId } = req.params;
-    const resp = await tipRepository.getById(tipId);
-    const tip = Tip.fromList(resp.rows)[0];
-    return res.status(http.OK).json(tip);
-}
-
-module.exports.getByTopic = async (req, res) => {
-
-    const { topic } = req.params;
-    const resp = await tipRepository.getByTopic(topic);
-    const tips = Tip.fromList(resp.rows);
-    return res.status(http.OK).json(tips);
-}
+module.exports = TipService;

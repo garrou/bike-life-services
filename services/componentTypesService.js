@@ -1,8 +1,17 @@
-const componentTypesRepository = require('../repositories/componentTypesRepository');
+const ComponentTypesRepository = require('../repositories/ComponentTypesRepository');
 const http = require('../constants/http.json');
 
-module.exports.get = async (_, res) => {
+class ComponentTypesService {
+
+    static get = async (_, res) => {
     
-    const resp = await componentTypesRepository.get();
-    return res.status(http.OK).json(resp.rows);
+        try {
+            const resp = await ComponentTypesRepository.get();
+            return res.status(http.OK).json(resp.rows);
+        } catch (err) {
+            return res.status(http.BAD_REQUEST).json({'confirm': 'Erreur durant la communication avec le serveur'});
+        }
+    }
 }
+
+module.exports = ComponentTypesService;

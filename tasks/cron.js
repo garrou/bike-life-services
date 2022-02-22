@@ -1,24 +1,24 @@
 const Bike = require('../models/Bike');
+const BikeRepository = require('../repositories/bikeRepository');
 const Component = require('../models/Component');
-const bikeRepository = require('../repositories/bikeRepository');
-const componentRepository = require('../repositories/componentRepository');
+const ComponentRepository = require('../repositories/ComponentRepository');
 const cron = require('node-cron');
 
 const everyDayAtMidnight = '0 0 0 * * *';
-const everyMinute = '* * * * *';
 
-cron.schedule(everyMinute, async () => {
+cron.schedule(everyDayAtMidnight, async () => {
 
-    const dbBikes = (await bikeRepository.getBikesAutoKm()).rows;
+    const dbBikes = (await BikeRepository.getBikesWithAutoKm()).rows;
     const bikes = Bike.fromList(dbBikes);    
     
     bikes.forEach(async (bike) => {
-        await bikeRepository.addDailyKm(bike.id);
-        const dbComponents = (await componentRepository.getBikeComponents(bike.id)).rows;
+        await BikeRepository.addDailyKm(bike.id);
+        const dbComponents = (await ComponentRepository.getBikeComponents(bike.id)).rows;
         const components = Component.fromList(dbComponents);
 
-        components.forEach(async (component) => componentRepository.addDailyKm(component.id, bike.kmPerWeek / 7));
+        components.forEach(async (component) => ComponentRepository.addDailyKm(component.id, bike.kmPerWeek / 7));
     });
 });
 
 module.exports = cron;
+

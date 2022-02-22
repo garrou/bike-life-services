@@ -1,42 +1,59 @@
 const pool = require('../db/db');
 
-/**
- * @returns {QueryResult<any>}
- */
-module.exports.get = async () => {
+class TipRepository {
 
-    const client = await pool.connect();
-    const res = await client.query(`SELECT * 
-                                    FROM tips 
-                                    ORDER BY write_date DESC`);
-    client.release(true);
-    return res;
-}
+    /**
+     * @returns {QueryResult<any>}
+     */
+    static getAll = async () => {
 
-/**
- * @param {Number} tipId 
- * @returns {QueryResult<any>}
- */
-module.exports.getById = async (tipId) => {
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT * 
+                                            FROM tips 
+                                            ORDER BY write_date DESC`);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
 
-    const client = await pool.connect();
-    const res = await client.query(`SELECT * 
+    /**
+     * @param {Number} tipId 
+     * @returns {QueryResult<any>}
+     */
+    static getById = async (tipId) => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT * 
                                     FROM tips 
                                     WHERE tip_id = $1`, [tipId]);
-    client.release(true);
-    return res;
-}
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
 
-/**
- * @param {String} topic 
- * @returns {QueryResult<any>}
- */
-module.exports.getByTopic = async (topic) => {
-    
-    const client = await pool.connect();
-    const res = await client.query(`SELECT * 
+    /**
+     * @param {String} topic 
+     * @returns {QueryResult<any>}
+     */
+    static getByTopic = async (topic) => {
+        
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT * 
                                     FROM tips 
                                     WHERE fk_topic LIKE $1`, [topic]);
-    client.release(true);
-    return res;
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
+
+module.exports = TipRepository;

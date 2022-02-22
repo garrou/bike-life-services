@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const guard = require('../middlewares/guard');
-const memberService = require('../services/memberService');
+const memberService = require('../services/MemberService');
 const router = Router();
 
 router.post('/members/signup', memberService.signup);

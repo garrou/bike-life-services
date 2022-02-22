@@ -1,16 +1,16 @@
 const { Router } = require('express');
-const bikeService = require('../services/bikeService');
-const guard = require('../middlewares/guard');
+const bikeService = require('../services/BikeService');
+const Guard = require('../middlewares/Guard');
 const router = Router();
 
-router.get('/bikes/:bikeId', guard.checkToken, bikeService.get);
+router.get('/bikes/:bikeId', Guard.checkToken, bikeService.get);
 
-router.get('/members/:memberId/bikes', guard.checkToken, bikeService.getByMember);
+router.get('/members/:memberId/bikes', Guard.checkToken, bikeService.getByMember);
 
-router.post('/members/:memberId/bikes', guard.checkToken, bikeService.create);
+router.post('/members/:memberId/bikes', Guard.checkToken, bikeService.create);
 
-router.delete('/bikes/:bikeId', guard.checkToken, bikeService.delete);
+router.delete('/bikes/:bikeId', Guard.checkToken, bikeService.delete);
 
-router.put('/bikes/:bikeId', guard.checkToken, bikeService.update);
+router.put('/bikes/:bikeId', Guard.checkToken, bikeService.update);
 
 module.exports = router;
