@@ -90,6 +90,17 @@ class ComponentService {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }
     }
+
+    static getAvgPercentChanges = async (req, res) => {
+        try {
+            const { memberId } = req.params;
+            const resp = await ComponentRepository.getAvgPercentChanges(memberId);
+            const changes = ComponentChange.fromList(resp.rows);
+            return res.status(http.OK).json(changes);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
 }
 
 module.exports = ComponentService;

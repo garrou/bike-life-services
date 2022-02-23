@@ -1,7 +1,7 @@
+const Generator = require('../utils/Generator');
 const Member = require('../models/Member');
 const MemberRepository = require('../repositories/MemberRepository');
 const Validator = require('../utils/Validator');
-const generator = require('../utils/Generator');
 const http = require('../constants/http.json');
 
 class MemberService {
@@ -19,7 +19,7 @@ class MemberService {
             if (resp.rowCount !== 0) {
                 return res.status(http.CONFLICT).json({'confirm': 'Un compte est déjà associé à cet email.'});
             }
-            const member = new Member(generator.uuid(), email, generator.createHash(password), true);
+            const member = new Member(Generator.uuid(), email, Generator.createHash(password), true);
             await MemberRepository.create(member);
             return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': member});
         } catch (err) {
@@ -36,13 +36,13 @@ class MemberService {
             if (resp.rowCount === 0) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot passe incorrect.'});
             }
-            const same = generator.comparePassword(password, resp.rows[0].password);
+            const same = Generator.comparePassword(password, resp.rows[0].password);
         
             if (!same) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot de passe incorrect.'});
             }
             const member = new Member(resp.rows[0].member_id, email, resp.rows[0].password, true);
-            return res.status(http.OK).json({'member': member, 'accessToken': generator.createJwt(member)});
+            return res.status(http.OK).json({'member': member, 'accessToken': Generator.createJwt(member)});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }
@@ -56,7 +56,7 @@ class MemberService {
             if (!Validator.isPassword(password)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
             } 
-            await MemberRepository.updatePassword(req.params.id, generator.createHash(password));
+            await MemberRepository.updatePassword(req.params.id, Generator.createHash(password));
             return res.status(http.OK).json({'confirm': 'Mot de passe modifié'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});

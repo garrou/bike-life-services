@@ -25,7 +25,7 @@ class BikeRepository {
      * @param {String} bikeId 
      * @returns {QueryResult<any>}
      */
-    static getBike = async (bikeId) => {
+    static get = async (bikeId) => {
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT * 

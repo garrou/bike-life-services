@@ -28,8 +28,8 @@ class TipRepository {
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT * 
-                                    FROM tips 
-                                    WHERE tip_id = $1`, [tipId]);
+                                            FROM tips 
+                                            WHERE tip_id = $1`, [tipId]);
             client.release(true);
             return res;
         } catch (err) {
@@ -46,8 +46,8 @@ class TipRepository {
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT * 
-                                    FROM tips 
-                                    WHERE fk_topic LIKE $1`, [topic]);
+                                            FROM tips 
+                                            WHERE fk_topic LIKE $1`, [topic]);
             client.release(true);
             return res;
         } catch (err) {

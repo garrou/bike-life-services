@@ -7,7 +7,7 @@ class TipService {
     static getAll = async (_, res) => {
 
         try {
-            const resp = await TipRepository.get();
+            const resp = await TipRepository.getAll();
             const tips = Tip.fromList(resp.rows);
             return res.status(http.OK).json(tips);
         } catch (err) {

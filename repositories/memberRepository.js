@@ -29,9 +29,9 @@ class MemberRepository {
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT members.* 
-                                       FROM members 
-                                       WHERE email = $1 AND active = true`, 
-                                       [email]);
+                                            FROM members 
+                                            WHERE email = $1 AND active = true`, 
+                                            [email]);
             client.release(true);
             return res;
         } catch (err) {
@@ -43,7 +43,7 @@ class MemberRepository {
      * @param {string} email 
      * @returns {QueryResult<any>}
      */
-    static getAll = async (email) => { 
+    static get = async (email) => { 
 
         try {
             const client = await pool.connect();
@@ -67,9 +67,9 @@ class MemberRepository {
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT email 
-                                    FROM members 
-                                    WHERE member_id = $1`, 
-                                    [id]);
+                                            FROM members 
+                                            WHERE member_id = $1`, 
+                                            [id]);
             client.release(true);
             return res;
 

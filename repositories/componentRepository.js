@@ -74,9 +74,9 @@ class ComponentRepository {
         try {
             const client = await pool.connect();
             await client.query(`UPDATE components
-                        SET total_km = total_km + $1
-                        WHERE component_id = $2`,
-                        [km, componentId]);
+                                SET total_km = total_km + $1
+                                WHERE component_id = $2`,
+                                [km, componentId]);
             client.release(true);
         } catch (err) {
             throw err;
@@ -227,6 +227,31 @@ class ComponentRepository {
             client.release(true);
             return res;
         } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} memberId 
+     */
+    static getAvgPercentChanges = async (memberId) => {
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT components.fk_component_type AS label, 
+                                                ROUND(AVG(components_changed.km_realised) / components.duration * 100, 2) AS value
+                                            FROM bikes, components, members_bikes, bikes_components, components_changed
+                                            WHERE members_bikes.fk_member = $1
+                                            AND members_bikes.fk_bike = bikes.bike_id
+                                            AND members_bikes.fk_bike = bikes_components.fk_bike
+                                            AND bikes_components.fk_component = components.component_id
+                                            AND components_changed.fk_component = components.component_id
+                                            AND components.active = true
+                                            GROUP BY components.fk_component_type, components.duration
+                                            ORDER BY value DESC`,
+                                            [memberId]);
+            client.release(true);
+            return res;
+        } catch {
             throw err;
         }
     }

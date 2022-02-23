@@ -1,5 +1,5 @@
+const Generator = require('../utils/Generator');
 const validator = require('../utils/Validator');
-const generator = require('../utils/Generator');
 
 class Bike {
 
@@ -37,7 +37,7 @@ class Bike {
      * @param {JSON} json 
      * @returns {Bike}
      */
-    static fromJson = (json) => new Bike(json.id === '' ? generator.uuid() : json.id, 
+    static fromJson = (json) => new Bike(json.id === '' ? Generator.uuid() : json.id, 
                                         json.name, 
                                         json.kmPerWeek, 
                                         json.electric, 
