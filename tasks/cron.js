@@ -1,5 +1,5 @@
 const Bike = require('../models/Bike');
-const BikeRepository = require('../repositories/bikeRepository');
+const BikeRepository = require('../repositories/BikeRepository');
 const Component = require('../models/Component');
 const ComponentRepository = require('../repositories/ComponentRepository');
 const cron = require('node-cron');

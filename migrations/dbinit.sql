@@ -43,7 +43,9 @@ VALUES ('Chaîne', 5000),
 	('Frein avant', 4000),
 	('Frein arrière', 4000),
 	('Plaquette', 4000),
-	('Cassette', 4000);
+	('Cassette', 4000),
+	('Dérailleur avant', 10000),
+	('Dérailleur arrière', 10000);
 
 CREATE TABLE components (
 	component_id VARCHAR NOT NULL PRIMARY KEY,
