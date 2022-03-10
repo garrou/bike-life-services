@@ -1,4 +1,5 @@
-const Generator = require('../utils/Generator');
+const Utils = require('../utils/Utils');
+const Mailer = require('../models/Mailer');
 const Member = require('../models/Member');
 const MemberRepository = require('../repositories/MemberRepository');
 const Validator = require('../utils/Validator');
@@ -15,15 +16,17 @@ class MemberService {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});
             }
             const resp = await MemberRepository.get(email);
-    
+
             if (resp.rowCount !== 0) {
                 return res.status(http.CONFLICT).json({'confirm': 'Un compte est déjà associé à cet email.'});
             }
-            const member = new Member(Generator.uuid(), email, Generator.createHash(password), true);
+            const member = new Member(Utils.uuid(), email, await Utils.createHash(password), true);
+            const url = Utils.generateUrl(member.id);
             await MemberRepository.create(member);
-            return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': member});
+            new Mailer().sendConfirmationEmail(email, url);
+
+            return res.status(http.CREATED).json({'confirm': 'Compte crée, veuillez confirmer votre email', 'member': member});
         } catch (err) {
-            console.log(err);
             return res.status(http.BAD_REQUEST).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }
     }
@@ -32,20 +35,34 @@ class MemberService {
     
         try {
             const { email, password } = req.body;
-            const resp = await MemberRepository.getActive(email);
+            const resp = await MemberRepository.get(email);
         
             if (resp.rowCount === 0) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot passe incorrect.'});
             }
-            const same = Generator.comparePassword(password, resp.rows[0].password);
+            if (!resp.rows[0].active) {
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Veuillez confirmer votre adresse email'});
+            }
+            const same = Utils.comparePassword(password, resp.rows[0].password);
         
             if (!same) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot de passe incorrect.'});
             }
-            const member = new Member(resp.rows[0].member_id, email, resp.rows[0].password, true);
-            return res.status(http.OK).json({'member': member, 'accessToken': Generator.createJwt(member)});
+            const member = new Member(resp.rows[0].member_id, email, resp.rows[0].password, resp.rows[0].active);
+            return res.status(http.OK).json({'member': member, 'accessToken': Utils.createJwt(member)});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+        }
+    }
+
+    static confirmEmail = async (req, res) => {
+
+        try {
+            const decoded = Utils.verifyEmailJwt(req.params.token);
+            await MemberRepository.activeMember(decoded.memberId);
+            return res.status(http.OK).json({'confirm': 'Email confirmé'});
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la confirmation du mail'});
         }
     }
     
@@ -57,7 +74,7 @@ class MemberService {
             if (!Validator.isPassword(password)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
             } 
-            await MemberRepository.updatePassword(req.params.id, Generator.createHash(password));
+            await MemberRepository.updatePassword(req.params.id, Utils.createHash(password));
             return res.status(http.OK).json({'confirm': 'Mot de passe modifié'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});

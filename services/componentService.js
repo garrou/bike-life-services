@@ -18,13 +18,12 @@ class ComponentService {
         }
     }
     
-    static getAlerts = async (req, res) => {
+    static getNbAlerts = async (req, res) => {
     
         try {
             const { memberId } = req.params;
-            const resp = await ComponentRepository.getAlerts(memberId, 0.8);
-            const components = Component.fromList(resp.rows);
-            return res.status(http.OK).json(components);
+            const resp = await ComponentRepository.getNbAlerts(memberId, 0.8);
+            return res.status(http.OK).json({'total': parseInt(resp.rows[0].total)});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }

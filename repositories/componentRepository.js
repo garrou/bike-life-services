@@ -88,11 +88,11 @@ class ComponentRepository {
      * @param {Number} percent 
      * @returns {QueryResult<any>}
      */
-    static getAlerts = async (memberId, percent) => {
+    static getNbAlerts = async (memberId, percent) => {
         
         try {
             const client = await pool.connect();
-            const res = await client.query(`SELECT DISTINCT components.*, get_last_changed_date(component_id) AS changed_at
+            const res = await client.query(`SELECT COUNT(*) AS total
                                             FROM bikes, components, members_bikes, bikes_components
                                             WHERE members_bikes.fk_member = $1
                                             AND members_bikes.fk_bike = bikes.bike_id

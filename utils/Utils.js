@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { v1: uuidv1 } = require('uuid');
 const Member = require('../models/Member');
 
-class Generator {
+class Utils {
 
     /**
      * @returns {String}
@@ -27,6 +27,27 @@ class Generator {
     static createJwt = (member) => jwt.sign({data: JSON.stringify(member) }, process.env.SECRET_TOKEN);
 
     /**
+     * @param {String} token 
+     * @returns {JSON}
+     */
+    static verifyJwt = (token) => jwt.verify(token, process.env.SECRET_TOKEN);
+
+    /**
+     * @param {String} token 
+     * @returns {JSON}
+     */
+    static verifyEmailJwt = (token) => jwt.verify(token, process.env.EMAIL_TOKEN);
+
+    /**
+     * @param {String} jwt 
+     * @returns {String}
+     */
+    static generateUrl = (memberId) => {
+        const token = jwt.sign({memberId: memberId}, process.env.EMAIL_TOKEN, {expiresIn: "1d"});
+        return `http://${process.env.HOST}:${process.env.PORT}/confirmation/${token}`;
+    }
+    
+    /**
      * @param {String} password 
      * @param {String} hash 
      * @returns {Boolean} 
@@ -34,4 +55,4 @@ class Generator {
     static comparePassword =  async (password, hash) => await bcrypt.compare(password, hash);
 }
 
-module.exports = Generator;
+module.exports = Utils;

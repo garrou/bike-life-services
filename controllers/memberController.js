@@ -7,6 +7,8 @@ router.post('/members/signup', memberService.signup);
 
 router.post('/members/login', memberService.login);
 
+router.get('/confirmation/:token', memberService.confirmEmail);
+
 router.patch('/members/:id/email', Guard.checkToken, memberService.updateEmail);
 
 router.patch('/members/:id/password', Guard.checkToken, memberService.updatePassword);

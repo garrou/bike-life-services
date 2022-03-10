@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/bikes/:bikeId/components', Guard.checkToken, componentService.getBikeComponents);
 
-router.get('/members/:memberId/components/alerts', Guard.checkToken, componentService.getAlerts);
+router.get('/members/:memberId/components/nb-alerts', Guard.checkToken, componentService.getNbAlerts);
 
 router.patch('/components/:componentId', Guard.checkToken, componentService.changeComponent);
 

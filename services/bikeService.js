@@ -2,7 +2,7 @@ const Bike = require('../models/Bike');
 const BikeRepository = require('../repositories/BikeRepository');
 const ComponentRepository = require('../repositories/ComponentRepository');
 const ComponentTypeRepository = require('../repositories/ComponentTypesRepository');
-const Generator = require('../utils/Generator');
+const Utils = require('../utils/Utils');
 const http = require('../constants/http.json');
 
 class BikeService {
@@ -22,7 +22,7 @@ class BikeService {
                     : (await ComponentTypeRepository.getAllWithoutBattery()).rows;
     
             types.forEach(async (type) => {
-                await ComponentRepository.create(Generator.uuid(), bike.id, bike.totalKm, type.average_duration, type.name);
+                await ComponentRepository.create(Utils.uuid(), bike.id, bike.totalKm, type.average_duration, type.name);
             });
             return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
         } catch (err) {

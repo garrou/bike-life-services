@@ -20,4 +20,4 @@ app.use(componentTypesController);
 app.use(memberController);
 app.use(tipController);
 
-app.listen(8100, '::');
+app.listen(process.env.PORT, '::');

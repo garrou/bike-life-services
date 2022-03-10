@@ -24,25 +24,6 @@ class MemberRepository {
      * @param {string} email 
      * @returns {QueryResult<any>}
      */
-    static getActive = async (email) => {
-        
-        try {
-            const client = await pool.connect();
-            const res = await client.query(`SELECT members.* 
-                                            FROM members 
-                                            WHERE email = $1 AND active = true`, 
-                                            [email]);
-            client.release(true);
-            return res;
-        } catch (err) {
-            throw err;
-        }
-   }
-
-    /**
-     * @param {string} email 
-     * @returns {QueryResult<any>}
-     */
     static get = async (email) => { 
 
         try {
@@ -110,6 +91,24 @@ class MemberRepository {
                                 SET password = $1
                                 WHERE member_id = $2`, 
                                 [password, id]);
+            client.release(true);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} id 
+     * @returns {QueryResult<any>}
+     */
+     static activeMember = async (id) => {
+        
+        try {
+            const client = await pool.connect();
+            await client.query(`UPDATE members 
+                                SET active = true
+                                WHERE member_id = $1`, 
+                                [id]);
             client.release(true);
         } catch (err) {
             throw err;

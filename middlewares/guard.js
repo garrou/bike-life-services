@@ -1,6 +1,5 @@
+const Utils = require('../utils/Utils');
 const http = require('../constants/http.json');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 class Guard {
 
@@ -11,13 +10,13 @@ class Guard {
         if (token === null) {
             return res.sendStatus(http.UNAUTHORIZED);
         }
-    
-        jwt.verify(token, process.env.SECRET_TOKEN, (err) => {
-            if (err) {
-                return res.sendStatus(http.UNAUTHORIZED);
-            } 
-            next();
-        });
+
+        try {
+            Utils.verifyJwt(token);
+        } catch (err) {
+            return res.sendStatus(http.UNAUTHORIZED);
+        } 
+        next();
     }
 }
 
