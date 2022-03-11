@@ -74,7 +74,7 @@ class MemberService {
             if (!Validator.isPassword(password)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
             } 
-            await MemberRepository.updatePassword(req.params.id, Utils.createHash(password));
+            await MemberRepository.updatePassword(req.params.id, await Utils.createHash(password));
             return res.status(http.OK).json({'confirm': 'Mot de passe modifié'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
