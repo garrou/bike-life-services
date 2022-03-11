@@ -5,7 +5,6 @@ class MemberRepository {
 
     /**
      * @param {Member} member
-     * @returns {QueryResult<any>}
      */
     static create = async (member) => {
 
@@ -53,7 +52,6 @@ class MemberRepository {
                                             [id]);
             client.release(true);
             return res;
-
         } catch (err) {
             throw err;
         }
@@ -62,7 +60,6 @@ class MemberRepository {
     /**
      * @param {String} id 
      * @param {String} email 
-     * @returns {QueryResult<any>}
      */
     static updateEmail = async (id, email) => {
         
@@ -81,7 +78,6 @@ class MemberRepository {
     /**
      * @param {String} id 
      * @param {String} password 
-     * @returns {QueryResult<any>}
      */
     static updatePassword = async (id, password) => {
         
@@ -99,7 +95,6 @@ class MemberRepository {
 
     /**
      * @param {String} id 
-     * @returns {QueryResult<any>}
      */
      static activeMember = async (id) => {
         

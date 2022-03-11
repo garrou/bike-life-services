@@ -13,11 +13,11 @@ class Utils {
 
     /**
      * @param {String} password 
-     * @returns {String}
+     * @returns {Promise<String>}
      */
     static createHash = async (password) => {
         const salt = await bcrypt.genSalt();
-        return await bcrypt.hash(password, salt);
+        return bcrypt.hash(password, salt);
     }
 
     /**
@@ -50,9 +50,9 @@ class Utils {
     /**
      * @param {String} password 
      * @param {String} hash 
-     * @returns {Boolean} 
+     * @returns {Promise<Boolean>} 
      */
-    static comparePassword =  async (password, hash) => await bcrypt.compare(password, hash);
+    static comparePassword =  (password, hash) => bcrypt.compare(password, hash);
 }
 
 module.exports = Utils;

@@ -43,7 +43,7 @@ class MemberService {
             if (!resp.rows[0].active) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Veuillez confirmer votre adresse email'});
             }
-            const same = Utils.comparePassword(password, resp.rows[0].password);
+            const same = await Utils.comparePassword(password, resp.rows[0].password);
         
             if (!same) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot de passe incorrect.'});

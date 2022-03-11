@@ -30,7 +30,6 @@ class ComponentRepository {
      * @param {Number} km
      * @param {Number} duration
      * @param {String} type
-     * @returns {QueryResult<any>}
      */
     static create = async (componentId, bikeId, km, duration, type) => {
 
@@ -50,16 +49,20 @@ class ComponentRepository {
 
     /**
      * @param {String} componentId 
-     * @returns {QueryResult<any>}
+     * @param {Date} changedAt
      */
-    static resetKm = async (componentId) => {
+    static resetKmByDate = async (componentId, changedAt) => {
 
         try {
             const client = await pool.connect();
             await client.query(`UPDATE components
-                                SET total_km = 0
-                                WHERE component_id = $1`,
-                                [componentId]);
+                                SET total_km = DATE_PART('day', NOW() - $2) * (bikes.average_km_week / 7)
+                                FROM components_changed, bikes_components, bikes
+                                WHERE components.component_id = $1
+                                AND components.component_id = components_changed.fk_component 
+                                AND bikes_components.fk_component = components.component_id
+                                AND bikes.bike_id = bikes_components.fk_bike`,
+                                [componentId, changedAt]);
             client.release(true);
         } catch (err) {
             throw err;
@@ -111,7 +114,6 @@ class ComponentRepository {
     /**
      * @param {String} componentId 
      * @param {Date} changedAt 
-     * @returns {QueryResult<any>}
      */
     static changeComponent = async (componentId, changedAt, km) => {
 

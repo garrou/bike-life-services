@@ -6,14 +6,13 @@ class BikeRepository {
     /**
      * @param {String} memberId
      * @param {Bike} bike
-     * @returns {QueryResult<any>}
      */
     static create = async (memberId, bike) => {
         try {
             const client = await pool.connect();
             await client.query(`INSERT INTO bikes
-                                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, 
-                                [bike.id, bike.name, bike.electric, bike.kmPerWeek, bike.addedAt, bike.type, bike.totalKm, bike.automaticKm]);
+                                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, 
+                                [bike.id, bike.name, bike.electric, bike.kmPerWeek, bike.buyAt, bike.addedAt, bike.type, bike.totalKm, bike.automaticKm]);
             await client.query(`INSERT INTO members_bikes VALUES ($1, $2)`, [memberId, bike.id]);
             client.release(true);
         } catch (err) {
@@ -60,7 +59,6 @@ class BikeRepository {
 
     /**
      * @param {String} bikeId 
-     * @returns {QueryResult<any>}
      */
     static delete = async (bikeId) => {
         try {
@@ -74,7 +72,6 @@ class BikeRepository {
     
     /**
      * @param {Bike} bike 
-     * @returns {QueryResult<any>}
      */
     static update = async (bike) => {
         try {
@@ -107,7 +104,6 @@ class BikeRepository {
 
     /**
      * @param {String} bikeId 
-     * @returns {QueryResult<any>}
      */
     static addDailyKm = async (bikeId) => {
         try {

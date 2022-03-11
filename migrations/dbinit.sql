@@ -19,6 +19,7 @@ CREATE TABLE bikes (
 	name VARCHAR(50) NOT NULL,
 	electric BOOLEAN NOT NULL,
 	average_km_week NUMERIC NOT NULL,
+	buy_at DATE NOT NULL,
 	added_at DATE NOT NULL,
 	bike_type VARCHAR NOT NULL REFERENCES bike_types(name),
 	total_km NUMERIC NOT NULL,
@@ -131,11 +132,11 @@ Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois 
 
 CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
 RETURNS DATE AS $$
-DECLARE change_date bikes.added_at%TYPE;
+DECLARE change_date DATE;
 BEGIN
 	SELECT INTO change_date 
 		CASE WHEN MAX(changed_at) IS NULL 
-			THEN (SELECT added_at
+			THEN (SELECT buy_at
 				FROM bikes, bikes_components
 				WHERE bikes.bike_id = bikes_components.fk_bike
 				AND bikes_components.fk_component = compo_id)
