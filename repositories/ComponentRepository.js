@@ -49,28 +49,6 @@ class ComponentRepository {
 
     /**
      * @param {String} componentId 
-     * @param {Date} changedAt
-     */
-    static resetKmByDate = async (componentId, changedAt) => {
-
-        try {
-            const client = await pool.connect();
-            await client.query(`UPDATE components
-                                SET total_km = DATE_PART('day', NOW() - $2) * (bikes.average_km_week / 7)
-                                FROM components_changed, bikes_components, bikes
-                                WHERE components.component_id = $1
-                                AND components.component_id = components_changed.fk_component 
-                                AND bikes_components.fk_component = components.component_id
-                                AND bikes.bike_id = bikes_components.fk_bike`,
-                                [componentId, changedAt]);
-            client.release(true);
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @param {String} componentId 
      * @param {Number} km 
      */
     static addDailyKm = async (componentId, km) => {
@@ -114,18 +92,20 @@ class ComponentRepository {
     /**
      * @param {String} componentId 
      * @param {Date} changedAt 
+     * @param {Number} km
+     * @param {Number} kmBeforeChange
      */
-    static changeComponent = async (componentId, changedAt, km) => {
+    static changeComponent = async (componentId, changedAt, km, kmBeforeChange) => {
 
         try {
             const client = await pool.connect();
             await client.query(`INSERT INTO components_changed
                                 VALUES ($1, $2, $3)`,
-                                [componentId, changedAt, km]);
+                                [componentId, changedAt, km - kmBeforeChange]);
             await client.query(`UPDATE components
-                                SET total_km = 0
-                                WHERE component_id = $1`,
-                                [componentId]);
+                                SET total_km = total_km - $1
+                                WHERE component_id = $2`,
+                                [kmBeforeChange, componentId]);
             client.release(true);
         } catch (err) {
             throw err;

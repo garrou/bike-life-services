@@ -2,6 +2,7 @@ const Component = require('../models/Component');
 const ComponentChange = require('../models/ComponentChange');
 const ComponentHistoric = require('../models/ComponentHistoric');
 const ComponentRepository = require('../repositories/ComponentRepository');
+const Validator = require('../utils/Validator');
 const http = require('../constants/http.json');
 
 class ComponentService {
@@ -33,9 +34,12 @@ class ComponentService {
     
         try {
             const { componentId } = req.params;
-            const { changedAt, km } = req.body;
-            await ComponentRepository.changeComponent(componentId, changedAt, km);
-            await ComponentRepository.resetKmByDate(componentId, changedAt);
+            const { changedAt, km, kmBeforeChange } = req.body;
+            
+            if (!Validator.isKm(km - kmBeforeChange)) {
+                return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur, kilomètres invalides'});
+            }
+            await ComponentRepository.changeComponent(componentId, changedAt, km, kmBeforeChange);
             return res.status(http.OK).json({'confirm': 'Composant changé'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
