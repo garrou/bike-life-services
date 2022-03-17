@@ -48,7 +48,7 @@ class MemberService {
             if (!same) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot de passe incorrect.'});
             }
-            const member = new Member(resp.rows[0].member_id, email, resp.rows[0].password, resp.rows[0].active);
+            const member = new Member(resp.rows[0].member_id, email, '', resp.rows[0].active);
             return res.status(http.OK).json({'member': member, 'accessToken': Utils.createJwt(member)});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
@@ -96,6 +96,8 @@ class MemberService {
                 return res.status(http.CONFLICT).json({'confirm': 'Cet email est déjà associé à un compte.'});
             }
             await MemberRepository.updateEmail(id, email);
+            const url = Utils.generateUrl(id);
+            new Mailer().sendConfirmationEmail(email, url);
             return res.status(http.OK).json({'confirm': 'Email modifié'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Email modifié'});

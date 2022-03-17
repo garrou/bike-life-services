@@ -13,4 +13,6 @@ router.delete('/bikes/:bikeId', Guard.checkToken, bikeService.delete);
 
 router.put('/bikes/:bikeId', Guard.checkToken, bikeService.update);
 
+router.patch('/bikes/:bikeId', Guard.checkToken, bikeService.addKm);
+
 module.exports = router;

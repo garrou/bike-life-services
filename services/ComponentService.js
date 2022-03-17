@@ -34,12 +34,9 @@ class ComponentService {
     
         try {
             const { componentId } = req.params;
-            const { changedAt, km, kmBeforeChange } = req.body;
-            
-            if (!Validator.isKm(km - kmBeforeChange)) {
-                return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur, kilomètres invalides'});
-            }
-            await ComponentRepository.changeComponent(componentId, changedAt, km, kmBeforeChange);
+            const { changedAt, km } = req.body;
+
+            await ComponentRepository.changeComponent(componentId, changedAt, km);
             return res.status(http.OK).json({'confirm': 'Composant changé'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});

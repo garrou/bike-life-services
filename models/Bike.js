@@ -1,4 +1,5 @@
 const Utils = require('../utils/Utils');
+const moment = require('moment');
 const validator = require('../utils/Validator');
 
 class Bike {
@@ -9,18 +10,16 @@ class Bike {
      * @param {Number} kmPerWeek 
      * @param {Boolean} electric
      * @param {String} type
-     * @param {Date} buyAt
      * @param {Date} addedAt
      * @param {Number} totalKm
      * @param {Boolean} automaticKm
      */
-    constructor(id, name, kmPerWeek, electric, type, buyAt, addedAt, totalKm, automaticKm) {
+    constructor(id, name, kmPerWeek, electric, type, addedAt, totalKm, automaticKm) {
         this.id = id;
         this.name = name;
         this.kmPerWeek = parseFloat(kmPerWeek);
         this.electric = electric;
         this.type = type;
-        this.buyAt = buyAt;
         this.addedAt = addedAt;
         this.totalKm = parseFloat(totalKm);
         this.automaticKm = automaticKm;
@@ -29,11 +28,15 @@ class Bike {
     /**
      * @returns {Boolean}
      */
-    isValid = () => validator.isDate(this.buyAt) 
-                    && validator.isDate(this.addedAt)
+    isValid = () => validator.isDate(this.addedAt)
                     && validator.isKm(this.kmPerWeek)
                     && validator.isKm(this.totalKm)
                     && validator.isValidName(this.name);
+
+    computeTotalKm = () => {
+        const diffInDays = moment(Date.now()).diff(moment(this.addedAt), 'days');
+        this.totalKm = this.kmPerWeek / 7 * diffInDays;
+    }
     
     /**
      * @param {JSON} json 
@@ -44,7 +47,6 @@ class Bike {
                                         json.kmPerWeek, 
                                         json.electric, 
                                         json.type, 
-                                        json.buyAt,
                                         json.addedAt,
                                         json.totalKm,
                                         json.automaticKm);
@@ -60,7 +62,6 @@ class Bike {
                                         bike.average_km_week, 
                                         bike.electric,
                                         bike.bike_type,
-                                        bike.buy_at,
                                         bike.added_at,
                                         bike.total_km,
                                         bike.automatic_km));

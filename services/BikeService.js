@@ -4,6 +4,7 @@ const ComponentRepository = require('../repositories/ComponentRepository');
 const ComponentTypeRepository = require('../repositories/ComponentTypesRepository');
 const Utils = require('../utils/Utils');
 const http = require('../constants/http.json');
+const Validator = require('../utils/Validator');
 
 class BikeService {
    
@@ -16,6 +17,7 @@ class BikeService {
             if (!bike.isValid()) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});    
             }
+            bike.computeTotalKm();            
             await BikeRepository.create(memberId, bike);
             const types = bike.electric 
                     ? (await ComponentTypeRepository.getAll()).rows
@@ -75,6 +77,22 @@ class BikeService {
             }   
             await BikeRepository.update(bike);
             return res.status(http.OK).json({'confirm': 'Vélo modifié'});
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
+
+    static addKm = async (req, res) => {
+
+        try {
+            const { bikeId } = req.params;
+            const { km } = req.body;
+
+            if (!Validator.isKm(km)) {
+                return res.status(http.FORBIDDEN).json({'confirm': 'Kilomètres invalides'});
+            }
+            await BikeRepository.addKm(bikeId, km);
+            return res.status(http.OK).json({'confirm': `${km} kilomètres ajoutés`});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }

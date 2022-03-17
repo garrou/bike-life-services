@@ -15,7 +15,7 @@ class ComponentRepository {
                                             WHERE component_id = fk_component
                                             AND fk_bike = $1
                                             AND active = true
-                                            ORDER BY fk_component_type`,
+                                            ORDER BY total_km / duration DESC`,
                                             [bikeId]);
             client.release(true);
             return res;
@@ -46,42 +46,25 @@ class ComponentRepository {
             throw err;
         }
     }
-
-    /**
-     * @param {String} componentId 
-     * @param {Number} km 
-     */
-    static addDailyKm = async (componentId, km) => {
-        try {
-            const client = await pool.connect();
-            await client.query(`UPDATE components
-                                SET total_km = total_km + $1
-                                WHERE component_id = $2`,
-                                [km, componentId]);
-            client.release(true);
-        } catch (err) {
-            throw err;
-        }
-    }
     
     /**
      * @param {String} memberId 
      * @param {Number} percent 
      * @returns {QueryResult<any>}
      */
-    static getNbAlerts = async (memberId, percent) => {
+    static getNbAlerts = async (bikeId, percent) => {
         
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT COUNT(*) AS total
                                             FROM bikes, components, members_bikes, bikes_components
-                                            WHERE members_bikes.fk_member = $1
+                                            WHERE members_bikes.fk_bike = $1
                                             AND members_bikes.fk_bike = bikes.bike_id
                                             AND members_bikes.fk_bike = bikes_components.fk_bike
                                             AND bikes_components.fk_component = components.component_id
                                             AND components.active = true
                                             AND components.total_km / components.duration >= $2`,
-                                            [memberId, percent]);
+                                            [bikeId, percent]);
             client.release(true);
             return res;
         } catch (err) {
@@ -93,19 +76,18 @@ class ComponentRepository {
      * @param {String} componentId 
      * @param {Date} changedAt 
      * @param {Number} km
-     * @param {Number} kmBeforeChange
      */
-    static changeComponent = async (componentId, changedAt, km, kmBeforeChange) => {
+    static changeComponent = async (componentId, changedAt, km) => {
 
         try {
             const client = await pool.connect();
             await client.query(`INSERT INTO components_changed
                                 VALUES ($1, $2, $3)`,
-                                [componentId, changedAt, km - kmBeforeChange]);
+                                [componentId, changedAt, km]);
             await client.query(`UPDATE components
-                                SET total_km = total_km - $1
-                                WHERE component_id = $2`,
-                                [kmBeforeChange, componentId]);
+                                SET total_km = (SELECT get_km_since_changed_date($1, $2))
+                                WHERE component_id = $1`,
+                                [componentId, changedAt]);
             client.release(true);
         } catch (err) {
             throw err;

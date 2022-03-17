@@ -19,7 +19,6 @@ CREATE TABLE bikes (
 	name VARCHAR(50) NOT NULL,
 	electric BOOLEAN NOT NULL,
 	average_km_week NUMERIC NOT NULL,
-	buy_at DATE NOT NULL,
 	added_at DATE NOT NULL,
 	bike_type VARCHAR NOT NULL REFERENCES bike_types(name),
 	total_km NUMERIC NOT NULL,
@@ -136,7 +135,7 @@ DECLARE change_date DATE;
 BEGIN
 	SELECT INTO change_date 
 		CASE WHEN MAX(changed_at) IS NULL 
-			THEN (SELECT buy_at
+			THEN (SELECT added_at
 				FROM bikes, bikes_components
 				WHERE bikes.bike_id = bikes_components.fk_bike
 				AND bikes_components.fk_component = compo_id)
@@ -167,5 +166,18 @@ BEGIN
     CLOSE compo_curs;
 	
 	DELETE FROM bikes WHERE bikes.bike_id = b_id;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION get_km_since_changed_date(compo_id VARCHAR, changed_at DATE)
+RETURNS NUMERIC AS $$
+DECLARE km bikes.average_km_week%TYPE;
+BEGIN
+	SELECT average_km_week INTO km
+	FROM bikes, bikes_components
+	WHERE bikes.bike_id = bikes_components.fk_bike
+	AND bikes_components.fk_component = compo_id;
+	
+	RETURN DATE_PART('day', NOW() - changed_at::TIMESTAMP) * (km / 7);
 END;
 $$ LANGUAGE PLPGSQL;

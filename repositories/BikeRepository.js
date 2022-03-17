@@ -11,8 +11,8 @@ class BikeRepository {
         try {
             const client = await pool.connect();
             await client.query(`INSERT INTO bikes
-                                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, 
-                                [bike.id, bike.name, bike.electric, bike.kmPerWeek, bike.buyAt, bike.addedAt, bike.type, bike.totalKm, bike.automaticKm]);
+                                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, 
+                                [bike.id, bike.name, bike.electric, bike.kmPerWeek, bike.addedAt, bike.type, bike.totalKm, bike.automaticKm]);
             await client.query(`INSERT INTO members_bikes VALUES ($1, $2)`, [memberId, bike.id]);
             client.release(true);
         } catch (err) {
@@ -48,7 +48,8 @@ class BikeRepository {
             const res = await client.query(`SELECT bikes.* 
                                             FROM bikes, members_bikes
                                             WHERE bike_id = fk_bike
-                                            AND fk_member = $1`, 
+                                            AND fk_member = $1
+                                            ORDER BY total_km DESC`, 
                                             [memberId]);
             client.release(true);
             return res;
@@ -104,14 +105,21 @@ class BikeRepository {
 
     /**
      * @param {String} bikeId 
+     * @param {Number} km
      */
-    static addDailyKm = async (bikeId) => {
+    static addKm = async (bikeId, km) => {
         try {
             const client = await pool.connect();
             await client.query(`UPDATE bikes
-                                SET total_km = total_km + average_km_week / 7
-                                WHERE bike_id = $1`,
-                                [bikeId]);
+                                SET total_km = total_km + $1
+                                WHERE bike_id = $2`,
+                                [km, bikeId]);
+            await client.query(`UPDATE components
+                                SET total_km = total_km + $1
+                                FROM bikes_components
+                                WHERE bikes_components.fk_bike = $2
+                                AND components.component_id = bikes_components.fk_component`,
+                                [km, bikeId])
             client.release(true);
         } catch (err) {
             throw err;
