@@ -90,7 +90,7 @@ class MemberService {
             if (!Validator.isEmail(email)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email invalide.'});
             } 
-            const resp = await memberRepository.get(email);
+            const resp = await MemberRepository.get(email);
     
             if (resp.rowCount !== 0) {
                 return res.status(http.CONFLICT).json({'confirm': 'Cet email est déjà associé à un compte.'});
