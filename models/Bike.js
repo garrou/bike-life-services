@@ -1,5 +1,6 @@
-const validator = require('../utils/validator');
-const generator = require('../utils/generator');
+const Utils = require('../utils/Utils');
+const moment = require('moment');
+const validator = require('../utils/Validator');
 
 class Bike {
 
@@ -27,17 +28,21 @@ class Bike {
     /**
      * @returns {Boolean}
      */
-    isValid = () => validator.isDate(this.addedAt) 
+    isValid = () => validator.isDate(this.addedAt)
                     && validator.isKm(this.kmPerWeek)
                     && validator.isKm(this.totalKm)
                     && validator.isValidName(this.name);
-    
 
+    computeTotalKm = () => {
+        const diffInDays = moment(Date.now()).diff(moment(this.addedAt), 'days');
+        this.totalKm = this.kmPerWeek / 7 * diffInDays;
+    }
+    
     /**
      * @param {JSON} json 
      * @returns {Bike}
      */
-    static fromJson = (json) => new Bike(json.id === '' ? generator.uuid() : json.id, 
+    static fromJson = (json) => new Bike(json.id === '' ? Utils.uuid() : json.id, 
                                         json.name, 
                                         json.kmPerWeek, 
                                         json.electric, 

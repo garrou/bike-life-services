@@ -1,16 +1,18 @@
 const { Router } = require('express');
-const guard = require('../middlewares/guard');
-const memberService = require('../services/memberService');
+const Guard = require('../middlewares/Guard');
+const memberService = require('../services/MemberService');
 const router = Router();
 
 router.post('/members/signup', memberService.signup);
 
 router.post('/members/login', memberService.login);
 
-router.patch('/members/:id/email', guard.checkToken, memberService.updateEmail);
+router.get('/confirmation/:token', memberService.confirmEmail);
 
-router.patch('/members/:id/password', guard.checkToken, memberService.updatePassword);
+router.patch('/members/:id/email', Guard.checkToken, memberService.updateEmail);
 
-router.get('/members/:id/email', guard.checkToken, memberService.getEmail);
+router.patch('/members/:id/password', Guard.checkToken, memberService.updatePassword);
+
+router.get('/members/:id/email', Guard.checkToken, memberService.getEmail);
 
 module.exports = router;

@@ -43,7 +43,9 @@ VALUES ('Chaîne', 5000),
 	('Frein avant', 4000),
 	('Frein arrière', 4000),
 	('Plaquette', 4000),
-	('Cassette', 4000);
+	('Cassette', 4000),
+	('Dérailleur avant', 10000),
+	('Dérailleur arrière', 10000);
 
 CREATE TABLE components (
 	component_id VARCHAR NOT NULL PRIMARY KEY,
@@ -129,7 +131,7 @@ Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois 
 
 CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
 RETURNS DATE AS $$
-DECLARE change_date bikes.added_at%TYPE;
+DECLARE change_date DATE;
 BEGIN
 	SELECT INTO change_date 
 		CASE WHEN MAX(changed_at) IS NULL 
@@ -164,5 +166,18 @@ BEGIN
     CLOSE compo_curs;
 	
 	DELETE FROM bikes WHERE bikes.bike_id = b_id;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION get_km_since_changed_date(compo_id VARCHAR, changed_at DATE)
+RETURNS NUMERIC AS $$
+DECLARE km bikes.average_km_week%TYPE;
+BEGIN
+	SELECT average_km_week INTO km
+	FROM bikes, bikes_components
+	WHERE bikes.bike_id = bikes_components.fk_bike
+	AND bikes_components.fk_component = compo_id;
+	
+	RETURN DATE_PART('day', NOW() - changed_at::TIMESTAMP) * (km / 7);
 END;
 $$ LANGUAGE PLPGSQL;
