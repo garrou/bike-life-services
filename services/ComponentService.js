@@ -2,7 +2,6 @@ const Component = require('../models/Component');
 const ComponentChange = require('../models/ComponentChange');
 const ComponentHistoric = require('../models/ComponentHistoric');
 const ComponentRepository = require('../repositories/ComponentRepository');
-const Validator = require('../utils/Validator');
 const http = require('../constants/http.json');
 
 class ComponentService {

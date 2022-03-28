@@ -73,11 +73,12 @@ CREATE TABLE topics (
 INSERT INTO topics 
 VALUES ('Chaîne'), 
 	('Batterie'),
-	('Pneu'),
-	('Frein'),
-	('Plaquette'),
-	('Dérailleur'),
-	('Cassette');
+	('Pneus'),
+	('Freins'),
+	('Plaquettes'),
+	('Dérailleurs'),
+	('Cassette'),
+	('Transmission');
 
 CREATE TABLE tips (
 	tip_id SERIAL PRIMARY KEY,
@@ -96,7 +97,7 @@ VALUES
 
 ('Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
 Pour les VTC, le gonflage est plus classique et se situe généralement entre 2 et 3 bars par pneu. 
-Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', NOW(), 'Pneu'),
+Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', NOW(), 'Pneus'),
 
 ('Changer un pneu sur le vélo', '1/ DÉMONTER UN PNEU DE VÉLO : ÉTAPE 1
 Pour retirer la roue du vélo, commencez par desserrer les boulons de chaque côté de l’axe. Enlevez ensuite le bouchon de valve, c’est-à-dire l’endroit par lequel vous pouvez gonfler votre roue.
@@ -127,7 +128,7 @@ Attention au sens du pneu : la plupart des pneus ont un sens. Il est en généra
 ÉTAPE 3 : METTRE LA CHAMBRE À AIR
 Il ne vous reste plus qu’à mettre la chambre à air, légèrement gonflée. Faites passer la valve par le trou de la jante, avant de placer la chambre à air entièrement dans le pneu.
 
-Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW(), 'Pneu');
+Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW(), 'Pneus');
 
 CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
 RETURNS DATE AS $$
@@ -181,3 +182,24 @@ BEGIN
 	RETURN DATE_PART('day', NOW() - changed_at::TIMESTAMP) * (km / 7);
 END;
 $$ LANGUAGE PLPGSQL;
+
+CREATE TABLE diagnostic (
+	id SERIAL PRIMARY KEY,
+	title VARCHAR(255) NOT NULL,
+	bike_type VARCHAR(25),
+	component VARCHAR(25) NOT NULL,
+	content TEXT NOT NULL
+);
+
+INSERT INTO diagnostic (title, bike_type, component, content)
+VALUES 
+('Vérification de la pression des pneus', 'Ville', 'Pneus', 'La pression des pneus de votre vélo doit être entre 3.5 et 6 bars'),
+('Vérification de la pression des pneus', 'VTT', 'Pneus', 'La pression des pneus de votre vélo doit être entre 3 et 4 bars'),
+('Vérification de la pression des pneus', 'Route', 'Pneus', 'La pression des pneus de votre vélo doit être entre 6 et 8 bars'),
+('Vérification de l''usure des pneus', NULL, 'Pneus', 'Vérifier que le pneu n''est pas craqué, déchiré ou que des fissures soit apparentes'),
+('Vérification des roues', NULL, 'Roues', 'Vérifier l''état des rayons de votre vélo, ceux-ci doivent être bien droits'),
+('Vérification des jantes', NULL, 'Jantes', 'Vérifier qu''il n''y a pas d''impact ou de fissure au niveau de la jante'),
+('Vérification de la transmission', NULL, 'Transmission', 'Vérifier le bon état des dents des plateaux, pignons. Celles-ci ne doivent pas être arrondies ou déformées'),
+('Vérification de la transmission', NULL, 'Transmission', 'Vérifier le passage des vitesses, celui-ci doit-être rapide et sans bruit. Les tester une à une'),
+('Vérification de la chaîne', NULL, 'Chaîne', 'Vérifier que la chaîne est bien tendue'),
+('Vérification des freins', NULL, 'Freins', 'Vérifier que les câbles soient ni effilochés, ni déformés, ni abimés');
