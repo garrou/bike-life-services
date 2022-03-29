@@ -2,10 +2,9 @@ const Bike = require('../models/Bike');
 const BikeRepository = require('../repositories/BikeRepository');
 const cron = require('node-cron');
 
-const everyDayAtMidnight = '0 0 0 * * *';
-const everyMinute = '* * * * *';
+const everyDay = '8 0 0 * * *';
 
-module.exports = cron.schedule(everyMinute, async () => {
+module.exports = cron.schedule(everyDay, async () => {
 
     const resp = (await BikeRepository.getBikesWithAutoKm()).rows;
     const bikes = Bike.fromList(resp);   
@@ -19,5 +18,3 @@ module.exports = cron.schedule(everyMinute, async () => {
         }
     });
 });
-
-module.exports = cron.schedule(everyMinute, () => console.log(`cron working : ${new Date().toJSON().slice(0, 10).replace(/-/g,'/')}`));

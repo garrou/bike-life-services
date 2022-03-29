@@ -84,20 +84,23 @@ CREATE TABLE tips (
 	tip_id SERIAL PRIMARY KEY,
 	title VARCHAR NOT NULL,
 	content TEXT NOT NULL,
-	write_date DATE NOT NULL,
-	fk_topic VARCHAR NOT NULL REFERENCES topics(name) ON DELETE CASCADE
+	fk_topic VARCHAR REFERENCES topics(name) ON DELETE CASCADE
 );
 
-INSERT INTO tips (title, content, write_date, fk_topic)
+INSERT INTO tips (title, content, fk_topic)
 VALUES 
 ('Comment limiter l’usure de la chaine ?', 'La chaine d’un vélo est prévue pour tenir entre 5000 et 8000 kms. Cependant, il est facile d’augmenter sa durée de vie en utilisant quelques astuces : 
 - Lorsque vous n’utilisez pas votre vélo, évitez de mettre votre chaine sur un braquet trop élevé ou évitez simplement de la « croiser ». Il est donc important de ne pas la placer sur une configuration « grand plateau, grand pignon » ou « grand plateau, petit pignon ». L’objectif est qu’elle ne soit pas trop tendue. Cela a tendance à l’étirer et à réduire sa durée de vie. 
 - Lorsque vous arrivez à 4000kms, démontez votre chaine, étalez-là à côté d’une chaine neuve. Si la différence entre les deux est de plus d’un moyeu, changez de chaine.
-- Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', NOW(), 'Chaîne'), 
+- Lorsque vous roulez, si vous entendez un bruit de frottement entre la chaine et le dérailleur avant ; c’est que votre chaine est peut-être usée.', 'Chaîne'), 
 
-('Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. Pour une personne de 70kgs, le gonflage sera de 7bars. Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
+('Gonflage des pneumatiques', 'Dans un cas général, pour un vélo de route, le gonflage des pneumatiques correspond à 10% du poids du corps du cycliste. 
+Pour une personne de 70kgs, le gonflage sera de 7bars. 
+Il est cependant déconseillé de dépasser les 8,5 ou 9 bars en fonction du vélo ou de la carrure du cycliste. 
+Si vous souhaitez avoir un plus gros confort sur votre vélo et une meilleure adhérence, diminuez la pression des pneumatiques. 
+A l’inverse, si vous êtes à la recherche de performances, augmentez la pression. La stabilité sera cependant impactée. 
 Pour les VTC, le gonflage est plus classique et se situe généralement entre 2 et 3 bars par pneu. 
-Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', NOW(), 'Pneus'),
+Pour les VTT, cela dépend de la pratique. La pression reste cependant très basse avec une valeur généralement inférieure à bars.', 'Pneus'),
 
 ('Changer un pneu sur le vélo', '1/ DÉMONTER UN PNEU DE VÉLO : ÉTAPE 1
 Pour retirer la roue du vélo, commencez par desserrer les boulons de chaque côté de l’axe. Enlevez ensuite le bouchon de valve, c’est-à-dire l’endroit par lequel vous pouvez gonfler votre roue.
@@ -128,7 +131,58 @@ Attention au sens du pneu : la plupart des pneus ont un sens. Il est en généra
 ÉTAPE 3 : METTRE LA CHAMBRE À AIR
 Il ne vous reste plus qu’à mettre la chambre à air, légèrement gonflée. Faites passer la valve par le trou de la jante, avant de placer la chambre à air entièrement dans le pneu.
 
-Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', NOW(), 'Pneus');
+Vérifiez que le pneu est bien installé sur la jante et regonflez-le. Une fois le petit bouchon de valve revissé, vous avez terminé !', 'Pneus'),
+
+('Nettoyer son vélo correctement', 'Etape 1 : Nettoyer le cadre 
+
+Pour nettoyer le cadre, mouillez-le avec un jet d’eau et une pression peu élevée. Cela évite la rouille des câbles (cf voir conseil 8). 
+Il est vivement conseillé de commencer par les parties grasses comme la chaine ou la transmission. Cela vous évitera de revenir plusieurs fois sur les parties étant en contact avec la chaine.  
+Nettoyer ensuite votre cadre avec du savon ainsi que la transmission, la chaine et les jantes.  
+Vous pouvez utiliser différents types de brosses afin d’atteindre les zones exiguës du cadre.  
+
+Etape 2 : Rincer et sécher  
+
+Une fois le vélo bien nettoyé, vous pouvez le rincer en faisant attention de ne pas utiliser un jet trop fort. Vous pouvez ensuite sécher votre vélo à l’aide d’un chiffon. Cela éviter l’infiltration de l’eau dans le cadre.  
+
+Etape 3 : Polish et protection 
+
+Lorsque votre vélo est sec, vous avez la possibilité d’appliquer une solution polish afin de protéger la peinture de votre cadre. Cela lui donnera également un effet brillant. Ce type de produit est à appliquer avec un chiffon doux sec. Faites très attention à ne pas en appliquer sur vos jantes ou vos disques de frein. Il s’agit généralement de produit très gras et par conséquent glissant.', NULL),
+
+('Nettoyer et rengraisser sa chaîne', '1ere étape : Dégraisser la chaine 
+Dans un premier temps, l’objectif est de dégraisser votre chaine. Pour cela vous pouvez utilisez des produits adaptés vendu en magasin. Mettez du produit sur la chaine, passez un chiffon sur la chaine, jusqu’à que celle-ci soit propre. Vous pouvez également mettre du dégraissant dans le chiffon plutôt que sur la chaine.  
+
+2eme étape Nettoyer au savon (facultative)  
+
+Il est également parfois nécessaire de nettoyer votre vélo avec du savon. Cela s’avère parfois nécessaire lorsque votre chaine est très sale. Vous pouvez également réaliser cette étape avant la première. Cela vous permettra d’économiser du dégraissant.  
+
+3eme étape : Regraisser  
+
+Lorsque votre chaine est propre, vous devez régresser votre chaine. Pour cela deux options s’offrent à vous : 
+Utilisation de graisse dite « classique ». L’avantage de celle-ci est qu’elle sera durable dans le temps. Vous n’aurez besoin de regraisser qu’une fois par mois environ (en fonction de votre utilisation du vélo). Celle-ci a cependant tendance à être moins efficace que le lubrifiant. 
+Le lubrifiant est plus « gras » que la graisse, il est donc plus efficace et salit moins les doigts dans le cas où vous déraillez. Cependant, il sera nécessaire de nettoyer et re lubrifier plus régulièrement (environ toutes les semaines ou toutes les deux semaines).', 'Chaîne'),
+
+('Les choses à ne pas faire', '
+- Pour nettoyer votre vélo, il est fortement déconseillé d’utiliser du white Spirit. C’est un produit beaucoup trop agressif pour votre cadre comme pour votre chaine ou dérailleur. 
+- Lors du nettoyage de votre vélo, évitez d’utiliser un jet trop fort. L’eau peut venir s’infiltrer dans les câbles de freins ou de dérailleur et rouiller avec le temps.', NULL),
+
+('Vérifier la hauteur de selle', 'Pour vérifier si la hauteur de selle est bonne il y a deux façons de procéder : 
+Asseyez-vous sur la selle, posez un pied à terre. Vous devez toucher le sol avec la pointe du pied. Si ce n’est pas le cas, montez ou descendez la selle en fonction de votre besoin. 
+Montez sur la selle, mettez les deux pieds sur les pédales en vous tenant à un objet fixe. 
+Mettez le pédalier à l’horizontale. Vous devez avoir les jambes qui forment un angle droit. 
+Si ce n’est pas le cas, montez ou descendez la selle en fonction de votre besoin.', NULL),
+
+('Déterminer l''usure des disques de frein', 'Pour connaitre l’usure de vos disques, il vous suffit de mesurer l’épaisseur de vos disques. 
+En fonction de la pratique (VTT, route, gravel…), celle-ci peut varier entre 1.5mm à 2mm. 
+Ainsi, si vous avez une épaisseur inférieure à 1.5mm, il sera nécessaire de changer votre disque. 
+Il est important de noter que l’usure du disque est rare. 
+Il n’est donc pas nécessaire de vérifier en permanence son épaisseur.  
+Une autre façon de vérifier l’état de vos disques (et même de vos freins) réside en la qualité du freinage. 
+Si vous sentez une baisse de la puissance de freinage, faites un check up de vos freins et de vos disques.', 'Freins'),
+
+('Quand purger les freins à disques', 'En purgeant le circuit hydraulique de vos freins chaque année, vous vous assurez qu’ils fonctionnent correctement, qu’ils offrent la meilleure sensation possible et qu’ils ne perdent pas de puissance. 
+Le rinçage consiste à retirer le liquide de frein usé (généralement de l’huile minérale, bien que des marques comme SRAM utilisent du synthétique qui retarde la surchauffe) et à le remplacer par du neuf. 
+Cette action annuelle peut être considérée comme une référence générale. Toutefois, si vous utilisez vos freins de manière intensive, que vous descendiez fréquemment des cols de montagne sur la route ou que vous pratiquiez l’enduro ou la descente en VTT, nous vous recommandons de les purger tous les six mois environ. 
+Toutefois, si vous constatez une perte de puissance ou de sensation de freinage, vous devez procéder à un remplacement d’urgence des freins.', 'Freins');
 
 CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
 RETURNS DATE AS $$

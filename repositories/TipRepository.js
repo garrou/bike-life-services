@@ -10,8 +10,8 @@ class TipRepository {
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT * 
-                                            FROM tips 
-                                            ORDER BY write_date DESC`);
+                                            FROM tips
+                                            ORDER BY tip_id`);
             client.release(true);
             return res;
         } catch (err) {
@@ -47,7 +47,9 @@ class TipRepository {
             const client = await pool.connect();
             const res = await client.query(`SELECT * 
                                             FROM tips 
-                                            WHERE fk_topic LIKE $1`, [topic]);
+                                            WHERE fk_topic LIKE $1
+                                            OR (fk_topic IS NULL AND $1 = '%')`, 
+                                            [topic]);
             client.release(true);
             return res;
         } catch (err) {
