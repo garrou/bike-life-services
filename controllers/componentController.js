@@ -19,4 +19,10 @@ router.get('/members/:memberId/components/nb-changes', Guard.checkToken, compone
 
 router.get('/members/:memberId/components/percents', Guard.checkToken, componentService.getAvgPercentChanges);
 
+router.get('/bikes/:bikeId/components/nb-change-stats', Guard.checkToken, componentService.getNbChangeByBike);
+
+router.get('/bikes/:bikeId/components/percents', Guard.checkToken, componentService.getAvgPercentChangesByBike);
+
+router.get('/bikes/:bikeId/components/nb-change-stats', Guard.checkToken, componentService.getNumOfComponentChangedByBike);
+
 module.exports = router;

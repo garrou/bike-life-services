@@ -2,18 +2,19 @@ const Bike = require('../models/Bike');
 const BikeRepository = require('../repositories/BikeRepository');
 const cron = require('node-cron');
 
-const everyDayAtMidnight = '0 0 0 * * *';
+const everyDay = '8 0 0 * * *';
 
-let task = cron.schedule(everyDayAtMidnight, async () => {
+module.exports = cron.schedule(everyDay, async () => {
 
     const resp = (await BikeRepository.getBikesWithAutoKm()).rows;
-    const bikes = Bike.fromList(resp);    
+    const bikes = Bike.fromList(resp);   
     
     bikes.forEach(async (bike) => {
-        await BikeRepository.addKm(bike.id, bike.kmPerWeek / 7);
-        console.log(`Add ${bike.kmPerWeek / 7} to ${bike.id}`);
+        try {
+            await BikeRepository.addKm(bike.id, (bike.kmPerWeek / 7).toFixed(2));
+            console.log(`Add ${(bike.kmPerWeek / 7).toFixed(2)} km to ${bike.id}`);
+        } catch (err) {
+            console.log(`Error when add auto km : ${err}`);
+        }
     });
 });
-
-module.exports = task;
-

@@ -173,7 +173,7 @@ class ComponentRepository {
      * @param {String} memberId 
      * @returns {QueryResult<any>}
      */
-    static getTotalNbChange = async (memberId) => {
+    static getTotalNbChangeByMember = async (memberId) => {
 
         try {
             const client = await pool.connect();
@@ -197,8 +197,10 @@ class ComponentRepository {
 
     /**
      * @param {String} memberId 
+     * @return {QueryResult<any>}
      */
-    static getAvgPercentChanges = async (memberId) => {
+    static getAvgPercentChangesByMember = async (memberId) => {
+
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT components.fk_component_type AS label, 
@@ -217,6 +219,63 @@ class ComponentRepository {
             return res;
         } catch {
             throw err;
+        }
+    }
+
+    /**
+     * @param {String} bikeId 
+     * @return {QueryResult<any>}
+     */
+    static getNbChangeByBike = async (bikeId) => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT EXTRACT(YEAR FROM components_changed.changed_at) AS label, COUNT(*) AS value
+                                            FROM bikes_components, components_changed
+                                            WHERE bikes_components.fk_bike = $1
+                                            AND bikes_components.fk_component = components_changed.fk_component
+                                            GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)`,
+                                            [bikeId]);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static getAvgPercentChangesByBike = async (bikeId) => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT components.fk_component_type AS label, 
+                                                    ROUND(AVG(components_changed.km_realised) / components.duration * 100, 2) AS value
+                                            FROM components, bikes_components, components_changed
+                                            WHERE bikes_components.fk_bike = $1
+                                            AND bikes_components.fk_component = components_changed.fk_component
+                                            GROUP BY components.fk_component_type, components.duration
+                                            ORDER BY value DESC`,
+                                            [bikeId]);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static getNumOfComponentChangedByBike = async (bikeId) => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT components.fk_component_type AS label, COUNT(*) AS value
+                                            FROM components, bikes_components, components_changed
+                                            WHERE bikes_components.fk_bike = $1
+                                            AND bikes_components.fk_component = components.component_id
+                                            AND components_changed.fk_component = components.component_id
+                                            AND components.active = true
+                                            GROUP BY components.fk_component_type`,
+                                            [bikeId]);
+        } catch (err) {
+            return err;
         }
     }
 }
