@@ -16,7 +16,7 @@ class Bike {
      */
     constructor(id, name, kmPerWeek, electric, type, addedAt, totalKm, automaticKm) {
         this.id = id;
-        this.name = name;
+        this.name = name.charAt(0).toUpperCase() + name.slice(1);
         this.kmPerWeek = parseFloat(kmPerWeek);
         this.electric = electric;
         this.type = type;
