@@ -5,12 +5,14 @@ class Tip {
      * @param {String} type 
      * @param {String} title 
      * @param {String} content 
+     * @param {String} video
      */
-    constructor(id, type, title, content, date) {
+    constructor(id, type, title, content, video) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.content = content;
+        this.video = video && video.slice(0, 11);
     }
 
     /**
@@ -22,7 +24,8 @@ class Tip {
                 .map((tip) => new Tip(tip.tip_id,
                                     tip.fk_topic,
                                     tip.title,
-                                    tip.content));
+                                    tip.content,
+                                    tip.video_id));
         }
 }
 

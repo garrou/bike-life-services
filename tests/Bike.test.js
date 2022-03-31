@@ -5,7 +5,7 @@ let bike, bikes;
 beforeEach(() => {
     bikes = fromList([{
         'bike_id': 'fs45fs5qfs5q4',
-        'name': 'Vélo de test',
+        'name': 'vélo de test',
         'average_km_week': 700,
         'electric': true,
         'added_at': '2022-02-02',
@@ -59,7 +59,7 @@ test('Check if is not a valid bike with too big name', () => {
 
 test('Check if Bike is created from json', () => {
     expect(bike.id).toBe('eeefzfz');
-    expect(bike.name).toBe('test');
+    expect(bike.name).toBe('Test');
     expect(bike.electric).toBe(false);
     expect(bike.kmPerWeek).toBe(123);
     expect(bike.addedAt).toBe('2022-09-02');
