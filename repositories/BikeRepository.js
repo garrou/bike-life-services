@@ -8,6 +8,7 @@ class BikeRepository {
      * @param {Bike} bike
      */
     static create = async (memberId, bike) => {
+
         try {
             const client = await pool.connect();
             await client.query(`INSERT INTO bikes
@@ -25,6 +26,7 @@ class BikeRepository {
      * @returns {QueryResult<any>}
      */
     static get = async (bikeId) => {
+
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT * 
@@ -43,6 +45,7 @@ class BikeRepository {
      * @returns {QueryResult<any>}
      */
     static getByMember = async (memberId) => {
+
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT bikes.* 
@@ -62,6 +65,7 @@ class BikeRepository {
      * @param {String} bikeId 
      */
     static delete = async (bikeId) => {
+
         try {
             const client = await pool.connect();
             await client.query(`CALL delete_bike($1)`, [bikeId]);
@@ -75,6 +79,7 @@ class BikeRepository {
      * @param {Bike} bike 
      */
     static update = async (bike) => {
+
         try {
             const client = await pool.connect();
             await client.query(`UPDATE bikes 
@@ -91,6 +96,7 @@ class BikeRepository {
      * @returns {QueryResult<any>}
      */
     static getBikesWithAutoKm = async () => {
+
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT bike_id, average_km_week 
@@ -108,6 +114,7 @@ class BikeRepository {
      * @param {Number} km
      */
     static addKm = async (bikeId, km) => {
+
         try {
             const client = await pool.connect();
             await client.query(`UPDATE bikes
@@ -120,6 +127,20 @@ class BikeRepository {
                                 WHERE bikes_components.fk_bike = $2
                                 AND components.component_id = bikes_components.fk_component`,
                                 [km, bikeId])
+            client.release(true);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    
+    static addDailyKm = async () => {
+
+        try {
+            const client = await pool.connect();
+            await client.query(`UPDATE bikes
+                                SET total_km = ROUND(total_km + average_km_week / 7, 2)
+                                WHERE automatic_km = TRUE`);
             client.release(true);
         } catch (err) {
             throw err;
