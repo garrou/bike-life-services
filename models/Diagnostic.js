@@ -10,7 +10,7 @@ class Diagnostic {
 
     static fromList = (records) => {
         return records
-                .map((diagnostic) => new Diagnostic(diagnostic.id, 
+                .map((diagnostic) => new this(diagnostic.id, 
                                                     diagnostic.title, 
                                                     diagnostic.bike_type, 
                                                     diagnostic.component, 

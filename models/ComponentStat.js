@@ -1,11 +1,11 @@
-class ComponentHistoric {
+class ComponentStat {
 
     /**
      * @param {} label
      * @param {} value 
      */
     constructor(label, value) {
-        this.label = label;
+        this.label = label.toString();
         this.value = parseFloat(value);
     }
 
@@ -15,8 +15,8 @@ class ComponentHistoric {
      */
     static fromList = (records) => {
         return records
-                .map((compo) => new ComponentHistoric(compo.label, compo.value));
+                .map((compo) => new this(compo.label, compo.value));
     }
 }
 
-module.exports = ComponentHistoric;
+module.exports = ComponentStat;

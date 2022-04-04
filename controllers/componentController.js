@@ -9,6 +9,8 @@ router.get('/members/:memberId/components/nb-alerts', Guard.checkToken, componen
 
 router.patch('/components/:componentId', Guard.checkToken, componentService.changeComponent);
 
+router.put('/components/:componentId', Guard.checkToken, componentService.updateComponent);
+
 router.get('/components/:componentId/change-historic', Guard.checkToken, componentService.getChangeHistoric);
 
 router.get('/members/:memberId/components/nb-change-stats/years/:year', Guard.checkToken, componentService.getNumOfComponentChangeByMemberByYear);

@@ -22,7 +22,8 @@ CREATE TABLE bikes (
 	added_at DATE NOT NULL,
 	bike_type VARCHAR NOT NULL REFERENCES bike_types(name),
 	total_km NUMERIC NOT NULL,
-	automatic_km BOOLEAN NOT NULL
+	automatic_km BOOLEAN NOT NULL,
+	price NUMERIC NOT NULL
 );
 
 CREATE TABLE members_bikes (
@@ -63,7 +64,9 @@ CREATE TABLE bikes_components (
 CREATE TABLE components_changed (
 	fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE,
 	changed_at DATE NOT NULL,
-	km_realised NUMERIC NOT NULL
+	km_realised NUMERIC NOT NULL,
+	price NUMERIC NOT NULL,
+	brand VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE topics (
