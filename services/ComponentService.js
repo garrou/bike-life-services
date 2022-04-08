@@ -52,11 +52,11 @@ class ComponentService {
         }
     }
     
-    static getChangeHistoric = async (req, res) => {
+    static getChangeHistoricByComponent = async (req, res) => {
     
         try {
             const { componentId } = req.params;
-            const resp = await ComponentRepository.getChangeHistoric(componentId);
+            const resp = await ComponentRepository.getChangeHistoricByComponent(componentId);
             const changes = ComponentChange.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
@@ -88,7 +88,7 @@ class ComponentService {
         }
     }
     
-    static getTotalNbChange = async (req, res) => {
+    static getTotalNbChangeByMember = async (req, res) => {
     
         try {
             const { memberId } = req.params;
@@ -100,7 +100,8 @@ class ComponentService {
         }
     }
 
-    static getAvgPercentChanges = async (req, res) => {
+    static getAvgPercentChangesByMember = async (req, res) => {
+
         try {
             const { memberId } = req.params;
             const resp = await ComponentRepository.getAvgPercentChangesByMember(memberId);
@@ -112,6 +113,7 @@ class ComponentService {
     }
 
     static getNbChangeByBike = async (req, res) => {
+
         try {
             const { bikeId } = req.params;
             const resp = await ComponentRepository.getNbChangeByBike(bikeId);
@@ -123,6 +125,7 @@ class ComponentService {
     }
 
     static getAvgPercentChangesByBike = async (req, res) => {
+
         try {
             const { bikeId } = req.params;
             const resp = await ComponentRepository.getAvgPercentChangesByBike(bikeId);
@@ -134,9 +137,34 @@ class ComponentService {
     }
 
     static getNumOfComponentChangedByBike = async (req, res) => {
+
         try {
             const { bikeId } = req.params;
             const resp = await ComponentRepository.getNumOfComponentChangedByBike(bikeId);
+            const changes = ComponentStat.fromList(resp.rows);
+            return res.status(http.OK).json(changes);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
+
+    static getSumPriceComponentByMember = async (req, res) => {
+
+        try {
+            const { memberId } = req.params;
+            const resp = await ComponentRepository.getSumPriceComponentsByMember(memberId);
+            const changes = ComponentStat.fromList(resp.rows);
+            return res.status(http.OK).json(changes);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
+
+    static getSumPriceComponentsByBike = async (req, res) => {
+
+        try {
+            const { bikeId } = req.params;
+            const resp = await ComponentRepository.getSumPriceComponentsByBike(bikeId);
             const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {

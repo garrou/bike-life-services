@@ -1,4 +1,3 @@
-const Bike = require('../models/Bike');
 const BikeRepository = require('../repositories/BikeRepository');
 const cron = require('node-cron');
 

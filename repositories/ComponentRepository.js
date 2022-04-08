@@ -65,7 +65,7 @@ class ComponentRepository {
             client.release(true);
             return res;
         } catch (err) {
-            return err;
+            throw err;
         }
     }
 
@@ -111,7 +111,6 @@ class ComponentRepository {
                                 [componentId, change.changedAt]);
             client.release(true);
         } catch (err) {
-            console.log(err);
             throw err;
         }
     }
@@ -120,7 +119,7 @@ class ComponentRepository {
      * @param {String} componentId 
      * @returns {QueryResult<any>}
      */
-    static getChangeHistoric = async (componentId) => {
+    static getChangeHistoricByComponent = async (componentId) => {
 
         try {
             const client = await pool.connect();
@@ -304,8 +303,57 @@ class ComponentRepository {
                                             AND components.active = true
                                             GROUP BY components.fk_component_type`,
                                             [bikeId]);
+            client.release(true);
+            return res;
         } catch (err) {
-            return err;
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} memberId 
+     * @returns {QueryResult<any>}
+     */
+    static getSumPriceComponentsByMember = async (memberId) => {
+        
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT EXTRACT(YEAR FROM components_changed.changed_at) AS label, SUM(components_changed.price) AS value
+                                        FROM bikes, components, members_bikes, bikes_components, components_changed
+                                        WHERE members_bikes.fk_member = $1
+                                        AND members_bikes.fk_bike = bikes.bike_id
+                                        AND members_bikes.fk_bike = bikes_components.fk_bike
+                                        AND bikes_components.fk_component = components.component_id
+                                        AND components_changed.fk_component = components.component_id
+                                        AND components.active = true
+                                        GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)
+                                        ORDER BY EXTRACT(YEAR FROM components_changed.changed_at)`,
+                                        [memberId]);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} bikeId 
+     * @returns {QueryResult<any>}
+     */
+     static getSumPriceComponentsByBike = async (bikeId) => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT EXTRACT(YEAR FROM components_changed.changed_at) AS label, SUM(components_changed.price) AS value
+                                            FROM bikes_components, components_changed
+                                            WHERE bikes_components.fk_bike = $1
+                                            AND bikes_components.fk_component = components_changed.fk_component
+                                            GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)`,
+                                            [bikeId]);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
         }
     }
 }

@@ -11,20 +11,24 @@ router.patch('/components/:componentId', Guard.checkToken, componentService.chan
 
 router.put('/components/:componentId', Guard.checkToken, componentService.updateComponent);
 
-router.get('/components/:componentId/change-historic', Guard.checkToken, componentService.getChangeHistoric);
+router.get('/components/:componentId/change-historic', Guard.checkToken, componentService.getChangeHistoricByComponent);
 
 router.get('/members/:memberId/components/nb-change-stats/years/:year', Guard.checkToken, componentService.getNumOfComponentChangeByMemberByYear);
 
 router.get('/members/:memberId/components/km-change-stats/years/:year', Guard.checkToken, componentService.getAvgKmComponentChangeByMemberByYear);
 
-router.get('/members/:memberId/components/nb-changes', Guard.checkToken, componentService.getTotalNbChange);
+router.get('/members/:memberId/components/nb-changes', Guard.checkToken, componentService.getTotalNbChangeByMember);
 
-router.get('/members/:memberId/components/percents', Guard.checkToken, componentService.getAvgPercentChanges);
+router.get('/members/:memberId/components/percents', Guard.checkToken, componentService.getAvgPercentChangesByMember);
 
 router.get('/bikes/:bikeId/components/nb-change-stats', Guard.checkToken, componentService.getNbChangeByBike);
 
 router.get('/bikes/:bikeId/components/percents', Guard.checkToken, componentService.getAvgPercentChangesByBike);
 
 router.get('/bikes/:bikeId/components/nb-change-stats', Guard.checkToken, componentService.getNumOfComponentChangedByBike);
+
+router.get('/members/:memberId/components/price', Guard.checkToken, componentService.getSumPriceComponentByMember);
+
+router.get('/bikes/:bikeId/components/price', Guard.checkToken, componentService.getSumPriceComponentsByBike);
 
 module.exports = router;
