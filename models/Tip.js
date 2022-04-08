@@ -21,7 +21,7 @@ class Tip {
      */
     static fromList = (records) => {
         return records
-                .map((tip) => new Tip(tip.tip_id,
+                .map((tip) => new this(tip.tip_id,
                                     tip.fk_topic,
                                     tip.title,
                                     tip.content,

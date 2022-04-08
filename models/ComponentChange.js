@@ -1,12 +1,16 @@
 class ComponentChange {
 
     /**
-     * @param {} label
-     * @param {} value 
+     * @param {String} changedAt
+     * @param {String} kmRealised 
+     * @param {String} price
+     * @param {String} brand
      */
-    constructor(label, value) {
-        this.label = label.toString();
-        this.value = parseFloat(value);
+    constructor(changedAt, kmRealised, price, brand) {
+        this.changedAt = changedAt;
+        this.kmRealised = parseFloat(kmRealised);
+        this.price = parseFloat(price);
+        this.brand = brand.charAt(0).toUpperCase() + brand.slice(1);
     }
 
     /**
@@ -15,7 +19,21 @@ class ComponentChange {
      */
     static fromList = (records) => {
         return records
-                .map((compo) => new ComponentChange(compo.label, compo.value));
+                .map((compo) => new this(compo.changed_at, 
+                                        compo.km_realised, 
+                                        compo.price, 
+                                        compo.brand));
+    }
+
+    /**
+     * @param {JSON} json 
+     * @returns {ComponentHistoric}
+     */
+    static fromJson = (json) => {
+        return new this(json.changedAt,
+                        json.kmRealised,
+                        json.price,
+                        json.brand);
     }
 }
 

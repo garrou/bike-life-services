@@ -1,6 +1,6 @@
 const Component = require('../models/Component');
+const ComponentStat = require('../models/ComponentStat');
 const ComponentChange = require('../models/ComponentChange');
-const ComponentHistoric = require('../models/ComponentHistoric');
 const ComponentRepository = require('../repositories/ComponentRepository');
 const http = require('../constants/http.json');
 
@@ -33,21 +33,31 @@ class ComponentService {
     
         try {
             const { componentId } = req.params;
-            const { changedAt, km } = req.body;
-
-            await ComponentRepository.changeComponent(componentId, changedAt, km);
+            const change = ComponentChange.fromJson(req.body);
+            await ComponentRepository.changeComponent(componentId, change);
             return res.status(http.OK).json({'confirm': 'Composant changé'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }
     }
+
+    static updateComponent = async (req, res) => {
+
+        try {
+            const component = Component.fromJson(req.body);
+            await ComponentRepository.updateComponent(component);
+            return res.status(http.OK).json({'confirm': 'Composant modifié'});
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
     
-    static getChangeHistoric = async (req, res) => {
+    static getChangeHistoricByComponent = async (req, res) => {
     
         try {
             const { componentId } = req.params;
-            const resp = await ComponentRepository.getChangeHistoric(componentId);
-            const changes = ComponentHistoric.fromList(resp.rows);
+            const resp = await ComponentRepository.getChangeHistoricByComponent(componentId);
+            const changes = ComponentChange.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
@@ -59,7 +69,7 @@ class ComponentService {
         try {
             const { memberId, year } = req.params;
             const resp = await ComponentRepository.getNumOfComponentChangeByMemberByYear(memberId, year);
-            const changes = ComponentChange.fromList(resp.rows);
+            const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
@@ -71,30 +81,31 @@ class ComponentService {
         try {
             const { memberId, year } = req.params;
             const resp = await ComponentRepository.getAvgKmComponentChangeByMemberByYear(memberId, year);
-            const changes = ComponentChange.fromList(resp.rows);
+            const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }
     }
     
-    static getTotalNbChange = async (req, res) => {
+    static getTotalNbChangeByMember = async (req, res) => {
     
         try {
             const { memberId } = req.params;
             const resp = await ComponentRepository.getTotalNbChangeByMember(memberId);
-            const changes = ComponentChange.fromList(resp.rows);
+            const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }
     }
 
-    static getAvgPercentChanges = async (req, res) => {
+    static getAvgPercentChangesByMember = async (req, res) => {
+
         try {
             const { memberId } = req.params;
             const resp = await ComponentRepository.getAvgPercentChangesByMember(memberId);
-            const changes = ComponentChange.fromList(resp.rows);
+            const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
@@ -102,10 +113,11 @@ class ComponentService {
     }
 
     static getNbChangeByBike = async (req, res) => {
+
         try {
             const { bikeId } = req.params;
             const resp = await ComponentRepository.getNbChangeByBike(bikeId);
-            const changes = ComponentChange.fromList(resp.rows);
+            const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
@@ -113,10 +125,11 @@ class ComponentService {
     }
 
     static getAvgPercentChangesByBike = async (req, res) => {
+
         try {
             const { bikeId } = req.params;
             const resp = await ComponentRepository.getAvgPercentChangesByBike(bikeId);
-            const changes = ComponentChange.fromList(resp.rows);
+            const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
@@ -124,10 +137,35 @@ class ComponentService {
     }
 
     static getNumOfComponentChangedByBike = async (req, res) => {
+
         try {
             const { bikeId } = req.params;
             const resp = await ComponentRepository.getNumOfComponentChangedByBike(bikeId);
-            const changes = ComponentChange.fromList(resp.rows);
+            const changes = ComponentStat.fromList(resp.rows);
+            return res.status(http.OK).json(changes);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
+
+    static getSumPriceComponentByMember = async (req, res) => {
+
+        try {
+            const { memberId } = req.params;
+            const resp = await ComponentRepository.getSumPriceComponentsByMember(memberId);
+            const changes = ComponentStat.fromList(resp.rows);
+            return res.status(http.OK).json(changes);
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
+
+    static getSumPriceComponentsByBike = async (req, res) => {
+
+        try {
+            const { bikeId } = req.params;
+            const resp = await ComponentRepository.getSumPriceComponentsByBike(bikeId);
+            const changes = ComponentStat.fromList(resp.rows);
             return res.status(http.OK).json(changes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});

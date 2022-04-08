@@ -1,4 +1,7 @@
+const res = require('express/lib/response');
 const pool = require('../db/db');
+const Component = require('../models/Component');
+const ComponentChange = require('../models/ComponentChange');
 
 class ComponentRepository {
 
@@ -35,10 +38,10 @@ class ComponentRepository {
 
         try {
             const client = await pool.connect();
-            await client.query(`INSERT INTO components (component_id, duration, fk_component_type, active, total_km)
-                                VALUES ($1, $2, $3, true, $4)`,
+            await client.query(`INSERT INTO components (component_id, duration, fk_component_type, active, total_km, price, brand)
+                                VALUES ($1, $2, $3, true, $4, 0, 'Inconnue')`,
                                 [componentId, duration, type, km]);
-            await client.query(`INSERT INTO bikes_components 
+            await client.query(`INSERT INTO bikes_components (fk_bike, fk_component)
                                 VALUES ($1, $2)`, 
                                 [bikeId, componentId]);
             client.release(true);
@@ -47,6 +50,25 @@ class ComponentRepository {
         }
     }
     
+    /**
+     * @param {Component} component 
+     * @returns {QueryResult<any>}
+     */
+     static updateComponent = async (component) => {
+
+        try {
+            const client = await pool.connect();
+            await client.query(`UPDATE components
+                                SET duration = $1, active = $2, total_km = $3, fk_component_type = $4, price = ROUND($5, 2), brand = $6
+                                WHERE component_id = $7`,
+                                [component.duration, component.active, component.totalKm, component.type, component.price, component.brand, component.id]);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
      * @param {String} memberId 
      * @param {Number} percent 
@@ -74,20 +96,19 @@ class ComponentRepository {
 
     /**
      * @param {String} componentId 
-     * @param {Date} changedAt 
-     * @param {Number} km
+     * @param {ComponentChange} change
      */
-    static changeComponent = async (componentId, changedAt, km) => {
+    static changeComponent = async (componentId, change) => {
 
         try {
             const client = await pool.connect();
-            await client.query(`INSERT INTO components_changed
-                                VALUES ($1, $2, $3)`,
-                                [componentId, changedAt, km]);
+            await client.query(`INSERT INTO components_changed (fk_component, changed_at, km_realised, price, brand)
+                                VALUES ($1, $2, $3, ROUND($4, 2), $5)`,
+                                [componentId, change.changedAt, change.kmRealised, change.price, change.brand]);
             await client.query(`UPDATE components
                                 SET total_km = (SELECT get_km_since_changed_date($1, $2))
                                 WHERE component_id = $1`,
-                                [componentId, changedAt]);
+                                [componentId, change.changedAt]);
             client.release(true);
         } catch (err) {
             throw err;
@@ -98,11 +119,11 @@ class ComponentRepository {
      * @param {String} componentId 
      * @returns {QueryResult<any>}
      */
-    static getChangeHistoric = async (componentId) => {
+    static getChangeHistoricByComponent = async (componentId) => {
 
         try {
             const client = await pool.connect();
-            const res = await client.query(`SELECT changed_at AS label, km_realised AS value
+            const res = await client.query(`SELECT *
                                             FROM components_changed
                                             WHERE fk_component = $1
                                             ORDER by changed_at ASC`,
@@ -243,6 +264,10 @@ class ComponentRepository {
         }
     }
 
+    /**
+     * @param {String} bikeId 
+     * @returns {QueryResult<any>}
+     */
     static getAvgPercentChangesByBike = async (bikeId) => {
 
         try {
@@ -262,6 +287,10 @@ class ComponentRepository {
         }
     }
 
+    /**
+     * @param {String} bikeId 
+     * @returns {QueryResult<any>}
+     */
     static getNumOfComponentChangedByBike = async (bikeId) => {
 
         try {
@@ -274,8 +303,57 @@ class ComponentRepository {
                                             AND components.active = true
                                             GROUP BY components.fk_component_type`,
                                             [bikeId]);
+            client.release(true);
+            return res;
         } catch (err) {
-            return err;
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} memberId 
+     * @returns {QueryResult<any>}
+     */
+    static getSumPriceComponentsByMember = async (memberId) => {
+        
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT EXTRACT(YEAR FROM components_changed.changed_at) AS label, SUM(components_changed.price) AS value
+                                        FROM bikes, components, members_bikes, bikes_components, components_changed
+                                        WHERE members_bikes.fk_member = $1
+                                        AND members_bikes.fk_bike = bikes.bike_id
+                                        AND members_bikes.fk_bike = bikes_components.fk_bike
+                                        AND bikes_components.fk_component = components.component_id
+                                        AND components_changed.fk_component = components.component_id
+                                        AND components.active = true
+                                        GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)
+                                        ORDER BY EXTRACT(YEAR FROM components_changed.changed_at)`,
+                                        [memberId]);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} bikeId 
+     * @returns {QueryResult<any>}
+     */
+     static getSumPriceComponentsByBike = async (bikeId) => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT EXTRACT(YEAR FROM components_changed.changed_at) AS label, SUM(components_changed.price) AS value
+                                            FROM bikes_components, components_changed
+                                            WHERE bikes_components.fk_bike = $1
+                                            AND bikes_components.fk_component = components_changed.fk_component
+                                            GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)`,
+                                            [bikeId]);
+            client.release(true);
+            return res;
+        } catch (err) {
+            throw err;
         }
     }
 }

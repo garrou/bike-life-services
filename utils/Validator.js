@@ -14,7 +14,7 @@ class Validator {
         return validator.isEmail(toCheck);
     }
     
-    static isKm = (toCheck) => {
+    static isNumber = (toCheck) => {
         return toCheck >= 0 && toCheck < Number.MAX_VALUE;
     }
     

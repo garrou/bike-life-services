@@ -19,7 +19,7 @@ class Member {
      */
      static fromList = (records) => { 
         return records
-                .map((member) => new Member(member.member_id, 
+                .map((member) => new this(member.member_id, 
                                             member.email, 
                                             member.password, 
                                             member.active));
