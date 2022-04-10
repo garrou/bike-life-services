@@ -15,7 +15,7 @@ class Validator {
     }
     
     static isNumber = (toCheck) => {
-        return toCheck >= 0 && toCheck < Number.MAX_VALUE;
+        return toCheck && toCheck >= 0 && toCheck < Number.MAX_VALUE;
     }
     
     static isValidName = (toCheck) => {

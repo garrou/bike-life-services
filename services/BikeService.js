@@ -76,7 +76,7 @@ class BikeService {
                 return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
             }   
             await BikeRepository.update(bike);
-            return res.status(http.OK).json({'confirm': 'Vélo modifié'});
+            return res.status(http.OK).json({'confirm': `${bike.name} modifié`});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }
@@ -88,8 +88,8 @@ class BikeService {
             const { bikeId } = req.params;
             const { km } = req.body;
 
-            if (!Validator.isKm(km)) {
-                return res.status(http.FORBIDDEN).json({'confirm': 'Kilomètres invalides'});
+            if (!Validator.isNumber(km)) {
+                return res.status(http.FORBIDDEN).json({'confirm': "Impossible d'ajouter des kilomètres"});
             }
             await BikeRepository.addKm(bikeId, km);
             return res.status(http.OK).json({'confirm': `${km} kilomètres ajoutés`});

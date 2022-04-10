@@ -46,7 +46,7 @@ class ComponentService {
         try {
             const component = Component.fromJson(req.body);
             await ComponentRepository.updateComponent(component);
-            return res.status(http.OK).json({'confirm': 'Composant modifié'});
+            return res.status(http.OK).json({'confirm': `${component.type} modifié`});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }

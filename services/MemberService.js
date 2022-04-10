@@ -48,8 +48,7 @@ class MemberService {
             if (!same) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot de passe incorrect.'});
             }
-            const member = new Member(resp.rows[0].member_id, email, '', resp.rows[0].active);
-            return res.status(http.OK).json({'member': member, 'accessToken': Utils.createJwt(member)});
+            return res.status(http.OK).json({'memberId': resp.rows[0].member_id, 'accessToken': Utils.createJwt(resp.rows[0].member_id)});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }

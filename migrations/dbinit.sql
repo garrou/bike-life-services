@@ -1,12 +1,12 @@
 CREATE TABLE members (
-	member_id VARCHAR NOT NULL PRIMARY KEY,
-	email VARCHAR UNIQUE NOT NULL,
-	password VARCHAR NOT NULL,
+	member_id VARCHAR(255) NOT NULL PRIMARY KEY,
+	email VARCHAR(255) UNIQUE NOT NULL,
+	password VARCHAR(255) NOT NULL,
 	active BOOLEAN NOT NULL
 );
 
 CREATE TABLE bike_types (
-	name VARCHAR NOT NULL PRIMARY KEY
+	name VARCHAR(50) NOT NULL PRIMARY KEY
 );
 
 INSERT INTO bike_types
@@ -15,7 +15,7 @@ VALUES ('VTT'),
 	('Route');
 
 CREATE TABLE bikes (
-	bike_id VARCHAR NOT NULL PRIMARY KEY,
+	bike_id VARCHAR(255) NOT NULL PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
 	electric BOOLEAN NOT NULL,
 	average_km_week NUMERIC NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE members_bikes (
 );
 
 CREATE TABLE components_type (
-	name VARCHAR NOT NULL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL PRIMARY KEY,
 	average_duration NUMERIC NOT NULL
 );
 
@@ -49,7 +49,7 @@ VALUES ('Chaîne', 5000),
 	('Dérailleur arrière', 10000);
 
 CREATE TABLE components (
-	component_id VARCHAR NOT NULL PRIMARY KEY,
+	component_id VARCHAR(255) NOT NULL PRIMARY KEY,
 	duration NUMERIC NOT NULL,
 	active BOOLEAN NOT NULL,
 	total_km NUMERIC NOT NULL,
@@ -66,14 +66,14 @@ CREATE TABLE components_changed (
 	changed_at DATE NOT NULL,
 	km_realised NUMERIC NOT NULL,
 	price NUMERIC NOT NULL,
-	brand VARCHAR(255) NOT NULL
+	brand VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE topics (
-	name VARCHAR NOT NULL PRIMARY KEY
+	name VARCHAR(50) NOT NULL PRIMARY KEY
 );
 
-INSERT INTO topics 
+INSERT INTO topics (name)
 VALUES ('Chaîne'), 
 	('Batterie'),
 	('Pneus'),
@@ -85,7 +85,7 @@ VALUES ('Chaîne'),
 
 CREATE TABLE tips (
 	tip_id SERIAL PRIMARY KEY,
-	title VARCHAR NOT NULL,
+	title VARCHAR(255) NOT NULL,
 	video_id CHAR(11),
 	content TEXT NOT NULL,
 	fk_topic VARCHAR REFERENCES topics(name) ON DELETE CASCADE
@@ -244,8 +244,8 @@ $$ LANGUAGE PLPGSQL;
 CREATE TABLE diagnostic (
 	id SERIAL PRIMARY KEY,
 	title VARCHAR(255) NOT NULL,
-	bike_type VARCHAR(25),
-	component VARCHAR(25) NOT NULL,
+	bike_type VARCHAR(50),
+	component VARCHAR(50) NOT NULL,
 	content TEXT NOT NULL
 );
 

@@ -126,7 +126,7 @@ class ComponentRepository {
             const res = await client.query(`SELECT *
                                             FROM components_changed
                                             WHERE fk_component = $1
-                                            ORDER by changed_at ASC`,
+                                            ORDER BY changed_at ASC`,
                                             [componentId]);
             client.release(true);
             return res;

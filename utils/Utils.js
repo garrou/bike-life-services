@@ -20,10 +20,10 @@ class Utils {
     }
 
     /**
-     * @param {Member} member 
+     * @param {String} memberId
      * @returns {String}
      */
-    static createJwt = (member) => jwt.sign({data: JSON.stringify(member) }, process.env.SECRET_TOKEN);
+    static createJwt = (memberId) => jwt.sign({data: memberId}, process.env.SECRET_TOKEN);
 
     /**
      * @param {String} token 

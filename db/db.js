@@ -6,7 +6,7 @@ const pool = new Pool({
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
     port: process.env.POSTGRES_PORT,
-    max: 20
+    max: 100
 });
 
 module.exports = pool;
