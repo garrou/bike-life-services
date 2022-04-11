@@ -13,11 +13,10 @@ class BikeService {
         try {
             const { memberId } = req.params;
             const bike = Bike.fromJson(req.body);
-    
+
             if (!bike.isValid()) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});    
-            }
-            bike.computeTotalKm();            
+            } 
             await BikeRepository.create(memberId, bike);
             const types = bike.electric 
                     ? (await ComponentTypeRepository.getAll()).rows

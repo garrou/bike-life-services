@@ -15,11 +15,19 @@ class Validator {
     }
     
     static isNumber = (toCheck) => {
-        return toCheck && toCheck >= 0 && toCheck < Number.MAX_VALUE;
+        return toCheck >= 0 && toCheck < Number.MAX_VALUE;
     }
     
     static isValidName = (toCheck) => {
         return validator.isLength(toCheck, {min: 1, max: 50});
+    }
+
+    static isBikeType = (toCheck) => {
+        return ['VTT', 'Ville', 'Route'].includes(toCheck);
+    }
+
+    static isUUID = (toCheck) => {
+        return validator.isUUID(toCheck);
     }
 }
 

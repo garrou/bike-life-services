@@ -25,7 +25,7 @@ class MemberService {
             await MemberRepository.create(member);
             new Mailer().sendConfirmationEmail(email, url);
 
-            return res.status(http.CREATED).json({'confirm': 'Compte crée, veuillez confirmer votre email', 'member': member});
+            return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': member});
         } catch (err) {
             return res.status(http.BAD_REQUEST).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }

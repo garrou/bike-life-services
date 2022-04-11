@@ -4,7 +4,7 @@ let bike, bikes;
 
 beforeEach(() => {
     bikes = fromList([{
-        'bike_id': 'fs45fs5qfs5q4',
+        'bike_id': '5f8988a0-b9b9-11ec-8bdb-d3c3457cc037',
         'name': 'vélo de test',
         'average_km_week': 700,
         'electric': true,
@@ -16,13 +16,13 @@ beforeEach(() => {
     }]);
 
     bike = fromJson({
-        'id': 'eeefzfz', 
+        'id': '5f8988a0-b9b9-11ec-8bdb-d3c3457cc037', 
         'name': 'test', 
         'kmPerWeek': 123, 
         'electric': false, 
         'automaticKm': true,
         'type': 'Ville', 
-        'addedAt': '2022-09-02',
+        'addedAt': '2022-02-02',
         'totalKm': '487',
         'price': '1000'
     });
@@ -30,7 +30,7 @@ beforeEach(() => {
 
 test('Check values of bike', () => {
     expect(bikes.length).toBe(1);
-    expect(bikes[0].id).toBe('fs45fs5qfs5q4');
+    expect(bikes[0].id).toBe('5f8988a0-b9b9-11ec-8bdb-d3c3457cc037');
     expect(bikes[0].name).toBe('Vélo de test');
     expect(bikes[0].electric).toBe(true);
     expect(bikes[0].kmPerWeek).toBe(700);
@@ -66,11 +66,11 @@ test('Check if price is valid with invalid price', () => {
 });
 
 test('Check if Bike is created from json', () => {
-    expect(bike.id).toBe('eeefzfz');
+    expect(bike.id).toBe('5f8988a0-b9b9-11ec-8bdb-d3c3457cc037');
     expect(bike.name).toBe('Test');
     expect(bike.electric).toBe(false);
     expect(bike.kmPerWeek).toBe(123);
-    expect(bike.addedAt).toBe('2022-09-02');
+    expect(bike.addedAt).toBe('2022-02-02');
     expect(bike.type).toBe('Ville');
     expect(bike.totalKm).toBe(487);
     expect(bike.price).toBe(1000);
