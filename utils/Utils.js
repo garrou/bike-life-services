@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v1: uuidv1 } = require('uuid');
-const Member = require('../models/Member');
 
 class Utils {
 
@@ -38,12 +37,12 @@ class Utils {
     static verifyEmailJwt = (token) => jwt.verify(token, process.env.EMAIL_TOKEN);
 
     /**
-     * @param {String} jwt 
+     * @param {String} memberId
      * @returns {String}
      */
     static generateUrl = (memberId) => {
         const token = jwt.sign({memberId: memberId}, process.env.EMAIL_TOKEN, {expiresIn: "1d"});
-        return `http://${process.env.HOST}:${process.env.PORT}/confirmation/${token}`;
+        return `https://${process.env.HOST}/confirmation/${token}`;
     }
     
     /**

@@ -23,10 +23,10 @@ class MemberService {
             }
             const url = Utils.generateUrl(member.id);
             await MemberRepository.create(member);
-            await new Mailer().sendConfirmationEmail(email, url);
+            new Mailer().sendConfirmationEmail(email, url);
             return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': member});
         } catch (err) {
-            return res.status(http.BAD_REQUEST).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }
     }
     
@@ -68,11 +68,16 @@ class MemberService {
     
         try {
             const { password } = req.body;
-    
+            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+
             if (!Validator.isPassword(password)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
             } 
-            await MemberRepository.updatePassword(req.params.id, await Utils.createHash(password));
+            const resp = await MemberRepository.updatePassword(memberId, await Utils.createHash(password));
+
+            if (resp['rowCount'] !== 1) {
+                return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Impossible de modifier le mot de passe.'});
+            }
             return res.status(http.OK).json({'confirm': 'Mot de passe modifié'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
@@ -88,12 +93,16 @@ class MemberService {
             if (!Validator.isEmail(email)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email invalide.'});
             } 
-            const resp = await MemberRepository.get(email);
+            let resp = await MemberRepository.get(email);
     
             if (resp['rowCount'] !== 0) {
                 return res.status(http.CONFLICT).json({'confirm': 'Cet email est déjà associé à un compte.'});
             }
-            await MemberRepository.updateEmail(memberId, email);
+            resp = await MemberRepository.updateEmail(memberId, email);
+
+            if (resp['rowCount'] !== 1) {
+                return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Impossible de modifier votre email'});
+            }
             return res.status(http.OK).json({'confirm': 'Email modifié'});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Email modifié'});

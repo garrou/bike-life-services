@@ -64,11 +64,12 @@ class MemberRepository {
         
         try {
             const client = await pool.connect();
-            await client.query(`UPDATE members 
+            const res = await client.query(`UPDATE members 
                                 SET email = $1
                                 WHERE member_id = $2`, 
                                 [email, id]);
             client.release(true);
+            return res;
         } catch (err) {
             throw err;
         }
@@ -82,11 +83,12 @@ class MemberRepository {
         
         try {
             const client = await pool.connect();
-            await client.query(`UPDATE members 
+            const res = await client.query(`UPDATE members 
                                 SET password = $1
                                 WHERE member_id = $2`, 
                                 [password, id]);
             client.release(true);
+            return res;
         } catch (err) {
             throw err;
         }

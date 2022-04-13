@@ -16,12 +16,12 @@ beforeEach(() => {
     }]);
 
     bike = fromJson({
-        'id': '5f8988a0-b9b9-11ec-8bdb-d3c3457cc037', 
-        'name': 'test', 
-        'kmPerWeek': 123, 
-        'electric': false, 
+        'id': '5f8988a0-b9b9-11ec-8bdb-d3c3457cc037',
+        'name': 'test',
+        'kmPerWeek': 123,
+        'electric': false,
         'automaticKm': true,
-        'type': 'Ville', 
+        'type': 'Ville',
         'addedAt': '2022-02-02',
         'totalKm': '487',
         'price': '1000'

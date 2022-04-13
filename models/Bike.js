@@ -38,34 +38,34 @@ class Bike {
                     && validator.isUUID(this.id);
     
     /**
-     * @param {JSON} json 
+     * @param {JSON} json
      * @returns {Bike}
      */
-    static fromJson = (json) => new this(json.id === '' ? Utils.uuid() : json.id, 
-                                        json.name, 
-                                        json.kmPerWeek, 
-                                        json.electric, 
-                                        json.type, 
-                                        json.addedAt,
-                                        json.totalKm,
-                                        json.automaticKm,
-                                        json.price);
+    static fromJson = (json) => new this(json['id'] === '' ? Utils.uuid() : json['id'],
+                                        json['name'],
+                                        json['kmPerWeek'],
+                                        json['electric'],
+                                        json['type'],
+                                        json['addedAt'],
+                                        json['totalKm'],
+                                        json['automaticKm'],
+                                        json['price']);
     
     /**
-     * @param {Array} records 
+     * @param {Array<JSON>} records
      * @returns {Array<Bike>}
      */
     static fromList = (records) => {
         return records
-                .map((bike) => new this(bike.bike_id, 
-                                        bike.name, 
-                                        bike.average_km_week, 
-                                        bike.electric,
-                                        bike.bike_type,
-                                        bike.added_at,
-                                        bike.total_km,
-                                        bike.automatic_km,
-                                        bike.price));
+                .map((bike) => new this(bike['bike_id'],
+                                        bike['name'],
+                                        bike['average_km_week'],
+                                        bike['electric'],
+                                        bike['bike_type'],
+                                        bike['added_at'],
+                                        bike['total_km'],
+                                        bike['automatic_km'],
+                                        bike['price']));
     }
 }
 

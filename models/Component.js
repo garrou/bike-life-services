@@ -2,13 +2,13 @@ class Component {
 
     /**
      * @param {String} id
-     * @param {String || Number} duration 
+     * @param {String} duration
      * @param {String} type
      * @param {Boolean} active
      * @param {Date} changedAt
-     * @param {String || Number} totalKm
+     * @param {String} totalKm
      * @param {String} brand
-     * @param {String || Number} price
+     * @param {String} price
      */
     constructor(id, duration, type, active, changedAt, totalKm, brand, price) {
         this.id = id;
@@ -22,34 +22,34 @@ class Component {
     }
 
     /**
-     * @param {Array} records 
+     * @param {Array<JSON>} records
      * @returns {Array<Component>} 
      */
     static fromList = (records) => {
         return records
-                .map((compo) => new this(compo.component_id, 
-                                        compo.duration,
-                                        compo.fk_component_type,
-                                        compo.active,
-                                        compo.changed_at,
-                                        compo.total_km,
-                                        compo.brand,
-                                        compo.price));
+                .map((compo) => new this(compo['component_id'],
+                                        compo['duration'],
+                                        compo['fk_component_type'],
+                                        compo['active'],
+                                        compo['changed_at'],
+                                        compo['total_km'],
+                                        compo['brand'],
+                                        compo['price']));
     }
 
     /**
-     * @param {JSON} json 
+     * @param {JSON} json
      * @returns {Component}
      */
     static fromJson = (json) => {
-        return new Component(json.id,
-                            json.duration,
-                            json.type,
-                            json.active,
-                            json.changedAt,
-                            json.totalKm,
-                            json.brand,
-                            json.price);
+        return new Component(json['id'],
+                            json['duration'],
+                            json['type'],
+                            json['active'],
+                            json['changedAt'],
+                            json['totalKm'],
+                            json['brand'],
+                            json['price']);
     }
 }
 

@@ -235,7 +235,7 @@ class ComponentRepository {
                                             [memberId]);
             client.release(true);
             return res;
-        } catch {
+        } catch (err) {
             throw err;
         }
     }

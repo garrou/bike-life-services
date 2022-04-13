@@ -23,15 +23,15 @@ class Member {
                 && Validator.isPassword(this.password);
 
     /**
-     * @param {Array} records 
+     * @param {Array<JSON>} records
      * @returns {Array<Member>}
      */
      static fromList = (records) => { 
         return records
-                .map((member) => new this(member.member_id, 
-                                            member.email, 
-                                            member.password, 
-                                            member.active));
+                .map((member) => new this(member['member_id'],
+                                            member['email'],
+                                            member['password'],
+                                            member['active']));
     }
 }
 
