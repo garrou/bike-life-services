@@ -3,7 +3,7 @@ const pool = require('../db/db');
 class TipRepository {
 
     /**
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getAll = async () => {
 
@@ -21,7 +21,7 @@ class TipRepository {
 
     /**
      * @param {Number} tipId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getById = async (tipId) => {
 
@@ -39,7 +39,7 @@ class TipRepository {
 
     /**
      * @param {String} topic 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getByTopic = async (topic) => {
         

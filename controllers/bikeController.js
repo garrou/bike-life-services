@@ -5,9 +5,9 @@ const router = Router();
 
 router.get('/bikes/:bikeId', Guard.checkToken, bikeService.get);
 
-router.get('/members/:memberId/bikes', Guard.checkToken, bikeService.getByMember);
+router.get('/member/bikes', Guard.checkToken, bikeService.getByMember);
 
-router.post('/members/:memberId/bikes', Guard.checkToken, bikeService.create);
+router.post('/member/bikes', Guard.checkToken, bikeService.create);
 
 router.delete('/bikes/:bikeId', Guard.checkToken, bikeService.delete);
 

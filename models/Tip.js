@@ -16,16 +16,16 @@ class Tip {
     }
 
     /**
-     * @param {Array} records 
+     * @param {Array<JSON>} records
      * @returns {Array<Tip>}
      */
     static fromList = (records) => {
         return records
-                .map((tip) => new this(tip.tip_id,
-                                    tip.fk_topic,
-                                    tip.title,
-                                    tip.content,
-                                    tip.video_id));
+                .map((tip) => new this(tip['tip_id'],
+                                    tip['fk_topic'],
+                                    tip['title'],
+                                    tip['content'],
+                                    tip['video_id']));
         }
 }
 

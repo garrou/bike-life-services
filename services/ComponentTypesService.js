@@ -7,7 +7,7 @@ class ComponentTypesService {
     
         try {
             const resp = await ComponentTypesRepository.getAll();
-            return res.status(http.OK).json(resp.rows);
+            return res.status(http.OK).json(resp['rows']);
         } catch (err) {
             return res.status(http.BAD_REQUEST).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }

@@ -9,10 +9,10 @@ router.post('/members/login', memberService.login);
 
 router.get('/confirmation/:token', memberService.confirmEmail);
 
-router.patch('/members/:id/email', Guard.checkToken, memberService.updateEmail);
+router.patch('/member/email', Guard.checkToken, memberService.updateEmail);
 
-router.patch('/members/:id/password', Guard.checkToken, memberService.updatePassword);
+router.patch('/member/password', Guard.checkToken, memberService.updatePassword);
 
-router.get('/members/:id/email', Guard.checkToken, memberService.getEmail);
+router.get('/member/email', Guard.checkToken, memberService.getEmail);
 
 module.exports = router;

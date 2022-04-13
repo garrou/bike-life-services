@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/bikes/:bikeId/components', Guard.checkToken, componentService.getBikeComponents);
 
-router.get('/members/:memberId/components/nb-alerts', Guard.checkToken, componentService.getNbAlerts);
+router.get('/bikes/:bikeId/components/nb-alerts', Guard.checkToken, componentService.getNbAlerts);
 
 router.patch('/components/:componentId', Guard.checkToken, componentService.changeComponent);
 
@@ -13,13 +13,13 @@ router.put('/components/:componentId', Guard.checkToken, componentService.update
 
 router.get('/components/:componentId/change-historic', Guard.checkToken, componentService.getChangeHistoricByComponent);
 
-router.get('/members/:memberId/components/nb-change-stats/years/:year', Guard.checkToken, componentService.getNumOfComponentChangeByMemberByYear);
+router.get('/components/nb-change-stats/years/:year', Guard.checkToken, componentService.getNumOfComponentChangeByMemberByYear);
 
-router.get('/members/:memberId/components/km-change-stats/years/:year', Guard.checkToken, componentService.getAvgKmComponentChangeByMemberByYear);
+router.get('/components/km-change-stats/years/:year', Guard.checkToken, componentService.getAvgKmComponentChangeByMemberByYear);
 
-router.get('/members/:memberId/components/nb-changes', Guard.checkToken, componentService.getTotalNbChangeByMember);
+router.get('/components/nb-changes', Guard.checkToken, componentService.getTotalNbChangeByMember);
 
-router.get('/members/:memberId/components/percents', Guard.checkToken, componentService.getAvgPercentChangesByMember);
+router.get('/components/percents', Guard.checkToken, componentService.getAvgPercentChangesByMember);
 
 router.get('/bikes/:bikeId/components/nb-change-stats', Guard.checkToken, componentService.getNbChangeByBike);
 
@@ -27,7 +27,7 @@ router.get('/bikes/:bikeId/components/percents', Guard.checkToken, componentServ
 
 router.get('/bikes/:bikeId/components/nb-change-stats', Guard.checkToken, componentService.getNumOfComponentChangedByBike);
 
-router.get('/members/:memberId/components/price', Guard.checkToken, componentService.getSumPriceComponentByMember);
+router.get('/components/price', Guard.checkToken, componentService.getSumPriceComponentByMember);
 
 router.get('/bikes/:bikeId/components/price', Guard.checkToken, componentService.getSumPriceComponentsByBike);
 

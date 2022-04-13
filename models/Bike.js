@@ -1,5 +1,4 @@
 const Utils = require('../utils/Utils');
-const moment = require('moment');
 const validator = require('../utils/Validator');
 
 class Bike {
@@ -10,7 +9,7 @@ class Bike {
      * @param {String} kmPerWeek 
      * @param {Boolean} electric
      * @param {String} type
-     * @param {Date} addedAt
+     * @param {String} addedAt
      * @param {String} totalKm
      * @param {Boolean} automaticKm
      * @param {String} price
@@ -34,42 +33,39 @@ class Bike {
                     && validator.isNumber(this.kmPerWeek)
                     && validator.isNumber(this.totalKm)
                     && validator.isValidName(this.name)
-                    && validator.isNumber(this.price);
-
-    computeTotalKm = () => {
-        const diffInDays = moment(Date.now()).diff(moment(this.addedAt), 'days');
-        this.totalKm = this.kmPerWeek / 7 * diffInDays;
-    }
+                    && validator.isBikeType(this.type)
+                    && validator.isNumber(this.price)
+                    && validator.isUUID(this.id);
     
     /**
-     * @param {JSON} json 
+     * @param {JSON} json
      * @returns {Bike}
      */
-    static fromJson = (json) => new this(json.id === '' ? Utils.uuid() : json.id, 
-                                        json.name, 
-                                        json.kmPerWeek, 
-                                        json.electric, 
-                                        json.type, 
-                                        json.addedAt,
-                                        json.totalKm,
-                                        json.automaticKm,
-                                        json.price);
+    static fromJson = (json) => new this(json['id'] === '' ? Utils.uuid() : json['id'],
+                                        json['name'],
+                                        json['kmPerWeek'],
+                                        json['electric'],
+                                        json['type'],
+                                        json['addedAt'],
+                                        json['totalKm'],
+                                        json['automaticKm'],
+                                        json['price']);
     
     /**
-     * @param {Array} records 
+     * @param {Array<JSON>} records
      * @returns {Array<Bike>}
      */
     static fromList = (records) => {
         return records
-                .map((bike) => new this(bike.bike_id, 
-                                        bike.name, 
-                                        bike.average_km_week, 
-                                        bike.electric,
-                                        bike.bike_type,
-                                        bike.added_at,
-                                        bike.total_km,
-                                        bike.automatic_km,
-                                        bike.price));
+                .map((bike) => new this(bike['bike_id'],
+                                        bike['name'],
+                                        bike['average_km_week'],
+                                        bike['electric'],
+                                        bike['bike_type'],
+                                        bike['added_at'],
+                                        bike['total_km'],
+                                        bike['automatic_km'],
+                                        bike['price']));
     }
 }
 

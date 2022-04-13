@@ -14,26 +14,26 @@ class ComponentChange {
     }
 
     /**
-     * @param {Array} records 
-     * @returns {Array<Component>} 
+     * @param {Array<JSON>} records
+     * @returns {Array<ComponentChange>}
      */
     static fromList = (records) => {
         return records
-                .map((compo) => new this(compo.changed_at, 
-                                        compo.km_realised, 
-                                        compo.price, 
-                                        compo.brand));
+                .map((compo) => new this(compo['changed_at'],
+                                        compo['km_realised'],
+                                        compo['price'],
+                                        compo['brand']));
     }
 
     /**
      * @param {JSON} json 
-     * @returns {ComponentHistoric}
+     * @returns {ComponentChange}
      */
     static fromJson = (json) => {
-        return new this(json.changedAt,
-                        json.kmRealised,
-                        json.price,
-                        json.brand);
+        return new this(json['changedAt'],
+                        json['kmRealised'],
+                        json['price'],
+                        json['brand']);
     }
 }
 

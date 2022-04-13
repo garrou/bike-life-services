@@ -1,4 +1,3 @@
-const Bike = require('../models/Bike');
 const pool = require('../db/db');
 
 class BikeRepository {
@@ -23,7 +22,7 @@ class BikeRepository {
 
     /**
      * @param {String} bikeId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static get = async (bikeId) => {
 
@@ -42,7 +41,7 @@ class BikeRepository {
 
     /**
      * @param {String} memberId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getByMember = async (memberId) => {
 
@@ -93,7 +92,7 @@ class BikeRepository {
    }
 
     /**
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getBikesWithAutoKm = async () => {
 

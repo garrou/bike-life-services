@@ -11,21 +11,20 @@ class BikeService {
     static create = async (req, res) => {
     
         try {
-            const { memberId } = req.params;
+            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
             const bike = Bike.fromJson(req.body);
-    
+
             if (!bike.isValid()) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});    
-            }
-            bike.computeTotalKm();            
+            } 
             await BikeRepository.create(memberId, bike);
-            const types = bike.electric 
-                    ? (await ComponentTypeRepository.getAll()).rows
-                    : (await ComponentTypeRepository.getAllWithoutBattery()).rows;
+            const types = bike.electric
+                    ? (await ComponentTypeRepository.getAll())['rows']
+                    : (await ComponentTypeRepository.getAllWithoutBattery())['rows'];
     
-            types.forEach(async (type) => {
-                await ComponentRepository.create(Utils.uuid(), bike.id, bike.totalKm, type.average_duration, type.name);
-            });
+            for (const type of types) {
+                await ComponentRepository.create(Utils.uuid(), bike.id, bike.totalKm, type['average_duration'], type.name);
+            }
             return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur de communication avec le serveur'});
@@ -37,7 +36,7 @@ class BikeService {
         try {
             const { bikeId } = req.params;
             const resp = await BikeRepository.get(bikeId);
-            const bike = Bike.fromList(resp.rows)[0];
+            const bike = Bike.fromList(resp['rows'])[0];
             return res.status(http.OK).json(bike);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
@@ -47,9 +46,9 @@ class BikeService {
     static getByMember = async (req, res) => {
     
         try {
-            const { memberId } = req.params;
+            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
             const resp = await BikeRepository.getByMember(memberId);
-            const bikes = Bike.fromList(resp.rows);
+            const bikes = Bike.fromList(resp['rows']);
             return res.status(http.OK).json(bikes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
@@ -76,7 +75,7 @@ class BikeService {
                 return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
             }   
             await BikeRepository.update(bike);
-            return res.status(http.OK).json({'confirm': 'Vélo modifié'});
+            return res.status(http.OK).json({'confirm': `${bike.name} modifié`});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }
@@ -88,8 +87,8 @@ class BikeService {
             const { bikeId } = req.params;
             const { km } = req.body;
 
-            if (!Validator.isKm(km)) {
-                return res.status(http.FORBIDDEN).json({'confirm': 'Kilomètres invalides'});
+            if (!Validator.isNumber(km)) {
+                return res.status(http.FORBIDDEN).json({'confirm': "Impossible d'ajouter des kilomètres"});
             }
             await BikeRepository.addKm(bikeId, km);
             return res.status(http.OK).json({'confirm': `${km} kilomètres ajoutés`});

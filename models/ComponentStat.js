@@ -1,8 +1,8 @@
 class ComponentStat {
 
     /**
-     * @param {} label
-     * @param {} value 
+     * @param {String} label
+     * @param {String} value
      */
     constructor(label, value) {
         this.label = label.toString();
@@ -10,12 +10,12 @@ class ComponentStat {
     }
 
     /**
-     * @param {Array} records 
-     * @returns {Array<Component>} 
+     * @param {Array<JSON>} records
+     * @returns {Array<ComponentStat>}
      */
     static fromList = (records) => {
         return records
-                .map((compo) => new this(compo.label, compo.value));
+                .map((compo) => new this(compo['label'], compo['value']));
     }
 }
 
