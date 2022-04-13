@@ -4,27 +4,7 @@ Backend of [bike-life](https://github.com/1-irdA/bike-life)
 
 ## Environments variables  
 
-This project use .env file for config, before launch, create a .env file at project root.       
-
-```sh
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_HOST=
-POSTGRES_DATABASE=
-POSTGRES_PORT=
-
-DOCKER_POSTGRES_HOST=
-
-SERVER_PORT=
-
-SECRET_TOKEN=
-```
-
-## Scripts
-
-```sh
-pip install -r requirements.txt
-```
+This project use .env file for config, before launch, create a .env file at project root.
 
 ## First start
 

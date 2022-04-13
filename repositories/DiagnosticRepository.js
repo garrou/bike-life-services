@@ -2,6 +2,10 @@ const pool = require('../db/db');
 
 class DiagnosticRepository {
 
+    /**
+     * @param {String} type
+     * @returns {Promise<any>}
+     */
     static getByBikeType = async (type) => {
         try {
             const client = await pool.connect();

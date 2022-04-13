@@ -21,7 +21,8 @@ class Mailer {
      */
     sendEmail = async (from, to, subject, text) => {
         try {
-            const resp = await this.transporter.sendMail({ from: from, to: to, subject: subject, text: text });
+            const info = await this.transporter.sendMail({ from: from, to: to, subject: subject, text: text });
+            console.log(info.messageId);
         } catch (err) {
             throw err;
         }
@@ -33,12 +34,13 @@ class Mailer {
      */
     sendConfirmationEmail = async (to, url) => {
         try {
-            const resp = await this.transporter.sendMail({ 
+            const info = await this.transporter.sendMail({
                 from: process.env.EMAIL_FROM, 
                 to: to, 
                 subject: 'Confirmer votre email', 
                 html: `Cliquer sur le lien pour finaliser la création de votre compte : <a href="${url}">Confirmer</a>` 
             });
+            console.log(info.messageId);
         } catch (err) {
             throw err;
         }

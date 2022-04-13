@@ -1,13 +1,10 @@
-const res = require('express/lib/response');
 const pool = require('../db/db');
-const Component = require('../models/Component');
-const ComponentChange = require('../models/ComponentChange');
 
 class ComponentRepository {
 
     /**
      * @param {String} bikeId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getBikeComponents = async (bikeId) => {
 
@@ -18,11 +15,12 @@ class ComponentRepository {
                                             WHERE component_id = fk_component
                                             AND fk_bike = $1
                                             AND active = true
-                                            ORDER BY total_km / duration DESC`,
+                                            ORDER BY total_km / duration DESC, fk_component_type ASC`,
                                             [bikeId]);
             client.release(true);
             return res;
         } catch (err) {
+            console.log(err);
             throw err;
         }
     }
@@ -52,7 +50,7 @@ class ComponentRepository {
     
     /**
      * @param {Component} component 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
      static updateComponent = async (component) => {
 
@@ -63,16 +61,15 @@ class ComponentRepository {
                                 WHERE component_id = $7`,
                                 [component.duration, component.active, component.totalKm, component.type, component.price, component.brand, component.id]);
             client.release(true);
-            return res;
         } catch (err) {
             throw err;
         }
     }
 
     /**
-     * @param {String} memberId 
+     * @param {String} bikeId
      * @param {Number} percent 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getNbAlerts = async (bikeId, percent) => {
         
@@ -117,7 +114,7 @@ class ComponentRepository {
 
     /**
      * @param {String} componentId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getChangeHistoricByComponent = async (componentId) => {
 
@@ -138,7 +135,7 @@ class ComponentRepository {
     /**
      * @param {String} memberId 
      * @param {Number} year 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getNumOfComponentChangeByMemberByYear = async (memberId, year) => {
 
@@ -166,7 +163,7 @@ class ComponentRepository {
     /**
      * @param {String} memberId 
      * @param {Number} year 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getAvgKmComponentChangeByMemberByYear = async (memberId, year) => {
 
@@ -192,7 +189,7 @@ class ComponentRepository {
 
     /**
      * @param {String} memberId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getTotalNbChangeByMember = async (memberId) => {
 
@@ -218,7 +215,7 @@ class ComponentRepository {
 
     /**
      * @param {String} memberId 
-     * @return {QueryResult<any>}
+     * @return {Promise<any>}
      */
     static getAvgPercentChangesByMember = async (memberId) => {
 
@@ -245,7 +242,7 @@ class ComponentRepository {
 
     /**
      * @param {String} bikeId 
-     * @return {QueryResult<any>}
+     * @return {Promise<any>}
      */
     static getNbChangeByBike = async (bikeId) => {
 
@@ -266,7 +263,7 @@ class ComponentRepository {
 
     /**
      * @param {String} bikeId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getAvgPercentChangesByBike = async (bikeId) => {
 
@@ -289,7 +286,7 @@ class ComponentRepository {
 
     /**
      * @param {String} bikeId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getNumOfComponentChangedByBike = async (bikeId) => {
 
@@ -312,7 +309,7 @@ class ComponentRepository {
 
     /**
      * @param {String} memberId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getSumPriceComponentsByMember = async (memberId) => {
         
@@ -338,7 +335,7 @@ class ComponentRepository {
 
     /**
      * @param {String} bikeId 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
      static getSumPriceComponentsByBike = async (bikeId) => {
 

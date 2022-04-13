@@ -1,5 +1,4 @@
 const pool = require('../db/db');
-const Member = require('../models/Member');
 
 class MemberRepository {
 
@@ -21,7 +20,7 @@ class MemberRepository {
 
     /**
      * @param {string} email 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static get = async (email) => { 
 
@@ -40,7 +39,7 @@ class MemberRepository {
 
     /**
      * @param {String} id 
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getEmailById = async (id) => {
 

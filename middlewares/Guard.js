@@ -8,7 +8,7 @@ class Guard {
         const token = authHeader && authHeader.split(' ')[1];
     
         if (token === null) {
-            return res.sendStatus(http.UNAUTHORIZED);
+            return res.sendStatus(http.BAD_REQUEST);
         }
 
         try {

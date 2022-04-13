@@ -1,17 +1,26 @@
+const Validator = require('../utils/Validator');
+
 class Member {
 
-    /** 
-     * @param {Number} id
+    /**
+     * @param {String} id
      * @param {String} email 
      * @param {String} password
      * @param {Boolean} active
      */
     constructor(id, email, password, active) {
         this.id = id;
-        this.email = email;
-        this.password = password;
+        this.email = email.trim();
+        this.password = password.trim();
         this.active = active;
     }
+
+    /**
+     * @returns {Boolean}
+     */
+    isValid = () => Validator.isUUID(this.id)
+                && Validator.isEmail(this.email)
+                && Validator.isPassword(this.password);
 
     /**
      * @param {Array} records 

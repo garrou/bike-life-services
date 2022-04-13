@@ -3,7 +3,7 @@ const pool = require('../db/db');
 class ComponentTypeRepository {
 
     /**
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getAll = async () => {
     
@@ -20,7 +20,7 @@ class ComponentTypeRepository {
     }
 
     /**
-     * @returns {QueryResult<any>}
+     * @returns {Promise<any>}
      */
     static getAllWithoutBattery = async () => {
         try {
