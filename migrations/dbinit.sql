@@ -261,3 +261,11 @@ VALUES
 ('Vérification de la transmission', NULL, 'Transmission', 'Vérifier le passage des vitesses, celui-ci doit-être rapide et sans bruit. Les tester une à une'),
 ('Vérification de la chaîne', NULL, 'Chaîne', 'Vérifier que la chaîne est bien tendue'),
 ('Vérification des freins', NULL, 'Freins', 'Vérifier que les câbles soient ni effilochés, ni déformés, ni abimés');
+
+CREATE TABLE repairs (
+    id SERIAL PRIMARY KEY,
+    repair_at DATE NOT NULL,
+    reason VARCHAR(1000),
+    price NUMERIC NOT NULL,
+    fk_component VARCHAR NOT NULL REFERENCES components(component_id) ON DELETE CASCADE
+);

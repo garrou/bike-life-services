@@ -42,7 +42,7 @@ class Component {
      * @returns {Component}
      */
     static fromJson = (json) => {
-        return new Component(json['id'],
+        return new this(json['id'],
                             json['duration'],
                             json['type'],
                             json['active'],

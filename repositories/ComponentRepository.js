@@ -123,7 +123,7 @@ class ComponentRepository {
             const res = await client.query(`SELECT *
                                             FROM components_changed
                                             WHERE fk_component = $1
-                                            ORDER BY changed_at ASC`,
+                                            ORDER BY changed_at DESC`,
                                             [componentId]);
             client.release(true);
             return res;
@@ -215,7 +215,7 @@ class ComponentRepository {
 
     /**
      * @param {String} memberId 
-     * @return {Promise<any>}
+     * @returns {Promise<any>}
      */
     static getAvgPercentChangesByMember = async (memberId) => {
 
@@ -242,7 +242,7 @@ class ComponentRepository {
 
     /**
      * @param {String} bikeId 
-     * @return {Promise<any>}
+     * @returns {Promise<any>}
      */
     static getNbChangeByBike = async (bikeId) => {
 
