@@ -10,9 +10,9 @@ class RepairRepository {
 
         try {
             const client = await pool.connect();
-            await client.query(`INSERT INTO repairs (repairs_at, reason, price, fk_component)
+            await client.query(`INSERT INTO repairs (repair_at, reason, price, fk_component)
                                 VALUES ($1, $2, $3, $4)`,
-                                [repair.repairAt, repair.reason, repair.price, repair.component]);
+                                [repair.repairAt, repair.reason, repair.price, repair.componentId]);
             client.release(true);
         } catch (err) {
             throw err;
@@ -30,7 +30,8 @@ class RepairRepository {
             const client = await pool.connect();
             const res = await client.query(`SELECT *
                                             FROM repairs
-                                            WHERE fk_component = $1`,
+                                            WHERE fk_component = $1
+                                            ORDER BY repair_at DESC`,
                                             [componentId]);
             client.release(true);
             return res;

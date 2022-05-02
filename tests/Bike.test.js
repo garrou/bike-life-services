@@ -26,7 +26,7 @@ beforeEach(() => {
         'totalKm': '487',
         'price': '1000'
     });
-})
+});
 
 test('Check values of bike', () => {
     expect(bikes.length).toBe(1);

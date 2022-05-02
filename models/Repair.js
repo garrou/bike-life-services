@@ -1,18 +1,21 @@
+const Validator = require('../utils/Validator');
+const MAX_SIZE = 1000;
+
 class Repair {
 
     /**
      * @param {Number} id
      * @param {Date} repairAt
      * @param {String} reason
-     * @param {Number} price
-     * @param {String} component
+     * @param {String} price
+     * @param {String} componentId
      */
-    constructor(id, repairAt, reason, price, component) {
+    constructor(id, repairAt, reason, price, componentId) {
         this.id = id;
         this.repairAt = repairAt;
-        this.reason = reason;
-        this.price = price;
-        this.component = component;
+        this.reason = reason.slice(0, MAX_SIZE);
+        this.price = parseFloat(price);
+        this.componentId = componentId;
     }
 
     /**
@@ -21,11 +24,31 @@ class Repair {
      */
     static fromJson = (json) => {
         return new this(json['id'],
-                        json['repair_at'],
+                        json['repairAt'],
                         json['reason'],
                         json['price'],
-                        json['component']);
+                        json['componentId']);
     }
+
+    /**
+     * @param {Array<JSON>} records
+     * @returns {Array<Repair>}
+     */
+    static fromList = (records) => {
+        return records.map(record => new this(record['id'],
+                                            record['repair_at'],
+                                            record['reason'],
+                                            record['price'],
+                                            record['fk_component']));
+    }
+
+    /**
+     * @returns {Boolean}
+     */
+    isValid = () => Validator.isNumber(this.price)
+                    // && Validator.isDate(this.repairAt)
+                    && Validator.isValidLength(this.reason, 0, MAX_SIZE)
+                    && Validator.isUUID(this.componentId);
 }
 
 module.exports = Repair;

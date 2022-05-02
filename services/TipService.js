@@ -19,8 +19,8 @@ class TipService {
     
         try {
             const resp = await TipRepository.getById(req.params['tipId']);
-            const tip = Tip.fromList(resp['rows'])[0];
-            return res.status(http.OK).json(tip);
+            const tips = Tip.fromList(resp['rows'])[0];
+            return res.status(http.OK).json(tips);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
         }

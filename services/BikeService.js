@@ -36,8 +36,8 @@ class BikeService {
         try {
             const { bikeId } = req.params;
             const resp = await BikeRepository.get(bikeId);
-            const bike = Bike.fromList(resp['rows'])[0];
-            return res.status(http.OK).json(bike);
+            const bikes = Bike.fromList(resp['rows'])[0];
+            return res.status(http.OK).json(bikes);
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }

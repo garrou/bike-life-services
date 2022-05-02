@@ -3,7 +3,7 @@ const repairService = require('../services/RepairService');
 const Guard = require('../middlewares/Guard');
 const router = Router();
 
-router.post('/components/:componentId/repairs', Guard.checkToken, repairService.addRepair);
+router.post('/components/repairs', Guard.checkToken, repairService.addRepair);
 
 router.get('/components/:componentId/repairs', Guard.checkToken, repairService.getRepairs);
 
