@@ -15,6 +15,15 @@ class DiagnosticService {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
         }
     }
+
+    static checkDiagnostics = async (req, res) => {
+
+        try {
+
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+        }
+    }
 }
 
 module.exports = DiagnosticService;
