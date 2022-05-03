@@ -7,6 +7,7 @@ class DiagnosticRepository {
      * @returns {Promise<any>}
      */
     static getByBikeType = async (type) => {
+
         try {
             const client = await pool.connect();
             const res = await client.query(`SELECT *
