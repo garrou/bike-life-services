@@ -17,9 +17,15 @@ class Validator {
     static isNumber = (toCheck) => {
         return toCheck >= 0 && toCheck < Number.MAX_VALUE;
     }
-    
-    static isValidName = (toCheck) => {
-        return validator.isLength(toCheck, {min: 1, max: 50});
+
+    /**
+     * @param toCheck
+     * @param {Number} min
+     * @param {Number} max
+     * @return {Boolean}
+     */
+    static isValidLength = (toCheck, min, max) => {
+        return validator.isLength(toCheck, {min: min, max: max});
     }
 
     static isBikeType = (toCheck) => {

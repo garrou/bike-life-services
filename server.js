@@ -8,6 +8,7 @@ const componentController = require('./controllers/componentController');
 const componentTypesController = require('./controllers/componentTypesController');
 const diagnosticController = require('./controllers/diagnosticController');
 const memberController = require('./controllers/memberController');
+const repairController = require('./controllers/repairController');
 const tipController = require('./controllers/tipController');
 const { cors } = require('./middlewares/cors');
 
@@ -22,6 +23,7 @@ app.use(componentController);
 app.use(componentTypesController);
 app.use(diagnosticController);
 app.use(memberController);
+app.use(repairController);
 app.use(tipController);
 
 app.listen(process.env.PORT, '::');

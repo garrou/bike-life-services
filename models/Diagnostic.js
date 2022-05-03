@@ -2,7 +2,7 @@ class Diagnostic {
 
     /**
      * @param {Number} id
-     * @param {String}title
+     * @param {String} title
      * @param {String} type
      * @param {String} component
      * @param {String} content

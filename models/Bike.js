@@ -1,5 +1,5 @@
 const Utils = require('../utils/Utils');
-const validator = require('../utils/Validator');
+const Validator = require('../utils/Validator');
 
 class Bike {
 
@@ -29,13 +29,13 @@ class Bike {
     /**
      * @returns {Boolean}
      */
-    isValid = () => validator.isDate(this.addedAt)
-                    && validator.isNumber(this.kmPerWeek)
-                    && validator.isNumber(this.totalKm)
-                    && validator.isValidName(this.name)
-                    && validator.isBikeType(this.type)
-                    && validator.isNumber(this.price)
-                    && validator.isUUID(this.id);
+    isValid = () => Validator.isDate(this.addedAt)
+                    && Validator.isNumber(this.kmPerWeek)
+                    && Validator.isNumber(this.totalKm)
+                    && Validator.isValidLength(this.name, 1, 50)
+                    && Validator.isBikeType(this.type)
+                    && Validator.isNumber(this.price)
+                    && Validator.isUUID(this.id);
     
     /**
      * @param {JSON} json

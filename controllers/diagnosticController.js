@@ -5,4 +5,6 @@ const router = Router();
 
 router.get('/diagnostics/:type', Guard.checkToken, diagnosticService.getDiagnostics);
 
+router.post('/diagnostics/check', Guard.checkToken, diagnosticService.checkDiagnostics);
+
 module.exports = router;

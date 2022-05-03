@@ -4,6 +4,7 @@ class MemberRepository {
 
     /**
      * @param {Member} member
+     * @returns {Promise<void>}
      */
     static create = async (member) => {
 
@@ -58,7 +59,8 @@ class MemberRepository {
 
     /**
      * @param {String} id 
-     * @param {String} email 
+     * @param {String} email
+     * @returns {Promise<any>}
      */
     static updateEmail = async (id, email) => {
         
@@ -77,7 +79,8 @@ class MemberRepository {
 
     /**
      * @param {String} id 
-     * @param {String} password 
+     * @param {String} password
+     * @returns {Promise<any>}
      */
     static updatePassword = async (id, password) => {
         
@@ -95,7 +98,8 @@ class MemberRepository {
     }
 
     /**
-     * @param {String} id 
+     * @param {String} id
+     * @returns {Promise<void>}
      */
      static activeMember = async (id) => {
         
