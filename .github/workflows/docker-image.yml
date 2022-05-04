@@ -1,4 +1,4 @@
-name: Docker Compose Actions Workflow
+name: docker compose build
 
 on:
   push:
@@ -15,8 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build Docker Compose
-      run: docker-compose build
-      env:
-        POSTGRES_DB: bikelife
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: admin
+      run: docker compose build
