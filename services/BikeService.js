@@ -11,7 +11,7 @@ class BikeService {
     static create = async (req, res) => {
     
         try {
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const bike = Bike.fromJson(req.body);
 
             if (!bike.isValid()) {
@@ -46,7 +46,7 @@ class BikeService {
     static getByMember = async (req, res) => {
     
         try {
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await BikeRepository.getByMember(memberId);
             const bikes = Bike.fromList(resp['rows']);
             return res.status(http.OK).json(bikes);

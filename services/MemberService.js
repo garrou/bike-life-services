@@ -43,7 +43,7 @@ class MemberService {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Veuillez confirmer votre adresse email'});
             }
             const same = await Utils.comparePassword(password, resp['rows'][0]['password']);
-        
+
             if (!same) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot de passe incorrect.'});
             }
@@ -68,7 +68,7 @@ class MemberService {
     
         try {
             const { password } = req.body;
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
 
             if (!Validator.isPassword(password)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Le mot de passe doit contenir 8 caractères minimum.'});
@@ -88,7 +88,7 @@ class MemberService {
     
         try {
             const { email } = req.body;
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
     
             if (!Validator.isEmail(email)) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email invalide.'});
@@ -112,7 +112,7 @@ class MemberService {
     static getEmail = async (req, res) => {
         
         try {
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await MemberRepository.getEmailById(memberId);
             return res.status(http.OK).json({'email': resp['rows'].length === 1 ? resp['rows'][0].email : ''});
         } catch (err) {

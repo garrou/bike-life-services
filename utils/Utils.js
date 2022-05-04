@@ -37,6 +37,12 @@ class Utils {
     static verifyEmailJwt = (token) => jwt.verify(token, process.env.EMAIL_TOKEN);
 
     /**
+     * @param {String} authorization
+     * @returns {String}
+     */
+    static getMemberId = (authorization) => Utils.verifyJwt(authorization.split(' ')[1])['data'];
+
+    /**
      * @param {String} memberId
      * @returns {String}
      */

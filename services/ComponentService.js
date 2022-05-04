@@ -69,7 +69,7 @@ class ComponentService {
     
         try {
             const { year } = req.params;
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await ComponentRepository.getNumOfComponentChangeByMemberByYear(memberId, year);
             const changes = ComponentStat.fromList(resp['rows']);
             return res.status(http.OK).json(changes);
@@ -82,7 +82,7 @@ class ComponentService {
         
         try {
             const { year } = req.params;
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await ComponentRepository.getAvgKmComponentChangeByMemberByYear(memberId, year);
             const changes = ComponentStat.fromList(resp['rows']);
             return res.status(http.OK).json(changes);
@@ -94,7 +94,7 @@ class ComponentService {
     static getTotalNbChangeByMember = async (req, res) => {
     
         try {
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await ComponentRepository.getTotalNbChangeByMember(memberId);
             const changes = ComponentStat.fromList(resp['rows']);
             return res.status(http.OK).json(changes);
@@ -106,7 +106,7 @@ class ComponentService {
     static getAvgPercentChangesByMember = async (req, res) => {
 
         try {
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await ComponentRepository.getAvgPercentChangesByMember(memberId);
             const changes = ComponentStat.fromList(resp['rows']);
             return res.status(http.OK).json(changes);
@@ -154,7 +154,7 @@ class ComponentService {
     static getSumPriceComponentByMember = async (req, res) => {
 
         try {
-            const memberId = Utils.verifyJwt(req.headers['authorization'].split(' ')[1])['data'];
+            const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await ComponentRepository.getSumPriceComponentsByMember(memberId);
             const changes = ComponentStat.fromList(resp['rows']);
             return res.status(http.OK).json(changes);
