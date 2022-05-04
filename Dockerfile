@@ -2,9 +2,9 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json ./
 
-RUN npm cache clean --force & npm install & npm update
+RUN npm install & npm update
 
 COPY . .
 
