@@ -1,5 +1,7 @@
 # bike-life-services
 
+[![Node.js CI](https://github.com/1-irdA/bike-life-services/actions/workflows/node.js.yml/badge.svg)](https://github.com/1-irdA/bike-life-services/actions/workflows/node.js.yml)
+
 Backend of [bike-life](https://github.com/1-irdA/bike-life)    
 
 ## First start
