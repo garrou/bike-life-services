@@ -12,7 +12,7 @@ class ComponentTypeRepository {
             const res = await client.query(`SELECT * 
                                             FROM components_type 
                                             ORDER BY name`);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -29,7 +29,7 @@ class ComponentTypeRepository {
                                             FROM components_type
                                             WHERE name <> 'Batterie' 
                                             ORDER BY name`);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;

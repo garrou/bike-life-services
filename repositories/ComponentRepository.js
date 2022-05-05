@@ -17,7 +17,7 @@ class ComponentRepository {
                                             AND active = true
                                             ORDER BY total_km / duration DESC, fk_component_type ASC`,
                                             [bikeId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
 
@@ -42,7 +42,7 @@ class ComponentRepository {
             await client.query(`INSERT INTO bikes_components (fk_bike, fk_component)
                                 VALUES ($1, $2)`, 
                                 [bikeId, componentId]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -60,7 +60,7 @@ class ComponentRepository {
                                 SET duration = $1, active = $2, total_km = $3, fk_component_type = $4, price = ROUND($5, 2), brand = $6
                                 WHERE component_id = $7`,
                                 [component.duration, component.active, component.totalKm, component.type, component.price, component.brand, component.id]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -84,7 +84,7 @@ class ComponentRepository {
                                             AND components.active = true
                                             AND components.total_km / components.duration >= $2`,
                                             [bikeId, percent]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -106,7 +106,7 @@ class ComponentRepository {
                                 SET total_km = (SELECT get_km_since_changed_date($1, $2))
                                 WHERE component_id = $1`,
                                 [componentId, change.changedAt]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -125,7 +125,7 @@ class ComponentRepository {
                                             WHERE fk_component = $1
                                             ORDER BY changed_at DESC`,
                                             [componentId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -152,7 +152,7 @@ class ComponentRepository {
                                             AND EXTRACT(YEAR FROM changed_at) = $2
                                             GROUP BY components.fk_component_type`,
                                             [memberId, year]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -180,7 +180,7 @@ class ComponentRepository {
                                             AND EXTRACT(YEAR FROM changed_at) = $2
                                             GROUP BY components.fk_component_type`,
                                             [memberId, year]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -206,7 +206,7 @@ class ComponentRepository {
                                             GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)
                                             ORDER BY EXTRACT(YEAR FROM components_changed.changed_at)`,
                                             [memberId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -233,7 +233,7 @@ class ComponentRepository {
                                             GROUP BY components.fk_component_type, components.duration
                                             ORDER BY value DESC`,
                                             [memberId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -254,7 +254,7 @@ class ComponentRepository {
                                             AND bikes_components.fk_component = components_changed.fk_component
                                             GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)`,
                                             [bikeId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -277,7 +277,7 @@ class ComponentRepository {
                                             GROUP BY components.fk_component_type, components.duration
                                             ORDER BY value DESC`,
                                             [bikeId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -300,7 +300,7 @@ class ComponentRepository {
                                             AND components.active = true
                                             GROUP BY components.fk_component_type`,
                                             [bikeId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -326,7 +326,7 @@ class ComponentRepository {
                                         GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)
                                         ORDER BY EXTRACT(YEAR FROM components_changed.changed_at)`,
                                         [memberId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -347,7 +347,7 @@ class ComponentRepository {
                                             AND bikes_components.fk_component = components_changed.fk_component
                                             GROUP BY EXTRACT(YEAR FROM components_changed.changed_at)`,
                                             [bikeId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;

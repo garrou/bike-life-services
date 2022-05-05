@@ -1,22 +1,14 @@
-const validator = require('validator');
+const valid = require('validator');
 
 class Validator {
 
-    static isDate = (toCheck) => {
-        return validator.isDate(new Date(toCheck));
-    }
+    static isDate = (toCheck) => valid.isDate(new Date(toCheck));
     
-    static isPassword = (toCheck) => {
-        return validator.isLength(toCheck, {min: 8, max: 255});
-    }
+    static isPassword = (toCheck) => valid.isLength(toCheck, {min: 8, max: 255});
     
-    static isEmail = (toCheck) => {
-        return validator.isEmail(toCheck);
-    }
+    static isEmail = (toCheck) => valid.isEmail(toCheck) && valid.isLength(toCheck, {max: 255});
     
-    static isNumber = (toCheck) => {
-        return toCheck >= 0 && toCheck < Number.MAX_VALUE;
-    }
+    static isNumber = (toCheck) => toCheck >= 0 && toCheck < Number.MAX_VALUE;
 
     /**
      * @param toCheck
@@ -24,17 +16,11 @@ class Validator {
      * @param {Number} max
      * @return {Boolean}
      */
-    static isValidLength = (toCheck, min, max) => {
-        return validator.isLength(toCheck, {min: min, max: max});
-    }
+    static isValidLength = (toCheck, min, max) => valid.isLength(toCheck, {min: min, max: max});
 
-    static isBikeType = (toCheck) => {
-        return ['VTT', 'Ville', 'Route'].includes(toCheck);
-    }
+    static isBikeType = (toCheck) => ['VTT', 'Ville', 'Route'].includes(toCheck);
 
-    static isUUID = (toCheck) => {
-        return validator.isUUID(toCheck);
-    }
+    static isUUID = (toCheck) => valid.isUUID(toCheck);
 }
 
 module.exports = Validator;
