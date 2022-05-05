@@ -46,6 +46,10 @@ class ComponentService {
 
         try {
             const component = Component.fromJson(req.body);
+
+            if (!component.isValid()) {
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});
+            }
             await ComponentRepository.updateComponent(component);
             return res.status(http.OK).json({'confirm': `${component.type} modifié`});
         } catch (err) {

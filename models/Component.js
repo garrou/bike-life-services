@@ -1,3 +1,6 @@
+const Validator = require('../utils/Validator');
+const constants = require('../constants/constants.json');
+
 class Component {
 
     /**
@@ -20,6 +23,9 @@ class Component {
         this.brand = brand.charAt(0).toUpperCase() + brand.slice(1);
         this.price = parseFloat(price);
     }
+
+    isValid = () => Validator.isValidLength(this.brand, constants.BRAND_MIN_SIZE, constants.BRAND_MAX_SIZE)
+                    && Validator.isNumber(this.price);
 
     /**
      * @param {Array<JSON>} records

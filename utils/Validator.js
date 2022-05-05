@@ -1,12 +1,13 @@
+const constants = require('../constants/constants.json');
 const valid = require('validator');
 
 class Validator {
 
     static isDate = (toCheck) => valid.isDate(new Date(toCheck));
     
-    static isPassword = (toCheck) => valid.isLength(toCheck, {min: 8, max: 255});
+    static isPassword = (toCheck) => valid.isLength(toCheck, {min: constants.PASSWORD_MIN_SIZE, max: constants.PASSWORD_MAX_SIZE});
     
-    static isEmail = (toCheck) => valid.isEmail(toCheck) && valid.isLength(toCheck, {max: 255});
+    static isEmail = (toCheck) => valid.isEmail(toCheck) && valid.isLength(toCheck, {max: constants.EMAIL_MAX_SIZE});
     
     static isNumber = (toCheck) => toCheck >= 0 && toCheck < Number.MAX_VALUE;
 
