@@ -1,5 +1,6 @@
 const Utils = require('../utils/Utils');
 const Validator = require('../utils/Validator');
+const constants = require('../constants/constants.json');
 
 class Bike {
 
@@ -32,7 +33,7 @@ class Bike {
     isValid = () => Validator.isDate(this.addedAt)
                     && Validator.isNumber(this.kmPerWeek)
                     && Validator.isNumber(this.totalKm)
-                    && Validator.isValidLength(this.name, 1, 50)
+                    && Validator.isValidLength(this.name, constants.BIKE_NAME_MIN_SIZE, constants.BIKE_NAME_MAX_SIZE)
                     && Validator.isBikeType(this.type)
                     && Validator.isNumber(this.price)
                     && Validator.isUUID(this.id);

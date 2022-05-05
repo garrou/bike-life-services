@@ -1,5 +1,4 @@
 require('dotenv').config();
-require('./tasks/cron');
 
 const express = require('express');
 const helmet = require('helmet');

@@ -15,7 +15,7 @@ class DiagnosticRepository {
                                             WHERE bike_type IS NULL OR bike_type = $1
                                             ORDER BY id`,
                                             [type]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;

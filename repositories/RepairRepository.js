@@ -13,7 +13,7 @@ class RepairRepository {
             await client.query(`INSERT INTO repairs (repair_at, reason, price, fk_component)
                                 VALUES ($1, $2, $3, $4)`,
                                 [repair.repairAt, repair.reason, repair.price, repair.componentId]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -33,7 +33,7 @@ class RepairRepository {
                                             WHERE fk_component = $1
                                             ORDER BY repair_at DESC`,
                                             [componentId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;

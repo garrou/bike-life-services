@@ -14,7 +14,7 @@ class BikeRepository {
                                 VALUES ($1, $2, $3, ROUND($4, 2), $5, $6, ROUND($7, 2), $8, ROUND($9, 2))`, 
                                 [bike.id, bike.name, bike.electric, bike.kmPerWeek, bike.addedAt, bike.type, bike.totalKm, bike.automaticKm, bike.price]);
             await client.query(`INSERT INTO members_bikes (fk_member, fk_bike) VALUES ($1, $2)`, [memberId, bike.id]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -32,7 +32,7 @@ class BikeRepository {
                                             FROM bikes 
                                             WHERE bike_id = $1`, 
                                             [bikeId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -53,7 +53,7 @@ class BikeRepository {
                                             AND fk_member = $1
                                             ORDER BY total_km DESC`, 
                                             [memberId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -68,7 +68,7 @@ class BikeRepository {
         try {
             const client = await pool.connect();
             await client.query(`CALL delete_bike($1)`, [bikeId]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -85,7 +85,7 @@ class BikeRepository {
                                 SET name = $1, electric = $2, average_km_week = ROUND($3, 2), bike_type = $4, total_km = ROUND($5, 2), automatic_km = $6, price = ROUND($7, 2)
                                 WHERE bike_id = $8`,
                                 [bike.name, bike.electric, bike.kmPerWeek, bike.type, bike.totalKm, bike.automaticKm, bike.price, bike.id]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -101,7 +101,7 @@ class BikeRepository {
             const res = await client.query(`SELECT bike_id, average_km_week 
                                             FROM bikes
                                             WHERE automatic_km = true`);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -126,21 +126,7 @@ class BikeRepository {
                                 WHERE bikes_components.fk_bike = $2
                                 AND components.component_id = bikes_components.fk_component`,
                                 [km, bikeId])
-            client.release(true);
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    
-    static addDailyKm = async () => {
-
-        try {
-            const client = await pool.connect();
-            await client.query(`UPDATE bikes
-                                SET total_km = ROUND(total_km + average_km_week / 7, 2)
-                                WHERE automatic_km = TRUE`);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }

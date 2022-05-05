@@ -12,7 +12,7 @@ class TipRepository {
             const res = await client.query(`SELECT * 
                                             FROM tips
                                             ORDER BY tip_id`);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -30,7 +30,7 @@ class TipRepository {
             const res = await client.query(`SELECT * 
                                             FROM tips 
                                             WHERE tip_id = $1`, [tipId]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -50,7 +50,7 @@ class TipRepository {
                                             WHERE fk_topic LIKE $1
                                             OR (fk_topic IS NULL AND $1 = '%')`, 
                                             [topic]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -72,7 +72,7 @@ class TipRepository {
                                                 FROM diagnostic
                                                 WHERE id in (${ids})
                                             )`);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;

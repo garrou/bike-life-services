@@ -13,7 +13,7 @@ class MemberRepository {
             await client.query(`INSERT INTO members (member_id, email, password, active) 
                                 VALUES ($1, $2, $3, $4)`, 
                                 [member.id, member.email, member.password, member.active]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }
@@ -31,7 +31,7 @@ class MemberRepository {
                                             FROM members 
                                             WHERE email = $1`, 
                                             [email]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -50,7 +50,7 @@ class MemberRepository {
                                             FROM members 
                                             WHERE member_id = $1`, 
                                             [id]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -70,7 +70,7 @@ class MemberRepository {
                                 SET email = $1
                                 WHERE member_id = $2`, 
                                 [email, id]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -90,7 +90,7 @@ class MemberRepository {
                                 SET password = $1
                                 WHERE member_id = $2`, 
                                 [password, id]);
-            client.release(true);
+            client.release();
             return res;
         } catch (err) {
             throw err;
@@ -109,7 +109,7 @@ class MemberRepository {
                                 SET active = true
                                 WHERE member_id = $1`, 
                                 [id]);
-            client.release(true);
+            client.release();
         } catch (err) {
             throw err;
         }

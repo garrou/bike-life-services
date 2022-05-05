@@ -1,23 +1,39 @@
 const { fromList, fromJson } = require("../models/Component");
 
-const components = fromList([{
-    'component_id': 'flqfkldmqkf57',
-    'duration': 2568.85,
-    'fk_component_type': 'Pneu',
-    'active': false,
-    'total_km': '45',
-    'brand': 'this is a test',
-    'price': '587.32'
-}]);
+let components, compo;
 
-const compo = fromJson({
-    'id': 'flqfkldmqkf57',
-    'duration': 2568.85,
-    'type': 'Pneu',
-    'active': false,
-    'totalKm': '45',
-    'brand': 'this is a test',
-    'price': '587.32'
+beforeEach(() => {
+    components = fromList([{
+        'component_id': 'flqfkldmqkf57',
+        'duration': 2568.85,
+        'fk_component_type': 'Pneu',
+        'active': false,
+        'total_km': '45',
+        'brand': 'this is a test',
+        'price': '587.32'
+    }]);
+
+    compo = fromJson({
+        'id': 'flqfkldmqkf57',
+        'duration': 2568.85,
+        'type': 'Pneu',
+        'active': false,
+        'totalKm': '45',
+        'brand': 'this is a test',
+        'price': '587.32'
+    });
+});
+
+test('Check if valid', () => {
+    expect(compo.isValid()).toBe(true);
+    expect(components[0].isValid()).toBe(true);
+});
+
+test('Check if valid with invalid brand', () => {
+    compo.brand = '';
+    expect(compo.isValid()).toBe(false);
+    components[0].brand = new Array(52).join('a');
+    expect(components[0].isValid()).toBe(false);
 });
 
 test('Check values of component', () => {

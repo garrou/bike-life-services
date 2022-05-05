@@ -2,9 +2,9 @@ name: docker compose build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
 
@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build Docker Compose
-      run: docker compose build
+      run: docker compose up -d
