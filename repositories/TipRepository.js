@@ -78,6 +78,20 @@ class TipRepository {
             throw err;
         }
     }
+
+    static getTopics = async () => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT * 
+                                            FROM topics
+                                            ORDER BY name DESC`);
+            client.release();
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = TipRepository;

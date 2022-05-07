@@ -36,6 +36,16 @@ class TipService {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
         }
     }
+
+    static getTopics = async (req, res) => {
+
+        try {
+            const resp = await TipRepository.getTopics();
+            return res.status(http.OK).json(resp['rows']);
+        } catch {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
+        }
+    }
 }
 
 module.exports = TipService;
