@@ -81,7 +81,9 @@ VALUES ('Chaîne'),
 	('Plaquettes'),
 	('Dérailleurs'),
 	('Cassette'),
-	('Transmission');
+	('Transmission'),
+	('Roulements'),
+	('Selle');
 
 CREATE TABLE tips (
 	tip_id SERIAL PRIMARY KEY,
@@ -173,9 +175,9 @@ Le lubrifiant est plus « gras » que la graisse, il est donc plus efficace et
 Asseyez-vous sur la selle, posez un pied à terre. Vous devez toucher le sol avec la pointe du pied. Si ce n’est pas le cas, montez ou descendez la selle en fonction de votre besoin. 
 Montez sur la selle, mettez les deux pieds sur les pédales en vous tenant à un objet fixe. 
 Mettez le pédalier à l’horizontale. Vous devez avoir les jambes qui forment un angle droit. 
-Si ce n’est pas le cas, montez ou descendez la selle en fonction de votre besoin.', NULL),
+Si ce n’est pas le cas, montez ou descendez la selle en fonction de votre besoin.', 'Selle'),
 
-('Déterminer l''usure des disques de frein', NULL, 'Pour connaitre l’usure de vos disques, il vous suffit de mesurer l’épaisseur de vos disques. 
+('Déterminer l’usure des disques de frein', NULL, 'Pour connaitre l’usure de vos disques, il vous suffit de mesurer l’épaisseur de vos disques.
 En fonction de la pratique (VTT, route, gravel…), celle-ci peut varier entre 1.5mm à 2mm. 
 Ainsi, si vous avez une épaisseur inférieure à 1.5mm, il sera nécessaire de changer votre disque. 
 Il est important de noter que l’usure du disque est rare. 
@@ -186,7 +188,105 @@ Si vous sentez une baisse de la puissance de freinage, faites un check up de vos
 ('Quand purger les freins à disques', NULL, 'En purgeant le circuit hydraulique de vos freins chaque année, vous vous assurez qu’ils fonctionnent correctement, qu’ils offrent la meilleure sensation possible et qu’ils ne perdent pas de puissance. 
 Le rinçage consiste à retirer le liquide de frein usé (généralement de l’huile minérale, bien que des marques comme SRAM utilisent du synthétique qui retarde la surchauffe) et à le remplacer par du neuf. 
 Cette action annuelle peut être considérée comme une référence générale. Toutefois, si vous utilisez vos freins de manière intensive, que vous descendiez fréquemment des cols de montagne sur la route ou que vous pratiquiez l’enduro ou la descente en VTT, nous vous recommandons de les purger tous les six mois environ. 
-Toutefois, si vous constatez une perte de puissance ou de sensation de freinage, vous devez procéder à un remplacement d’urgence des freins.', 'Freins');
+Toutefois, si vous constatez une perte de puissance ou de sensation de freinage, vous devez procéder à un remplacement d’urgence des freins.', 'Freins'),
+
+('Vérifier l’état d’usure la cassette', NULL,
+ 'Il faut vérifier l’état d’usure des dents de votre cassette.
+Celles-ci doivent avoir une forme plate sur leur dessus. Si les dents ont une forme pointues comme une dent, c’est que la cassette doit être changée.
+En général, une cassette se change vers les 10000kms.', 'Cassette'),
+
+(' Changer les plaquettes des freins à disque sur un vélo à disque', NULL,
+'Retirez la vis ou la goupille qui maintient les plaquettes en place dans l’étrier avec l’outil adapté, selon le modèle de freins.
+Sortez les plaquettes (selon les modèles, par le haut ou par le bas).
+Nettoyez l’intérieur de l’étrier avec une bombe de nettoyant.
+Nettoyez les plaquettes au papier de verre, ou changez-les.
+Replacez les plaquettes en n’oubliant pas leur ressort de rappel sous forme de lamelle.
+Refixez la vis ou la goupille qui assure leur maintien et freinez plusieurs fois pour ôter le jeu.
+Dégraissez le disque et contrôlez son serrage sur le moyeu.
+Remontez la roue et faites-la tourner après avoir actionné le levier.
+Si le disque frotte en continu, réglez le centrage de l’étrier de frein.
+S’il frotte par intermittence, essayez de le dévoiler avec une clé dégraissée, par petite torsion.', 'Plaquettes'),
+
+('Déglacer ses plaquettes de freins', NULL,
+'Etape 1 : Démonter les plaquettes
+
+Commencez par démonter vos plaquettes comme décrits dans le conseil « Changer ses plaquettes de frein ».
+
+Etape 2 : Comment savoir si vos plaquettes sont « gelées »
+
+Le gèle des plaquettes se fait lorsque celles-ci surchauffent due à un freinage trop appuyé.
+Il y a deux façons de savoir si vos plaquettes sont gelées :
+- Lorsque vous freinez, vos plaquettes font un grincement très aigues
+- Lorsque vous les démontez, elles ont une apparence très brillante.
+Pour les « déglacer », prenez du papier de verre et frottez-les jusqu’à ce que l’apparence brillant disparaisse. Une fois cette étape effectuée, vous pouvez remonter vos plaquettes.
+', 'Plaquettes'),
+
+('Nettoyer vos plaquettes de freins', NULL,
+'Etape 1 : Démonter les plaquettes
+
+ Commencez par démonter vos plaquettes comme décrits dans le conseil « Changer ses plaquettes de frein ».
+
+ Etape 2 : nettoyer les plaquettes :
+
+ Prenez de l’acétone ou un dégraissant. Mettez vos plaquettes à tremper dans l’acétone (environ 1 minute) ? sortez-les et nettoyez-les à l’aide d’un chiffon. Répétez cette opération 2 à 3 fois jusqu’à qu’il n’y ai plus de traces sur votre chiffon.
+ Une fois propre, remontez vos plaquettes.
+', 'Plaquettes'),
+
+('Régler son dérailleur arrière', NULL,
+'Etape 1 : Régler les butées
+
+ Les butées sont les premiers éléments à régler sur votre dérailleur arrière. Petit rappel : les butées définissent la course du dérailleur du petit au grand pignon et évitent que la chaîne ne saute. Elles sont bien réglées lorsque le dérailleur se déplace de haut en bas sans dérailler et lorsqu’on n’entend pas de cliquetis sur le plus petit et le plus grand pignon.
+ – Réglage de la butée côté petit pignon (butée High, ou butée basse) : alignement de la chaine et du galet-guide avec le petit pignon
+ – Réglage de la butée côté grand pignon (butée Low, ou butée haute) : alignement de la chaine et du galet-guide avec le grand pignon
+
+ Etape 2 : Régler la tension du câble de dérailleur
+
+ Avant de régler la tension du câble, nous vous conseillons de desserrer le câble, puis de positionner la molette de réglage à la moitié de sa course. Ce petit détail est très utile pour ajouter ou enlever de la tension par la suite.
+ 1. positionnez votre chaine sur le petit pignon et le deuxième plateau
+
+ 2. tirez à la main le câble de dérailleur et tendez-le, puis ajustez la vis de serrage
+
+ 3. testez le passage de vitesses
+
+ 4. affinez le réglage de tension avec la molette pour trouver le bon réglage
+
+ Si les vitesses peinent à monter : ajoutez de la tension à l’aide de la molette.
+ Si les vitesses peinent à descendre : enlevez de la tension à l’aide de la molette.
+ Le réglage se fait petit à petit, en testant le passage de vitesses et ajoutant/enlevant de la tension de câble !', 'Dérailleurs'),
+
+('Régler son dérailleur avant', NULL,
+'La plupart du temps, votre dérailleur avant est livré avec une cale en plastique placée dans le mécanisme afin de le maintenir dans la position pour le réglage, veillez donc à ne pas la retirer pour le moment. Le réglage se fait avec le câble de dérailleur libéré.
+ - Pour un dérailleur à collier, dans un premier temps alignez la fourchette de votre dérailleur de sorte à ce quelle soit parallèle à vos plateaux.
+
+ - Réglez ensuite la hauteur du dérailleur ; la partie extérieure de la fourchette doit être entre 1 et 3 mm au-dessus de la dent la plus haute du grand plateau.
+
+ - À présent bien positionné, serrez la vis de maintien du dérailleur au couple indiqué par le fabricant puis sortez la cale de montage s’il y en avait une.
+
+ - Placez la chaîne sur le plus grand pignon à l’arrière et sur le plus petit plateau à l’avant puis réglez la butée basse du dérailleur avant (vis "L", pour Low) de sorte à positionner la partie interne de la fourchette à 2 mm de la chaîne.
+
+ - Vissez complètement la molette de tension au niveau de la commande de vitesses puis dévissez-la de 2 tours.
+
+ - Bloquez à présent le câble de commande sur le dérailleur en le tendant légèrement à la main.
+
+ - Placez la chaîne sur le plus petit pignon à l’arrière et sur le plus grand plateau à l’avant puis réglez la butée haute du dérailleur avant (vis "H", pour High) de sorte à positionner la partie externe de la fourchette à 2 mm de la chaîne.
+  Un réglage parfait des butées évite que la chaîne ne frotte contre la fourchette mais empêche aussi que celle-ci ne déraille.
+
+ - Réglez la tension du câble à l’aide de la molette sur la commande de vitesse. Si la vitesse ne monte pas, cela veut dire qu’il manque de tension. Si elle ne descend pas, cela vous indique qu’il y a trop de tension.
+  Pour faciliter le réglage final, lubrifiez votre transmission.', 'Dérailleurs'),
+
+('Entretenir sa batterie', NULL,
+'- Evitez les cycles de charge/décharge trop importants. Si votre batterie se trouve en dessous de 20% d’autonomie, rechargez-là, n’attendez pas de tomber à moins de 5%. De même lors d’une recharge, n’allez pas jusqu’à 100%, arrêtez-vous entre 90 et 95%. Votre batterie gagnera ainsi en durée de vie.
+
+ - Il est également recommandé d’acheter les batteries de la marque de votre vélo. Celles-ci sont parfaitement adaptées à votre vélo et auront une meilleure durée de vie qu’une batterie d’un constructeur externe.
+
+ - Evitez de l’utiliser dans des températures trop hautes ou trop basses. Elle doit être stockée entre 5°C et 25°C.
+
+ - Lorsque votre batterie est en fin de vie, pensez à la ramener chez votre constructeur pour que celle-ci soit recyclée.', 'Batterie'),
+
+('Nettoyer les roulements du vélo', NULL,
+'- Commencer par démonter les roulements. Cela se fait simplement à l’aide d’une clé Allen.
+ - Comme pour les plaquettes de frein, mettez-les à tremper quelques secondes dans de l’acétone ou nettoyez-les à l’aide d’un dégraissant. Frottez à l’aide d’un chiffon. Répétez cette opération jusqu’à qu’il n’y est plus de traces sur votre chiffon.
+ Remontez vos roulements', 'Roulements');
 
 CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
 RETURNS DATE AS $$
@@ -254,9 +354,9 @@ VALUES
 ('Vérification de la pression des pneus', 'Ville', 'Pneus', 'La pression des pneus de votre vélo doit être entre 3.5 et 6 bars'),
 ('Vérification de la pression des pneus', 'VTT', 'Pneus', 'La pression des pneus de votre vélo doit être entre 3 et 4 bars'),
 ('Vérification de la pression des pneus', 'Route', 'Pneus', 'La pression des pneus de votre vélo doit être entre 6 et 8 bars'),
-('Vérification de l''usure des pneus', NULL, 'Pneus', 'Vérifier que le pneu n''est pas craqué, déchiré ou que des fissures soit apparentes'),
-('Vérification des roues', NULL, 'Roues', 'Vérifier l''état des rayons de votre vélo, ceux-ci doivent être bien droits'),
-('Vérification des jantes', NULL, 'Jantes', 'Vérifier qu''il n''y a pas d''impact ou de fissure au niveau de la jante'),
+('Vérification de l’usure des pneus', NULL, 'Pneus', 'Vérifier que le pneu n’est pas craqué, déchiré ou que des fissures soit apparentes'),
+('Vérification des roues', NULL, 'Roues', 'Vérifier l’état des rayons de votre vélo, ceux-ci doivent être bien droits'),
+('Vérification des jantes', NULL, 'Jantes', 'Vérifier qu’il n’y a pas d’impact ou de fissure au niveau de la jante'),
 ('Vérification de la transmission', NULL, 'Transmission', 'Vérifier le bon état des dents des plateaux, pignons. Celles-ci ne doivent pas être arrondies ou déformées'),
 ('Vérification de la transmission', NULL, 'Transmission', 'Vérifier le passage des vitesses, celui-ci doit-être rapide et sans bruit. Les tester une à une'),
 ('Vérification de la chaîne', NULL, 'Chaîne', 'Vérifier que la chaîne est bien tendue'),
