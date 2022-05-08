@@ -1,22 +1,16 @@
 require('dotenv').config();
-
-const { Client } = require('pg');
-const client = new Client({
-    user: process.env.POSTGRES_USER,
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    port: process.env.POSTGRES_PORT,
-});
+const BikeRepository = require( "../repositories/BikeRepository");
 
 (async () => {
 
     try {
-        await client.connect();
-        await client.query(`UPDATE bikes
-                            SET total_km = ROUND(total_km + average_km_week / 7, 2)
-                            WHERE automatic_km = TRUE`);
-        client.end();
+        const bikes = await BikeRepository.getBikesWithAutoKm();
+
+        console.log(`${bikes['rows'].length} bikes with automatic km`);
+
+        for (const bike of bikes['rows']) {
+            await BikeRepository.addKm(bike.bike_id, bike.average_km_week / 7);
+        }
     } catch (err) {
         console.log(err);
     }

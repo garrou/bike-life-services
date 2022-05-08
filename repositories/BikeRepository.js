@@ -119,13 +119,13 @@ class BikeRepository {
             await client.query(`UPDATE bikes
                                 SET total_km = ROUND(total_km + $1, 2)
                                 WHERE bike_id = $2`,
-                                [km, bikeId]);
+                [km, bikeId]);
             await client.query(`UPDATE components
                                 SET total_km = ROUND(total_km + $1, 2)
                                 FROM bikes_components
                                 WHERE bikes_components.fk_bike = $2
                                 AND components.component_id = bikes_components.fk_component`,
-                                [km, bikeId])
+                [km, bikeId])
             client.release();
         } catch (err) {
             throw err;
