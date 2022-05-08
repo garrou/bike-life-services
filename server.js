@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const helmet = require('helmet');
+
 const bikeController = require('./controllers/bikeController');
 const componentController = require('./controllers/componentController');
 const componentTypesController = require('./controllers/componentTypesController');
@@ -9,8 +10,8 @@ const diagnosticController = require('./controllers/diagnosticController');
 const memberController = require('./controllers/memberController');
 const repairController = require('./controllers/repairController');
 const tipController = require('./controllers/tipController');
-const { cors } = require('./middlewares/cors');
 
+const cors = require('./middlewares/cors');
 const app = express();
 
 app.use(helmet());
