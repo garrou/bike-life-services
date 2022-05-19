@@ -18,9 +18,7 @@ class Member {
     /**
      * @returns {Boolean}
      */
-    isValid = () => Validator.isUUID(this.id)
-                && Validator.isEmail(this.email)
-                && Validator.isPassword(this.password);
+    isValid = () => Validator.isUUID(this.id) && Validator.isEmail(this.email);
 
     /**
      * @param {Array<JSON>} records
