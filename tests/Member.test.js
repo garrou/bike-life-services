@@ -20,8 +20,3 @@ test('Check if member is valid with invalid email', () => {
    member.email = 'this_is_a_test';
    expect(member.isValid()).toBe(false);
 });
-
-test('Check if member is valid with invalid password', () => {
-    member.password = 'this_is';
-    expect(member.isValid()).toBe(false);
-});
