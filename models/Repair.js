@@ -1,5 +1,5 @@
 const Validator = require('../utils/Validator');
-const MAX_SIZE = 1000;
+const constants = require('../constants/constants.json');
 
 class Repair {
 
@@ -13,7 +13,7 @@ class Repair {
     constructor(id, repairAt, reason, price, componentId) {
         this.id = id;
         this.repairAt = repairAt;
-        this.reason = reason.slice(0, MAX_SIZE);
+        this.reason = reason.slice(0, constants.REASON_MAX_SIZE);
         this.price = parseFloat(price);
         this.componentId = componentId;
     }
@@ -46,8 +46,8 @@ class Repair {
      * @returns {Boolean}
      */
     isValid = () => Validator.isNumber(this.price)
-                    // && Validator.isDate(this.repairAt)
-                    && Validator.isValidLength(this.reason, 0, MAX_SIZE)
+                    && Validator.isDate(this.repairAt)
+                    && Validator.isValidLength(this.reason, 0, constants.REASON_MAX_SIZE)
                     && Validator.isUUID(this.componentId);
 }
 
