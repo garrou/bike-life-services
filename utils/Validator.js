@@ -11,12 +11,6 @@ class Validator {
     
     static isNumber = (toCheck) => toCheck >= 0 && toCheck < Number.MAX_VALUE;
 
-    /**
-     * @param toCheck
-     * @param {Number} min
-     * @param {Number} max
-     * @return {Boolean}
-     */
     static isValidLength = (toCheck, min, max) => valid.isLength(toCheck, {min: min, max: max});
 
     static isBikeType = (toCheck) => ['VTT', 'Ville', 'Route'].includes(toCheck);
