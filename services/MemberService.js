@@ -11,7 +11,7 @@ class MemberService {
 
         try {
             const { email, password } = req.body;
-            const member = new Member(Utils.uuid(), email, await Utils.createHash(password), true);
+            const member = new Member(Utils.uuid(), email, await Utils.createHash(password), false);
 
             if (!member.isValid()) {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});
@@ -24,7 +24,7 @@ class MemberService {
             const url = Utils.generateUrl(member.id);
             await MemberRepository.create(member);
             new Mailer().sendConfirmationEmail(email, url);
-            return res.status(http.CREATED).json({'confirm': 'Compte crée', 'member': member});
+            return res.status(http.CREATED).json({'confirm': 'Compte créé, veuillez confirmer votre email', 'member': member});
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
         }
@@ -57,8 +57,10 @@ class MemberService {
 
         try {
             const decoded = Utils.verifyEmailJwt(req.params.token);
-            await MemberRepository.activeMember(decoded['data']);
-            return res.status(http.OK).json({'confirm': 'Email confirmé'});
+            await MemberRepository.activeMember(decoded['memberId']);
+            return res.writeHead(http.REDIRECT, {
+                Location: 'https://bikeslife.fr'
+            }).end();
         } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la confirmation du mail'});
         }

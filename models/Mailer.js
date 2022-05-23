@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const fs = require("fs");
 
 class Mailer {
 
@@ -39,7 +40,23 @@ class Mailer {
             from: process.env.EMAIL_FROM,
             to: to,
             subject: 'Confirmer votre email',
-            html: `Cliquer sur le lien pour finaliser la création de votre compte : <a href="${url}">Confirmer</a>`
+            attachments: [
+                {
+                    filename: 'logo.png',
+                    content: fs.createReadStream('./assets/logo.png'),
+                    cid: "bikeslifelogo"
+                }
+            ],
+            html: `
+<h1>Bienvenue chez Bike's life.</h1>
+
+<p>Un service pour suivre l'usure de votre vélo et de ses composants</p>
+<p>Cliquer sur le lien pour finaliser la création de votre compte :</p>
+<a href="${url}">Confirmer</a>
+
+<br />
+<img src="cid:bikeslifelogo" width="200" height="200" alt="Logo" />
+`
         }, (err, info) => {
             if (err) {
                 console.log(err);
