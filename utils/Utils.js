@@ -48,7 +48,7 @@ class Utils {
      */
     static generateUrl = (memberId) => {
         const token = jwt.sign({memberId: memberId}, process.env.EMAIL_TOKEN, {expiresIn: "1d"});
-        return `https://${process.env.HOST}/confirmation/${token}`;
+        return `https://bikelifeservices.alwaysdata.net/confirmation/${token}`;
     }
     
     /**
