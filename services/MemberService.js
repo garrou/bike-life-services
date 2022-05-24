@@ -1,3 +1,5 @@
+const Bike = require("../models/Bike");
+const BikeRepository = require("../repositories/BikeRepository");
 const MemberRepository = require('../repositories/MemberRepository');
 const Utils = require('../utils/Utils');
 const Validator = require('../utils/Validator');
@@ -19,9 +21,9 @@ class MemberService {
             if (resp['rowCount'] !== 1) {
                 return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Impossible de modifier le mot de passe.'});
             }
-            return res.status(http.OK).json({'confirm': 'Mot de passe modifié'});
+            return res.status(http.OK).json({'confirm': 'Mot de passe modifié.'});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
     
@@ -42,11 +44,11 @@ class MemberService {
             resp = await MemberRepository.updateEmail(memberId, email);
 
             if (resp['rowCount'] !== 1) {
-                return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Impossible de modifier votre email'});
+                return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Impossible de modifier votre email.'});
             }
-            return res.status(http.OK).json({'confirm': 'Email modifié'});
+            return res.status(http.OK).json({'confirm': 'Email modifié.'});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Email modifié'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Email modifié.'});
         }
     }
     
@@ -57,16 +59,41 @@ class MemberService {
             const resp = await MemberRepository.getEmailById(memberId);
             return res.status(http.OK).json({'email': resp['rowCount'] === 1 ? resp['rows'][0]['email'] : ''});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
+        }
+    }
+
+    static checkAuth = async (req, res) => {
+
+        try {
+            const { password } = req.body;
+            const memberId = Utils.getMemberId(req.headers['authorization']);
+            const resp = await MemberRepository.getPasswordById(memberId);
+            const same = await Utils.comparePassword(password, resp['rows'][0]['password']);
+
+            if (!same) {
+                return res.status(http.UNAUTHORIZED).json({'confirm': 'Mot de passe incorrect.'});
+            }
+            return res.status(http.OK).json({'confirm': 'Suppression de votre compte.'});
+        } catch (err) {
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
 
     static delete = async (req, res) => {
 
         try {
+            const memberId = Utils.getMemberId(req.headers['authorization']);
+            const resp = await BikeRepository.getByMember(memberId);
+            const bikes = Bike.fromList(resp['rows']);
 
+            for (const bike of bikes) {
+                await BikeRepository.delete(bike.id);
+            }
+            await MemberRepository.delete(memberId);
+            return res.status(http.OK).json({'confirm': 'Compte correctement supprimé.'});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
 }

@@ -115,6 +115,42 @@ class MemberRepository {
             throw err;
         }
     }
+
+    /**
+     * @param {String} id
+     * @returns {Promise<any>}
+     */
+    static getPasswordById = async (id) => {
+
+        try {
+            const client = await pool.connect();
+            const res = await client.query(`SELECT password
+                                            FROM members 
+                                            WHERE member_id = $1`,
+                                            [id]);
+            client.release();
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} id
+     * @returns {Promise<void>}
+     */
+    static delete = async (id) => {
+
+        try {
+            const client = await pool.connect();
+            await client.query(`DELETE FROM members 
+                                            WHERE member_id = $1`,
+                                            [id]);
+            client.release();
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = MemberRepository;

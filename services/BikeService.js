@@ -15,7 +15,7 @@ class BikeService {
             const bike = Bike.fromJson(req.body);
 
             if (!bike.isValid()) {
-                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});    
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides.'});
             } 
             await BikeRepository.create(memberId, bike);
             const types = bike.electric
@@ -27,7 +27,7 @@ class BikeService {
             }
             return res.status(http.CREATED).json({'confirm': 'Vélo ajouté', 'bike': bike});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur de communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur de communication avec le serveur.'});
         }
     }
     
@@ -37,9 +37,10 @@ class BikeService {
             const { bikeId } = req.params;
             const resp = await BikeRepository.get(bikeId);
             const bikes = Bike.fromList(resp['rows'])[0];
+
             return res.status(http.OK).json(bikes);
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
     
@@ -49,9 +50,10 @@ class BikeService {
             const memberId = Utils.getMemberId(req.headers['authorization']);
             const resp = await BikeRepository.getByMember(memberId);
             const bikes = Bike.fromList(resp['rows']);
+
             return res.status(http.OK).json(bikes);
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
     
@@ -60,9 +62,10 @@ class BikeService {
         try {
             const { bikeId } = req.params;
             await BikeRepository.delete(bikeId);
-            return res.status(http.OK).json({'confirm': 'Vélo supprimé'});
+
+            return res.status(http.OK).json({'confirm': 'Vélo supprimé.'});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
     
@@ -72,12 +75,13 @@ class BikeService {
             const bike = Bike.fromJson(JSON.parse(req.body.bike));
     
             if (!bike.isValid()) {
-                return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides'});
+                return res.status(http.FORBIDDEN).json({'confirm': 'Informations invalides.'});
             }   
             await BikeRepository.update(bike);
+
             return res.status(http.OK).json({'confirm': `${bike.name} modifié`});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur.'});
         }
     }
 
@@ -88,12 +92,13 @@ class BikeService {
             const { km } = req.body;
 
             if (!Validator.isNumber(km)) {
-                return res.status(http.FORBIDDEN).json({'confirm': "Impossible d'ajouter des kilomètres"});
+                return res.status(http.FORBIDDEN).json({'confirm': "Impossible d'ajouter des kilomètres."});
             }
             await BikeRepository.addKm(bikeId, km);
-            return res.status(http.OK).json({'confirm': `${km} kilomètres ajoutés`});
+
+            return res.status(http.OK).json({'confirm': `${km} kilomètres ajoutés.`});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur.'});
         }
     }
 }

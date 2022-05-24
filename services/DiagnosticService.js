@@ -12,9 +12,10 @@ class DiagnosticService {
             const { type } = req.params;
             const resp = await DiagnosticRepository.getByBikeType(type);
             const diagnostics = Diagnostic.fromList(resp['rows']);
+
             return res.status(http.OK).json(diagnostics);
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur.'});
         }
     }
 
@@ -33,7 +34,7 @@ class DiagnosticService {
             }
             return res.status(http.OK).json({'confirm': 'OK', 'tips': tips});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant le communication avec le serveur.'});
         }
     }
 }

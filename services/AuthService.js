@@ -15,7 +15,7 @@ class AuthService {
             const member = new Member(Utils.uuid(), email, await Utils.createHash(password), false);
 
             if (!member.isValid()) {
-                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides.'});
             }
             const resp = await MemberRepository.get(member.email);
 
@@ -28,7 +28,7 @@ class AuthService {
 
             return res.status(http.CREATED).json({'confirm': 'Compte créé, veuillez confirmer votre email', 'member': member});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
 
@@ -42,16 +42,16 @@ class AuthService {
                 return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot passe incorrect.'});
             }
             if (!resp['rows'][0]['active']) {
-                return res.status(http.BAD_REQUEST).json({'confirm': 'Veuillez confirmer votre adresse email'});
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Veuillez confirmer votre adresse email.'});
             }
             const same = await Utils.comparePassword(password, resp['rows'][0]['password']);
 
             if (!same) {
-                return res.status(http.BAD_REQUEST).json({'confirm': 'Email ou mot de passe incorrect.'});
+                return res.status(http.UNAUTHORIZED).json({'confirm': 'Email ou mot de passe incorrect.'});
             }
             return res.status(http.OK).json({'accessToken': Utils.createJwt(resp['rows'][0]['member_id'])});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
 
@@ -65,7 +65,7 @@ class AuthService {
                 Location: 'https://bikeslife.fr'
             }).end();
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la confirmation du mail'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la confirmation du mail.'});
         }
     }
 
@@ -81,9 +81,9 @@ class AuthService {
             const url = Utils.generateUrl(resp['rows'][0]['member_id'], 'reset');
             new Mailer().sendAskReset(email, url);
 
-            return res.status(http.OK).json({'confirm': 'Un email pour récupérer votre mot de passe a été envoyé'});
+            return res.status(http.OK).json({'confirm': 'Un email pour récupérer votre mot de passe a été envoyé.'});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la réinitialisation du mot de passe'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la réinitialisation du mot de passe.'});
         }
     }
 
@@ -104,7 +104,7 @@ class AuthService {
                 Location: 'https://bikeslife.fr'
             }).end();
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la réinitialisation du mot de passe'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la réinitialisation du mot de passe.'});
         }
     }
 }
