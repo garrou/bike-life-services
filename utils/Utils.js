@@ -44,11 +44,12 @@ class Utils {
 
     /**
      * @param {String} memberId
+     * @param {String} action
      * @returns {String}
      */
-    static generateUrl = (memberId) => {
+    static generateUrl = (memberId, action) => {
         const token = jwt.sign({memberId: memberId}, process.env.EMAIL_TOKEN, {expiresIn: "1d"});
-        return `https://bikelifeservices.alwaysdata.net/confirmation/${token}`;
+        return `https://bikelifeservices.alwaysdata.net/${action}/${token}`;
     }
     
     /**

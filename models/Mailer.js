@@ -13,15 +13,73 @@ class Mailer {
             }
         });
     }
-    
+
     /**
-     * @param {String} from 
-     * @param {String} to 
-     * @param {String} subject 
-     * @param {String} text 
+     * @param {String} to
+     * @param {String} url
      */
-    sendEmail = (from, to, subject, text) => {
-        this.transporter.sendMail({ from: from, to: to, subject: subject, text: text }, (err, info) => {
+    sendAskReset = (to, url) => {
+        this.transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            to: to,
+            subject: 'Demande de réinitialisation de votre mot de passe',
+            attachments: [
+                {
+                    filename: 'logo.png',
+                    content: fs.createReadStream('./assets/logo.png'),
+                    cid: "bikeslifelogo"
+                }
+            ],
+            html: `
+<h3>Bonjour,</h3>
+
+<p>Une demande de réinitialisation de votre mot de passe a été faite.</p>
+<p>Si vous n'êtes pas à l'origine de la demande, merci d'ignorer ce mail.</p>
+<p>
+    Pour réinitialiser votre mot de passe, cliquer <a href="${url}">ici</a>, 
+    vous serez redirigé vers le site web et recevrez un second email avec un mot de passe.
+</p>
+
+<br />
+<img src="cid:bikeslifelogo" width="200" height="200" alt="Logo" />`
+        }, (err, info) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(info.envelope);
+                console.log(info.messageId);
+            }
+        });
+    }
+
+    /**
+     * @param {String} to
+     * @param {String} password
+     */
+    sendNewPassword = (to, password) => {
+        this.transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            to: to,
+            subject: 'Nouveau mot de passe',
+            attachments: [
+                {
+                    filename: 'logo.png',
+                    content: fs.createReadStream('./assets/logo.png'),
+                    cid: "bikeslifelogo"
+                }
+            ],
+            html: `
+<p>Bonjour,</p>
+
+<p>Voici le nouveau mot de passe.</p>
+<p>${password}</p>
+
+<br />
+<p>Vous pouvez le changer dans Profil -> Modifier le mot de passe</p>
+
+<br />
+<img src="cid:bikeslifelogo" width="200" height="200" alt="Logo" />`
+        }, (err, info) => {
             if (err) {
                 console.log(err);
             } else {
@@ -50,13 +108,12 @@ class Mailer {
             html: `
 <h1>Bienvenue chez Bike's life.</h1>
 
-<p>Un service pour suivre l'usure de votre vélo et de ses composants</p>
-<p>Cliquer sur le lien pour finaliser la création de votre compte :</p>
+<p>Un service pour suivre l'usure de votre vélo et de ses composants.</p>
+<p>Cliquer sur le lien pour finaliser la création de votre compte, vous serez redirigé vers le site web :</p>
 <a href="${url}">Confirmer</a>
 
 <br />
-<img src="cid:bikeslifelogo" width="200" height="200" alt="Logo" />
-`
+<img src="cid:bikeslifelogo" width="200" height="200" alt="Logo" />`
         }, (err, info) => {
             if (err) {
                 console.log(err);

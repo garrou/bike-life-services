@@ -99,16 +99,17 @@ class MemberRepository {
 
     /**
      * @param {String} id
+     * @param {Boolean} active
      * @returns {Promise<void>}
      */
-     static activeMember = async (id) => {
+     static setActive = async (id, active) => {
         
         try {
             const client = await pool.connect();
             await client.query(`UPDATE members 
-                                SET active = true
-                                WHERE member_id = $1`, 
-                                [id]);
+                                SET active = $1
+                                WHERE member_id = $2`,
+                                [active, id]);
             client.release();
         } catch (err) {
             throw err;

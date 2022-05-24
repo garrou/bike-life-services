@@ -3,16 +3,10 @@ const Guard = require('../middlewares/Guard');
 const memberService = require('../services/MemberService');
 const router = Router();
 
-router.post('/members/signup', memberService.signup);
+router.patch('/email', Guard.checkToken, memberService.updateEmail);
 
-router.post('/members/login', memberService.login);
+router.patch('/password', Guard.checkToken, memberService.updatePassword);
 
-router.get('/confirmation/:token', memberService.confirmEmail);
-
-router.patch('/member/email', Guard.checkToken, memberService.updateEmail);
-
-router.patch('/member/password', Guard.checkToken, memberService.updatePassword);
-
-router.get('/member/email', Guard.checkToken, memberService.getEmail);
+router.get('/email', Guard.checkToken, memberService.getEmail);
 
 module.exports = router;
