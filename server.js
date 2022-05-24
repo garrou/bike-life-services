@@ -11,8 +11,8 @@ const diagnosticController = require('./controllers/diagnosticController');
 const memberController = require('./controllers/memberController');
 const repairController = require('./controllers/repairController');
 const tipController = require('./controllers/tipController');
-
 const cors = require('./middlewares/cors');
+
 const app = express();
 
 app.use(helmet());

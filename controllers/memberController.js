@@ -9,4 +9,6 @@ router.patch('/password', Guard.checkToken, memberService.updatePassword);
 
 router.get('/email', Guard.checkToken, memberService.getEmail);
 
+router.delete('/', Guard.checkToken, memberService.delete);
+
 module.exports = router;

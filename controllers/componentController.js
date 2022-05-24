@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const componentService = require('../services/ComponentService');
 const Guard = require('../middlewares/Guard');
+
 const router = Router();
 
 router.patch('/:componentId', Guard.checkToken, componentService.changeComponent);

@@ -2,6 +2,7 @@ const { Router } = require('express');
 const bikeService = require('../services/BikeService');
 const componentService = require("../services/ComponentService");
 const Guard = require('../middlewares/Guard');
+
 const router = Router();
 
 router.get('/:bikeId', Guard.checkToken, bikeService.get);

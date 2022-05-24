@@ -10,7 +10,7 @@ class TipService {
             const resp = await TipRepository.getAll();
             const tips = Tip.fromList(resp['rows']);
             return res.status(http.OK).json(tips);
-        } catch (err) {
+        } catch {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
         }
     }
@@ -21,7 +21,7 @@ class TipService {
             const resp = await TipRepository.getById(req.params['tipId']);
             const tips = Tip.fromList(resp['rows'])[0];
             return res.status(http.OK).json(tips);
-        } catch (err) {
+        } catch {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur serveur'});
         }
     }

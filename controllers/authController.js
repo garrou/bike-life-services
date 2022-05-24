@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const authService = require('../services/AuthService');
+
 const router = Router();
 
 router.post('/signup', authService.signup);
