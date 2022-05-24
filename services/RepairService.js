@@ -10,12 +10,13 @@ class RepairService {
             const repair = Repair.fromJson(req.body);
 
             if (!repair.isValid()) {
-                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides'});
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Informations invalides.'});
             }
             await RepairRepository.create(repair);
+
             return res.status(http.CREATED).json({'confirm': 'Réparation ajoutée', 'repair': repair});
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
 
@@ -25,9 +26,10 @@ class RepairService {
             const { componentId } = req.params;
             const resp = await RepairRepository.getByComponent(componentId);
             const repairs = Repair.fromList(resp['rows']);
+
             return res.status(http.OK).json(repairs);
         } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur'});
+            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
 }

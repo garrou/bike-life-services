@@ -83,6 +83,8 @@ VALUES ('Chaîne'),
 	('Cassette'),
 	('Transmission'),
 	('Roulements'),
+	('Roues'),
+	('Jantes'),
 	('Selle');
 
 CREATE TABLE tips (
@@ -286,7 +288,33 @@ Pour les « déglacer », prenez du papier de verre et frottez-les jusqu’à ce
 ('Nettoyer les roulements du vélo', NULL,
 '- Commencer par démonter les roulements. Cela se fait simplement à l’aide d’une clé Allen.
  - Comme pour les plaquettes de frein, mettez-les à tremper quelques secondes dans de l’acétone ou nettoyez-les à l’aide d’un dégraissant. Frottez à l’aide d’un chiffon. Répétez cette opération jusqu’à qu’il n’y est plus de traces sur votre chiffon.
- Remontez vos roulements', 'Roulements');
+ Remontez vos roulements', 'Roulements'),
+
+ ('Entretenir ses jantes', NULL,
+ 'Pour entretenir ses jantes, vous devez
+
+ - Nettoyer vos jantes
+ - Inspecter leurs états', 'Jantes'),
+
+ ('Entretenir ses roues', NULL,
+ 'Pour entretenir vos roues de vélos, vous devez
+
+ - Nettoyer vos jantes
+ - Inspecter leurs états
+ - Faire une révision des moyeus
+ - Faire une révision des roulements
+ - Vérifier la tension des rayons
+ - Vérifier que les roues ne sont pas voilés', 'Roues'),
+
+ ('Entretenir votre transmission', 'I2P9VGdjC2I',
+ 'Avant de commencer il faut protéger le disque avec un chiffon propre.
+
+ Ensuite vous devez :
+
+ - Dégraisser la transmission (cassette, chaîne, roulettes de dérailleurs)
+ - Laisser agir le produit
+ - Rincer le transmission puis laisser sécher
+ - Lubrifier la chaîne', 'Transmission');
 
 CREATE OR REPLACE FUNCTION get_last_changed_date(compo_id VARCHAR)
 RETURNS DATE AS $$
