@@ -11,7 +11,7 @@ class TipService {
             const tips = Tip.fromList(resp['rows']);
 
             return res.status(http.OK).json(tips);
-        } catch {
+        } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
@@ -23,7 +23,7 @@ class TipService {
             const tips = Tip.fromList(resp['rows'])[0];
 
             return res.status(http.OK).json(tips);
-        } catch {
+        } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
@@ -35,7 +35,7 @@ class TipService {
             const tips = Tip.fromList(resp['rows']);
 
             return res.status(http.OK).json(tips);
-        } catch {
+        } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
@@ -46,7 +46,7 @@ class TipService {
             const resp = await TipRepository.getTopics();
 
             return res.status(http.OK).json(resp['rows']);
-        } catch {
+        } catch (err) {
             return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Erreur durant la communication avec le serveur.'});
         }
     }
