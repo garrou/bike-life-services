@@ -59,26 +59,6 @@ class MemberRepository {
 
     /**
      * @param {String} id 
-     * @param {String} email
-     * @returns {Promise<any>}
-     */
-    static updateEmail = async (id, email) => {
-        
-        try {
-            const client = await pool.connect();
-            const res = await client.query(`UPDATE members 
-                                SET email = $1
-                                WHERE member_id = $2`, 
-                                [email, id]);
-            client.release();
-            return res;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @param {String} id 
      * @param {String} password
      * @returns {Promise<any>}
      */

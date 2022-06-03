@@ -27,31 +27,6 @@ class MemberService {
         }
     }
     
-    static updateEmail = async (req, res) => {
-    
-        try {
-            const { email } = req.body;
-            const memberId = Utils.getMemberId(req.headers['authorization']);
-    
-            if (!Validator.isEmail(email)) {
-                return res.status(http.BAD_REQUEST).json({'confirm': 'Email invalide.'});
-            } 
-            let resp = await MemberRepository.get(email);
-    
-            if (resp['rowCount'] !== 0) {
-                return res.status(http.CONFLICT).json({'confirm': 'Cet email est déjà associé à un compte.'});
-            }
-            resp = await MemberRepository.updateEmail(memberId, email);
-
-            if (resp['rowCount'] !== 1) {
-                return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Impossible de modifier votre email.'});
-            }
-            return res.status(http.OK).json({'confirm': 'Email modifié.'});
-        } catch (err) {
-            return res.status(http.INTERNAL_SERVER_ERROR).json({'confirm': 'Email modifié.'});
-        }
-    }
-    
     static getEmail = async (req, res) => {
         
         try {
