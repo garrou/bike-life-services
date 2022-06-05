@@ -11,7 +11,11 @@ class AuthService {
     static signup = async (req, res) => {
 
         try {
-            const { email, password } = req.body;
+            const { email, password, confirm } = req.body;
+
+            if (password != confirm) {
+                return res.status(http.BAD_REQUEST).json({'confirm': 'Les mots de passe sont différents.'});
+            }
             const member = new Member(Utils.uuid(), email, await Utils.createHash(password), false);
 
             if (!member.isValid()) {
